@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPI - Evidence Packaged Infrastructure | The Evidence Layer for AI</title>
+    <meta name="description" content="AI that can be trusted, verified, and reproduced — anywhere. Capture → Sign → Verify → Replay. All in one .epi file.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">.EPI</span>
+                <span class="logo-tagline">Evidence Layer for AI</span>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#what-is-epi">What is EPI</a></li>
+                <li><a href="#why-epi">Why EPI</a></li>
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#technical">Technical</a></li>
+                <li><a href="#file-structure">File Structure</a></li>
+                <li><a href="#regulations">Regulations</a></li>
+                <li><a href="#founder">Founder</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon sun-icon">☀️</span>
+                    <span class="theme-icon moon-icon">🌙</span>
+                </button>
+                <a href="#request-demo" class="btn btn--primary btn--sm">Request MVP/Demo</a>
+                <a href="#technical" class="btn btn--outline btn--sm">Documentation</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Evidence Packaged Infrastructure (.epi)</h1>
+                <p class="hero-subtitle">AI that can be trusted, verified, and reproduced — anywhere.</p>
+                <p class="hero-value">Capture → Sign → Verify → Replay. All in one .epi file.</p>
+                
+                <div class="hero-ctas">
+                    <a href="#request-demo" class="btn btn--primary btn--lg">Request MVP / Demo</a>
+                    <a href="#technical" class="btn btn--outline btn--lg">View Documentation</a>
+                </div>
+                
+                <div class="hero-links">
+                    <a href="#technical">View sample .epi</a>
+                    <span class="separator">|</span>
+                    <a href="https://mohdibrahimaiml.github.io/portfolio-/" target="_blank">Read Founder Research</a>
+                    <span class="separator">|</span>
+                    <a href="#request-demo">Request for private GitHub Repository (MVP)</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="epi-file-icon">
+                    <div class="file-header">.epi</div>
+                    <div class="file-steps">
+                        <div class="step">1. Capture workflow</div>
+                        <div class="step">2. Cryptographic signing</div>
+                        <div class="step">3. Package artifacts</div>
+                        <div class="step">4. Verify &amp; replay</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats Banner -->
+    <section class="stats-banner">
+        <div class="container">
+            <div class="stats-banner-grid">
+                <div class="banner-stat">
+                    <div class="banner-stat-number">70%</div>
+                    <div class="banner-stat-label">Cannot be reproduced</div>
+                </div>
+                <div class="banner-stat">
+                    <div class="banner-stat-number">$67.4B</div>
+                    <div class="banner-stat-label">Lost to AI failures annually</div>
+                </div>
+                <div class="banner-stat">
+                    <div class="banner-stat-number">89%</div>
+                    <div class="banner-stat-label">Enterprises use AI</div>
+                </div>
+                <div class="banner-stat">
+                    <div class="banner-stat-number">12-32%</div>
+                    <div class="banner-stat-label">Have AI governance</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <h2 class="section-title">AI Has No Audit Trail. This is a Global Risk.</h2>
+            
+            <div class="problem-grid">
+                <div class="problem-before">
+                    <h3>Before EPI</h3>
+                    <ul class="problem-list">
+                        <li>❌ AI outputs cannot be proven</li>
+                        <li>❌ No cryptographic provenance</li>
+                        <li>❌ 70% of AI research cannot be reproduced</li>
+                        <li>❌ Regulators demand evidence (EU AI Act, RBI FREE-AI, FDA)</li>
+                        <li>❌ Compliance teams cannot verify LLM decisions</li>
+                    </ul>
+                    <p class="problem-quote">"It ran once... but can we prove how?" → <strong>No.</strong></p>
+                </div>
+                
+                <div class="problem-visual">
+                    <div class="workflow-box workflow-box--before">
+                        <h4>Before</h4>
+                        <div class="workflow-flow">
+                            Code → Docker → Logs → Model → ??? → Output
+                        </div>
+                        <div class="workflow-status workflow-status--error">
+                            ❌ No Proof. No Replay. No Compliance.
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-box workflow-box--after">
+                        <h4>After (with EPI)</h4>
+                        <div class="workflow-flow">
+                            epi record → run.epi → epi verify → epi replay
+                        </div>
+                        <div class="workflow-status workflow-status--success">
+                            ✅ Signed. Portable. Reproducible.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution" id="what-is-epi">
+        <div class="container">
+            <h2 class="section-title">The PDF for AI Workflows</h2>
+            <p class="solution-intro">
+                EPI is an open standard and recording system that captures an AI workflow into a single, 
+                tamper-evident .epi file — ready to verify, replay, and audit. Like a PDF made documents 
+                portable and consistent, <strong>EPI makes AI workflows trustworthy and auditable.</strong>
+            </p>
+            
+            <div class="solution-flow">
+                <div class="flow-step">
+                    <div class="flow-icon">📝</div>
+                    <div class="flow-label">Your Script</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">🎬</div>
+                    <div class="flow-label">epi record</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">📦</div>
+                    <div class="flow-label">Signed .epi File</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">✅</div>
+                    <div class="flow-label">epi verify</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">👁️</div>
+                    <div class="flow-label">epi view</div>
+                </div>
+            </div>
+            
+            <div class="solution-cta">
+                <a href="#technical" class="btn btn--secondary">See how .epi works inside</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="why-epi">
+        <div class="container">
+            <h2 class="section-title">4 Revolutionary Capabilities</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Zero Code Change</h3>
+                    <p>Drop-in CLI. No SDK bloat.</p>
+                    <div class="code-snippet">
+                        <code>epi record --out run.epi -- python script.py</code>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Legal-Grade Proof</h3>
+                    <p>Ed25519 signatures built into every workflow.</p>
+                    <div class="feature-detail">Tamper-proof, cryptographically verifiable</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Portable &amp; Offline</h3>
+                    <p>Run anywhere. No server needed.</p>
+                    <div class="feature-detail">Single .epi file works everywhere, forever</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Aware Recording</h3>
+                    <p>Intercepts OpenAI, Anthropic, Ollama calls.</p>
+                    <div class="feature-detail">Caches LLM responses for deterministic replay</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Competitive Advantage Section -->
+    <section class="competitive" id="competitive">
+        <div class="container">
+            <h2 class="section-title">EPI vs 12 Leading AI Workflow Platforms</h2>
+            <p class="competitive-subtitle">Comprehensive Competitive Analysis: Tools track metadata. <strong>EPI records legal-grade evidence.</strong></p>
+            
+            <div class="comparison-table-wrapper">
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Self-Contained Package</th>
+                                <th>Deterministic Replay</th>
+                                <th>Cryptographic Verification</th>
+                                <th>LLM/API Call Capture</th>
+                                <th>Audit Trail Ready</th>
+                                <th>Offline Reproducibility</th>
+                                <th>Cost to Reproduce</th>
+                                <th>Regulatory Compliance</th>
+                                <th>Non-Technical Viewer</th>
+                                <th>Enterprise Ready</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="highlight-row">
+                                <td class="platform-name"><strong>EPI</strong></td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full cost-highlight"><strong>Near-zero</strong></td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">MLflow</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Weights &amp; Biases</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">DVC</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Kubeflow</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Apache Airflow</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Prefect</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Pachyderm</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">ClearML</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">DagsHub</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Union.ai</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Vellum AI</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                            </tr>
+                            <tr>
+                                <td class="platform-name">Neptune.ai</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-none">$1-3.2M</td>
+                                <td class="capability-none">❌</td>
+                                <td class="capability-partial">⚠️</td>
+                                <td class="capability-full">✅</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- EPI Unique Advantages Section -->
+            <div class="unique-advantages">
+                <h3 class="advantages-title">Why EPI is Different - 6 Unique Competitive Advantages</h3>
+                <div class="advantages-grid">
+                    <div class="advantage-card">
+                        <div class="advantage-icon">📦</div>
+                        <h4>Only Tool with Self-Contained Packages</h4>
+                        <p class="advantage-impact">Single .epi ZIP file with everything needed - truly portable like PDFs</p>
+                        <p class="advantage-detail">No external dependencies. No cloud storage required. Works everywhere, forever.</p>
+                    </div>
+                    
+                    <div class="advantage-card">
+                        <div class="advantage-icon">🔄</div>
+                        <h4>Only Tool with Deterministic Replay</h4>
+                        <p class="advantage-impact">Cached responses guarantee identical outputs, $0 reproduction cost</p>
+                        <p class="advantage-detail">Replay workflows without re-running expensive API calls or model inference.</p>
+                    </div>
+                    
+                    <div class="advantage-card">
+                        <div class="advantage-icon">🔐</div>
+                        <h4>Only Tool with Cryptographic Verification</h4>
+                        <p class="advantage-impact">Ed25519 signatures + SHA-256 hashes create tamper-proof evidence</p>
+                        <p class="advantage-detail">Legal-grade proof of authenticity. Detect any modification instantly.</p>
+                    </div>
+                    
+                    <div class="advantage-card">
+                        <div class="advantage-icon">🤖</div>
+                        <h4>Only Tool Capturing Full LLM Responses</h4>
+                        <p class="advantage-impact">Complete prompt-response pairs cached - proves every AI decision</p>
+                        <p class="advantage-detail">Record OpenAI, Anthropic, Ollama calls with full context and metadata.</p>
+                    </div>
+                    
+                    <div class="advantage-card">
+                        <div class="advantage-icon">⚖️</div>
+                        <h4>Only Tool Purpose-Built for Regulatory Compliance</h4>
+                        <p class="advantage-impact">EU AI Act, FDA, RBI, SEC ready on day one</p>
+                        <p class="advantage-detail">Built-in audit trails meet global regulatory requirements out of the box.</p>
+                    </div>
+                    
+                    <div class="advantage-card">
+                        <div class="advantage-icon">👁️</div>
+                        <h4>Only Tool with Offline-First Static Viewer</h4>
+                        <p class="advantage-impact">Safe HTML viewer, no code execution, accessible to non-technical users</p>
+                        <p class="advantage-detail">Compliance officers and auditors can review evidence without technical setup.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases" id="use-cases">
+        <div class="container">
+            <h2 class="section-title">Who Uses EPI?</h2>
+            
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-icon">🏦</div>
+                    <h3>Financial Services</h3>
+                    <p class="use-case-compliance">RBI FREE-AI Compliant</p>
+                    <ul class="use-case-features">
+                        <li>LLM decision audit trails</li>
+                        <li>KYC/AML reproducibility</li>
+                        <li>Model explainability logs</li>
+                    </ul>
+                    <p class="use-case-impact">"Prove every credit decision to regulators"</p>
+                    <a href="#demo" class="use-case-link">View fintech .epi example →</a>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">🏥</div>
+                    <h3>Healthcare &amp; Pharma</h3>
+                    <p class="use-case-compliance">FDA 2024-25 Ready</p>
+                    <ul class="use-case-features">
+                        <li>Traceable AI diagnostics</li>
+                        <li>Bias audit documentation</li>
+                        <li>Clinical safety validation</li>
+                    </ul>
+                    <p class="use-case-impact">"Document AI reasoning in medical decisions"</p>
+                    <a href="#demo" class="use-case-link">View healthcare .epi example →</a>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">🔬</div>
+                    <h3>AI Research &amp; Development</h3>
+                    <p class="use-case-compliance">Publishing Standards</p>
+                    <ul class="use-case-features">
+                        <li>Peer-review reproducibility</li>
+                        <li>Dataset/model lineage tracking</li>
+                        <li>Non-deterministic debugging</li>
+                    </ul>
+                    <p class="use-case-impact">"Publish papers with verifiable .epi artifacts"</p>
+                    <a href="#demo" class="use-case-link">View research .epi example →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed File Structure Section -->
+    <section class="file-structure-detail" id="file-structure">
+        <div class="container">
+            <h2 class="section-title">Inside a .epi File: Complete Anatomy</h2>
+            <p class="file-structure-intro">Every .epi file is a self-contained ZIP archive with everything needed to prove, reproduce, and audit an AI workflow.</p>
+            
+            <div class="file-explorer">
+                <div class="explorer-item explorer-root">
+                    <div class="explorer-header" onclick="toggleExplorer(this)">
+                        <span class="explorer-icon">📦</span>
+                        <span class="explorer-name">.epi</span>
+                        <span class="explorer-type">(application/epi+zip)</span>
+                        <span class="explorer-toggle">▼</span>
+                    </div>
+                    <div class="explorer-content">
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">📄</span>
+                                <span class="explorer-name">mimetype</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Content:</strong> "application/epi+zip" (stored, uncompressed)<br>
+                                    <strong>Purpose:</strong> Identifies file as EPI container (like PDF magic bytes)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">📋</span>
+                                <span class="explorer-name">manifest.json</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Workflow metadata (id, created_at, author)</li>
+                                        <li>Environment info (OS, Python version, dependencies)</li>
+                                        <li>Entrypoint (command or script executed)</li>
+                                        <li>Replay policy (offline_only/prefer_offline/allow_network)</li>
+                                        <li>Digital signature (Ed25519)</li>
+                                        <li>Hash verification info</li>
+                                    </ul>
+                                    <strong>Description:</strong> Global header of the package; like PDF catalog
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">📝</span>
+                                <span class="explorer-name">steps.jsonl</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Format:</strong> NDJSON (newline-delimited JSON)<br>
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Chronological timeline of all steps</li>
+                                        <li>Shell commands (with stdout/stderr/exit code)</li>
+                                        <li>Python function calls (params, return values)</li>
+                                        <li>LLM calls (model, prompt, response, latency)</li>
+                                        <li>HTTP requests (URL, method, headers, response)</li>
+                                        <li>File I/O operations (read/write paths, hashes)</li>
+                                        <li>Each step immutably hashed (SHA-256)</li>
+                                    </ul>
+                                    <strong>Description:</strong> Immutable execution timeline; the heart of reproducibility
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">📁</span>
+                                <span class="explorer-name">artifacts/</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Structure:</strong> sha256_&lt;hash&gt;.&lt;extension&gt;<br>
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>All outputs captured during execution</li>
+                                        <li>Files, logs, plots, images, models</li>
+                                        <li>Content-addressed (hash-based naming)</li>
+                                        <li>Tamper-evident structure</li>
+                                    </ul>
+                                    <strong>Description:</strong> All workflow outputs preserved
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">💾</span>
+                                <span class="explorer-name">cache/</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Structure:</strong> &lt;provider&gt;/&lt;key&gt;.json<br>
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Cached API responses (OpenAI, Anthropic, etc.)</li>
+                                        <li>Full LLM request/response pairs</li>
+                                        <li>Enables deterministic replay</li>
+                                    </ul>
+                                    <strong>Example:</strong> cache/openai/chat_completion_abc123.json<br>
+                                    <strong>Description:</strong> Why EPI enables $0-cost reproduction
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">🌍</span>
+                                <span class="explorer-name">env.json</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Operating system (OS, version)</li>
+                                        <li>Python version and packages</li>
+                                        <li>GPU/hardware info</li>
+                                        <li>Environment variables (redacted)</li>
+                                        <li>Docker/container info</li>
+                                    </ul>
+                                    <strong>Description:</strong> Environment snapshot for reproducibility
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">✓</span>
+                                <span class="explorer-name">checks.json</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Verification DSL rules:</strong>
+                                    <ul>
+                                        <li>"assert file exists: path/to/file"</li>
+                                        <li>"response contains: search_string"</li>
+                                        <li>"exit code: 0"</li>
+                                        <li>"LLM response matches: expected_output"</li>
+                                        <li>Custom validation logic</li>
+                                    </ul>
+                                    <strong>Description:</strong> Automated verification tests
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">👁️</span>
+                                <span class="explorer-name">viewer/</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Embedded static HTML + JS</li>
+                                        <li>index.html (entry point)</li>
+                                        <li>CSS/JS for timeline visualization</li>
+                                        <li>No code execution (read-only)</li>
+                                        <li>Works offline in any browser</li>
+                                    </ul>
+                                    <strong>Description:</strong> Safe, portable evidence viewer
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">🔐</span>
+                                <span class="explorer-name">signatures/</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Detached signatures</li>
+                                        <li>Ed25519 public key</li>
+                                        <li>Cryptographic attestations</li>
+                                        <li>Signer identity information</li>
+                                    </ul>
+                                    <strong>Description:</strong> Legal-grade proof of authenticity
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">🔗</span>
+                                <span class="explorer-name">provenance.json</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Git repository refs/commits</li>
+                                        <li>Dataset IDs and versions</li>
+                                        <li>Model checksums</li>
+                                        <li>Data lineage</li>
+                                        <li>Author attribution</li>
+                                    </ul>
+                                    <strong>Description:</strong> Full chain of custody
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="explorer-item">
+                            <div class="explorer-header" onclick="toggleExplorer(this)">
+                                <span class="explorer-icon">🔒</span>
+                                <span class="explorer-name">attachments/</span>
+                                <span class="explorer-toggle">▼</span>
+                            </div>
+                            <div class="explorer-content">
+                                <div class="explorer-detail">
+                                    <strong>Contains:</strong>
+                                    <ul>
+                                        <li>Encrypted large blobs (optional)</li>
+                                        <li>AES-GCM encryption</li>
+                                        <li>Compression support</li>
+                                    </ul>
+                                    <strong>Description:</strong> For confidential or large files
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="file-structure-note">
+                <p><strong>No external dependencies. No proprietary formats. Pure evidence.</strong></p>
+                <a href="#request-demo" class="btn btn--primary">Download Example .epi with Full Structure</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regulatory Drivers Section -->
+    <section class="regulations" id="regulations">
+        <div class="container">
+            <h2 class="section-title">Why Now? Global Regulatory Mandate</h2>
+            <p class="regulations-intro">AI governance is no longer optional. Major economies are enforcing audit trail requirements.</p>
+            
+            <div class="regulations-grid">
+                
+                <!-- EU AI Act -->
+                <div class="regulation-card">
+                    <div class="regulation-header">
+                        <div class="regulation-icon">🇪🇺</div>
+                        <div>
+                            <h3>EU AI Act</h3>
+                            <div class="regulation-date">Enforcement: August 2, 2026</div>
+                        </div>
+                    </div>
+                    <div class="regulation-content">
+                        <div class="regulation-penalty">Penalties: €35M or 7% of annual revenue</div>
+                        
+                        <h4>Key Requirements:</h4>
+                        <ul class="regulation-list">
+                            <li>Complete audit trails for high-risk AI</li>
+                            <li>Activity logging and traceability</li>
+                            <li>Risk assessment and mitigation</li>
+                            <li>High-quality datasets</li>
+                            <li>Detailed documentation</li>
+                            <li>Human oversight measures</li>
+                            <li>Robustness, cybersecurity, accuracy</li>
+                        </ul>
+                        
+                        <h4>Timeline:</h4>
+                        <div class="regulation-timeline">
+                            <div class="timeline-point">
+                                <strong>Feb 2, 2025:</strong> Prohibitions start
+                            </div>
+                            <div class="timeline-point">
+                                <strong>Aug 2, 2026:</strong> High-risk AI compliance deadline
+                            </div>
+                            <div class="timeline-point">
+                                <strong>Aug 2, 2027:</strong> All systems must comply
+                            </div>
+                        </div>
+                        
+                        <div class="epi-value">
+                            <strong>EPI Value:</strong> EPI's .epi files provide audit-grade logging and traceability automatically
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- US Executive Orders -->
+                <div class="regulation-card">
+                    <div class="regulation-header">
+                        <div class="regulation-icon">🇺🇸</div>
+                        <div>
+                            <h3>US Executive Orders (2025)</h3>
+                            <div class="regulation-date">Signed: July 23, 2025</div>
+                        </div>
+                    </div>
+                    <div class="regulation-content">
+                        <div class="regulation-penalty">Scope: Federal AI procurement &amp; exports</div>
+                        
+                        <h4>Three Executive Orders:</h4>
+                        <ul class="regulation-list">
+                            <li>Data center acceleration</li>
+                            <li>Global U.S. AI competitiveness</li>
+                            <li>Unbiased AI principles for federal procurement</li>
+                        </ul>
+                        
+                        <h4>Unbiased AI Requirements:</h4>
+                        <ul class="regulation-list">
+                            <li>No "woke" or ideologically-biased AI models</li>
+                            <li>Technical limitations acknowledged</li>
+                            <li>Sensitive technical data protected</li>
+                            <li>Latitude given for vendor implementation</li>
+                        </ul>
+                        
+                        <h4>American AI Exports Program:</h4>
+                        <p>Emphasis on explainability and reliability for global AI leadership</p>
+                        
+                        <div class="epi-value">
+                            <strong>EPI Value:</strong> EPI proves AI model behavior through verifiable evidence, satisfying unbiased AI principles
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- RBI AI Governance -->
+                <div class="regulation-card">
+                    <div class="regulation-header">
+                        <div class="regulation-icon">🇮🇳</div>
+                        <div>
+                            <h3>RBI AI Governance (India)</h3>
+                            <div class="regulation-date">Effective: 2025</div>
+                        </div>
+                    </div>
+                    <div class="regulation-content">
+                        <div class="regulation-penalty">Scope: Financial services AI systems</div>
+                        
+                        <h4>Framework Principles:</h4>
+                        <ul class="regulation-list">
+                            <li>People-centricity</li>
+                            <li>Fairness</li>
+                            <li>Accountability in AI-driven decisions</li>
+                            <li>Transparency in model operations</li>
+                            <li>Compliance with ethical standards</li>
+                            <li>Risk management across AI systems</li>
+                        </ul>
+                        
+                        <h4>Private Sector Requirements:</h4>
+                        <ul class="regulation-list">
+                            <li>Publish transparency reports</li>
+                            <li>Provide grievance redress systems</li>
+                            <li>Use techno-legal solutions for risk management</li>
+                        </ul>
+                        
+                        <h4>Governance Structure:</h4>
+                        <ul class="regulation-list">
+                            <li>RBI (banking/finance oversight)</li>
+                            <li>NITI Aayog (policy coordination)</li>
+                            <li>Bureau of Indian Standards (technical standards)</li>
+                            <li>AI Safety Institute (IndiaAI Mission)</li>
+                        </ul>
+                        
+                        <div class="epi-value">
+                            <strong>EPI Value:</strong> EPI provides transparent, reproducible evidence trail meeting RBI accountability requirements
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FDA Healthcare -->
+                <div class="regulation-card">
+                    <div class="regulation-header">
+                        <div class="regulation-icon">🏥</div>
+                        <div>
+                            <h3>FDA &amp; Healthcare Standards</h3>
+                            <div class="regulation-date">Guidance: 2024-2025</div>
+                        </div>
+                    </div>
+                    <div class="regulation-content">
+                        <div class="regulation-penalty">Scope: Clinical AI systems</div>
+                        
+                        <h4>Requirements:</h4>
+                        <ul class="regulation-list">
+                            <li>Reproducible results documentation</li>
+                            <li>Audit trails for every decision</li>
+                            <li>Bias and fairness validation</li>
+                            <li>Safety and efficacy evidence</li>
+                        </ul>
+                        
+                        <p>Medical device standards align with EU AI Act requirements for high-risk systems.</p>
+                        
+                        <div class="epi-value">
+                            <strong>EPI Value:</strong> EPI captures complete clinical decision audit trail, meeting FDA documentation standards
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Section -->
+    <section class="technical" id="technical">
+        <div class="container">
+            <h2 class="section-title">Built for Developers</h2>
+            <p class="technical-subtitle">Simple, Powerful CLI</p>
+            
+            <div class="code-block-wrapper">
+                <div class="code-block">
+                    <div class="code-header">Terminal</div>
+                    <pre><code>pip install epi-recorder
+
+epi record --out run.epi -- python train.py
+epi verify run.epi
+epi view run.epi</code></pre>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">Python API</div>
+                    <pre><code>from epi_recorder import record
+
+with record("my.epi", workflow_name="demo"):
+    run_experiment()</code></pre>
+                </div>
+            </div>
+            
+            <div class="technical-info">
+                <div class="info-box">
+                    <strong>Supports:</strong> Python, Shell, HTTP, LLM APIs<br>
+                    <strong>Integration:</strong> Jupyter notebooks, FastAPI, CLI tools<br>
+                    <strong>Coming Soon:</strong> Node.js, Go, Rust SDKs
+                </div>
+            </div>
+            
+            <div class="technical-structure">
+                <h3>Inside a MVP of epi-recorder (.epi File)</h3>
+                <div class="file-structure">
+                    <div class="file-tree">
+                        <div class="tree-item tree-root">.epi <span class="file-type">(application/epi+zip)</span></div>
+                        <div class="tree-item tree-child">├── manifest.json <span class="file-desc">(metadata + signature)</span></div>
+                        <div class="tree-item tree-child">├── steps.jsonl <span class="file-desc">(timeline of steps)</span></div>
+                        <div class="tree-item tree-child">├── artifacts/ <span class="file-desc">(captured outputs)</span></div>
+                        <div class="tree-item tree-child">└── verification/ <span class="file-desc">(proof data)</span></div>
+                    </div>
+                    <p class="file-note">Everything needed to verify and replay, in one portable file</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quality Section -->
+    <section class="quality" id="quality">
+        <div class="container">
+            <h2 class="section-title">Enterprise-Grade Correctness</h2>
+            
+            <div class="quality-metrics">
+                <div class="metric-bar">
+                    <div class="metric-label">Security-critical modules</div>
+                    <div class="metric-progress">
+                        <div class="metric-fill" style="width: 100%">100%</div>
+                    </div>
+                    <div class="metric-check">✅</div>
+                </div>
+                
+                <div class="metric-bar">
+                    <div class="metric-label">CLI/Core coverage</div>
+                    <div class="metric-progress">
+                        <div class="metric-fill" style="width: 95%">95%</div>
+                    </div>
+                    <div class="metric-check">✅</div>
+                </div>
+                
+                <div class="metric-bar">
+                    <div class="metric-label">Full repository coverage</div>
+                    <div class="metric-progress">
+                        <div class="metric-fill" style="width: 79%">79%</div>
+                    </div>
+                    <div class="metric-check">✅</div>
+                </div>
+            </div>
+            
+            <div class="quality-stats">
+                <div class="stat-item">231 tests passing</div>
+                <div class="stat-divider">|</div>
+                <div class="stat-item">0 critical vulnerabilities</div>
+                <div class="stat-divider">|</div>
+                <div class="stat-item">Production-ready</div>
+            </div>
+            
+            <p class="quality-note">Built with cryptography, container packaging, and schema validation</p>
+        </div>
+    </section>
+
+    <!-- Market Opportunity Section -->
+    <section class="market" id="market">
+        <div class="container">
+            <h2 class="section-title">A $150B+ Market Ready Today</h2>
+            
+            <div class="market-stats">
+                <div class="stat-card">
+                    <div class="stat-number">$67.4B</div>
+                    <div class="stat-label">Lost annually to AI failures</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Cannot be reproduced</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">EU AI Act</div>
+                    <div class="stat-label">Forces audit trails (Aug 2026)</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">88%</div>
+                    <div class="stat-label">Enterprises use AI (no governance)</div>
+                </div>
+            </div>
+            
+            <p class="market-note">Regulatory mandates meet urgent business need</p>
+        </div>
+    </section>
+
+    <!-- Founder Section -->
+    <section class="founder" id="founder">
+        <div class="container">
+            <h2 class="section-title">Built by AI Verification Expert</h2>
+            
+            <div class="founder-card">
+                <div class="founder-avatar">
+                    <div class="avatar-circle">MA</div>
+                </div>
+                
+                <div class="founder-info">
+                    <h3>Mohd Ibrahim Afridi</h3>
+                    <p class="founder-title">AI/ML Engineer &amp; Entrepreneur</p>
+                    <p class="founder-bio">
+                        5+ years building verifiable, evidence-bound AI systems. 
+                        Published researcher on scalable safety-aware architectures.
+                    </p>
+                    
+                    <ul class="founder-highlights">
+                        <li>✓ Created Evidence-Bound Answering System, TRUTHLENS, Proof-Answers</li>
+                        <li>✓ Published: Grok-3, Grok-3+, Dynamic CoT Reward Models (peer-reviewed)</li>
+                        <li>✓ Founded XCL3NT (AI e-commerce) &amp; Velroy Eagle (logistics)</li>
+                        <li>✓ Open-source contributor (20+ projects on GitHub)</li>
+                    </ul>
+                    
+                    <div class="founder-actions">
+                        <a href="https://mohdibrahimaiml.github.io/portfolio-/" target="_blank" class="btn btn--primary">View Full Portfolio</a>
+                        <a href="https://github.com/mohdibrahimaiml" target="_blank" class="btn btn--outline">GitHub Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section class="roadmap" id="roadmap">
+        <div class="container">
+            <h2 class="section-title">Our Path Forward</h2>
+            
+            <div class="roadmap-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">Q1 2026</div>
+                    <div class="timeline-content">
+                        <h4>EPI Cloud Verifier &amp; Registry</h4>
+                        <p>Cloud-based verification service and .epi file registry</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">Q2 2026</div>
+                    <div class="timeline-content">
+                        <h4>3 Enterprise Pilots</h4>
+                        <p>Fintech + Healthcare production deployments</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">Q3 2026</div>
+                    <div class="timeline-content">
+                        <h4>Compliance Certification</h4>
+                        <p>EU AI Act Ready + regulatory framework alignment</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker">Q4 2026</div>
+                    <div class="timeline-content">
+                        <h4>Open Format Spec v1</h4>
+                        <p>LangChain, LlamaIndex, and major LLM framework integrations</p>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="roadmap-note">Community-driven, transparent development</p>
+        </div>
+    </section>
+
+    <!-- Business Model Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Flexible Plans for Every Organization</h2>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Open Source</h3>
+                    <div class="pricing-price">Free</div>
+                    <ul class="pricing-features">
+                        <li>✓ CLI + SDK</li>
+                        <li>✓ Local verification</li>
+                        <li>✓ Community support</li>
+                    </ul>
+                    <p class="pricing-target"><strong>Best for:</strong> Individual developers, researchers</p>
+                    <a href="#request-demo" class="btn btn--outline btn--full-width">Get Started</a>
+                </div>
+                
+                <div class="pricing-card pricing-card--featured">
+                    <div class="pricing-badge">Popular</div>
+                    <h3>Team</h3>
+                    <div class="pricing-price">$500-5K<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ Everything in Open Source</li>
+                        <li>✓ Cloud verification dashboard</li>
+                        <li>✓ 50 workflow runs/month</li>
+                        <li>✓ Team collaboration</li>
+                    </ul>
+                    <p class="pricing-target"><strong>Best for:</strong> ML teams, startups</p>
+                    <a href="#request-demo" class="btn btn--primary btn--full-width">Request Demo</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="pricing-price">Custom</div>
+                    <ul class="pricing-features">
+                        <li>✓ Everything in Team</li>
+                        <li>✓ Unlimited runs</li>
+                        <li>✓ RBAC + audit reports</li>
+                        <li>✓ On-prem deployment</li>
+                        <li>✓ SLA support</li>
+                    </ul>
+                    <p class="pricing-target"><strong>Best for:</strong> Regulated industries, large orgs</p>
+                    <a href="#request-demo" class="btn btn--outline btn--full-width">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- India First Section -->
+    <section class="india" id="india">
+        <div class="container">
+            <h2 class="section-title">Built in India. For the World.</h2>
+            
+            <div class="india-grid">
+                <div class="india-card">
+                    <div class="india-number">01</div>
+                    <p>India leads Asia in AI governance readiness</p>
+                </div>
+                
+                <div class="india-card">
+                    <div class="india-number">02</div>
+                    <p>RBI FREE-AI Framework sets global standards</p>
+                </div>
+                
+                <div class="india-card">
+                    <div class="india-number">03</div>
+                    <p>India's DPI model aligns with open standards</p>
+                </div>
+                
+                <div class="india-card">
+                    <div class="india-number">04</div>
+                    <p>EPI positions India at forefront of AI audit infrastructure</p>
+                </div>
+            </div>
+            
+            <p class="india-note">Applying for Rainmatter by Zerodha acceleration program</p>
+        </div>
+    </section>
+
+    <!-- Demo Request Section -->
+    <section class="demo-request" id="request-demo">
+        <div class="container">
+            <h2 class="section-title">Ready to Build the Evidence Layer of AI?</h2>
+            
+            <div class="demo-form-wrapper">
+                <form class="demo-form" id="demoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company" class="form-label">Company</label>
+                            <input type="text" id="company" name="company" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="role" class="form-label">Role</label>
+                            <select id="role" name="role" class="form-control">
+                                <option value="">Select your role</option>
+                                <option value="engineer">Engineer/Developer</option>
+                                <option value="researcher">Researcher</option>
+                                <option value="compliance">Compliance Officer</option>
+                                <option value="executive">Executive/Decision Maker</option>
+                                <option value="investor">Investor</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message" class="form-label">Message *</label>
+                        <textarea id="message" name="message" class="form-control" rows="4" required placeholder="Tell us about your use case and what you'd like to see in the demo..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn--primary btn--lg btn--full-width">Request MVP / Demo</button>
+                </form>
+                
+                <div class="demo-success" id="demoSuccess" style="display: none;">
+                    <div class="success-icon">✅</div>
+                    <h3>Request Submitted!</h3>
+                    <p>Thank you for your interest in EPI. We'll be in touch within 24 hours.</p>
+                </div>
+            </div>
+            
+            <div class="demo-divider">OR</div>
+            
+            <div class="demo-contact">
+                <p><strong>Contact Founder Directly:</strong></p>
+                <p>
+                    Email: <a href="mailto:epitechforworld@outlook.com">epitechforworld@outlook.com</a> | 
+                    Phone: <a href="tel:+918121766711">+91-81217-66711</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="https://github.com/mohdibrahimaiml" target="_blank">GitHub</a></li>
+                        <li><a href="#technical">Documentation</a></li>
+                        <li><a href="#demo">Demo .epi File</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="https://mohdibrahimaiml.github.io/portfolio-/" target="_blank">Founder Portfolio</a></li>
+                        <li><a href="https://mohdibrahimaiml.github.io/portfolio-/" target="_blank">Research Papers</a></li>
+                        <li><a href="#roadmap">Roadmap</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#use-cases">Use Case Guides</a></li>
+                        <li><a href="#competitive">Comparisons</a></li>
+                        <li><a href="#request-demo">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 EPI. Open standards for AI evidence. Built in India.</p>
+                <div class="footer-social">
+                    <a href="https://github.com/mohdibrahimaiml" target="_blank" aria-label="GitHub">GitHub</a>
+                    <a href="#" target="_blank" aria-label="LinkedIn">LinkedIn</a>
+                    <a href="#" target="_blank" aria-label="Twitter">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
