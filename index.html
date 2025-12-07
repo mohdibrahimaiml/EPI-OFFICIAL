@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPI LABS — The PDF for AI Workflows</title>
+    <meta name="description"
+        content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible. Transform opaque AI runs into transparent, portable digital proofs.">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epilabs.org/">
+    <meta property="og:title" content="EPI LABS — The PDF for AI Workflows">
+    <meta property="og:description"
+        content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible.">
+    <meta property="og:image" content="https://epilabs.org/epi-file-visual.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://epilabs.org/">
+    <meta property="twitter:title" content="EPI LABS — The PDF for AI Workflows">
+    <meta property="twitter:description"
+        content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible.">
+    <meta property="twitter:image" content="https://epilabs.org/epi-file-visual.png">
+
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Top Anchor -->
+    <div id="top"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container nav-container">
+            <div class="nav-logo">
+                <a href="index.html" title="Go to Home">
+                    <img src="logo.png" alt="EPI LABS" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="how-it-works.html">How It Works</a>
+                <a href="use-cases.html">Use Cases</a>
+                <a href="vision.html">Vision</a>
+                <a href="index.html#get-started">Get Started</a>
+                <a href="vision.html#founder">Team</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-cta">
+                <a href="https://github.com/mohdibrahimaiml/EPI-V1.1" class="btn-secondary" target="_blank">GitHub</a>
+                <a href="contact.html" class="btn-primary">Request Deck</a>
+            </div>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Text Only) -->
+    <section class="hero" id="home">
+        <canvas id="particle-canvas"></canvas>
+        <div class="container" style="text-align: center; max-width: 800px;">
+            <div class="hero-content" style="max-width: 100%;">
+                <div class="hero-badge"
+                    style="border-color: var(--color-violet-500); color: var(--color-violet-500); background: rgba(139, 92, 246, 0.1);">
+                    🚀 v2.0.0 — Production Ready</div>
+                <h1 class="hero-title text-gradient" style="font-size: 4rem;">The PDF
+                    for AI Workflows</h1>
+                <p class="hero-subtitle">Stop relying on screenshots. <strong>Evidence Packaged Infrastructure
+                        (.epi)</strong> is the open standard for
+                    <strong>self-contained, cryptographically signed evidence</strong> that makes AI verifiable
+                    everyday.
+                </p>
+                <div class="hero-cta" style="justify-content: center;">
+                    <a href="how-it-works.html" class="btn-primary">See the Evidence Package →</a>
+                    <a href="https://pypi.org/project/epi-recorder/" class="btn-secondary" target="_blank">
+                        <span>pip install epi-recorder</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Demo Section (Separate, Fully Visible) -->
+    <section class="section" id="product" style="padding-top: 4rem;">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">See It In Action</h2>
+                <p class="section-desc">From code execution to sealed evidence in seconds.</p>
+            </div>
+            <div style="display: flex; gap: 3rem; align-items: center; justify-content: center; flex-wrap: wrap;">
+                <!-- The Terminal (Creation) -->
+                <div class="terminal-window terminal-interactive" style="flex: 1; min-width: 350px; max-width: 500px;">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="terminal-title">epi-recorder v2.0</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-output">
+                            <div class="terminal-line"><span class="prompt">$</span> epi record experiment.py</div>
+                            <div class="terminal-line info">Capturing runtime context...</div>
+                            <div class="terminal-line info">Intercepting LLM calls...</div>
+                            <div class="terminal-line success">✔ Evidence packaged: <span
+                                    style="color: var(--color-primary-light);">scan_01.epi</span></div>
+                            <div class="terminal-line"><span class="prompt">$</span> _</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The File (Result) -->
+                <div class="epi-file-visual" style="min-width: 280px;">
+                    <div class="file-header">
+                        <div class="file-type">.epi</div>
+                        <div
+                            style="width: 8px; height: 8px; background: var(--color-success); border-radius: 50%; box-shadow: 0 0 10px var(--color-success);">
+                        </div>
+                    </div>
+                    <div class="file-body">
+                        <div class="file-line medium"></div>
+                        <div class="file-line"></div>
+                        <div class="file-line short"></div>
+                        <div class="file-line medium" style="margin-top: 1rem; opacity: 0.5;"></div>
+                        <div class="file-line short" style="opacity: 0.5;"></div>
+                    </div>
+                    <div class="file-footer">
+                        <div class="seal-icon">🔒</div>
+                        <div class="seal-info">
+                            <div class="seal-text">Cryptographic Seal</div>
+                            <div class="seal-status">✔ Verified</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="hero-stats" style="margin-top: 4rem; justify-content: center;">
+                <div class="stat-item">
+                    <div class="stat-value">v2.0.0</div>
+                    <div class="stat-label">Production Ready</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">$160B+</div>
+                    <div class="stat-label">TAM (6 Industries)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Open Source</div>
+                    <div class="stat-label">Apache 2.0 License</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section class="section get-started-section" id="get-started">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started with epi-recorder v2.0.0</h2>
+                <p class="section-desc">Production-ready MVP. Install in seconds, record your first workflow in minutes.
+                </p>
+            </div>
+            <div class="install-demo">
+                <div class="install-steps">
+                    <div class="install-step">
+                        <div class="step-number">1</div>
+                        <h4>Install</h4>
+                        <div class="code-block">
+                            <code>pip install epi-recorder</code>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-number">2</div>
+                        <h4>Record</h4>
+                        <div class="code-block">
+                            <code>epi run my_script.py</code>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-number">3</div>
+                        <h4>Verify</h4>
+                        <div class="code-block">
+                            <code>epi verify output.epi</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cli-reference">
+                    <h3>Complete CLI Reference (v2.0.0)</h3>
+
+                    <!-- Core Commands -->
+                    <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">📹 Core
+                        Commands</h4>
+                    <div class="cli-commands">
+                        <div class="cli-command">
+                            <code class="command-name">epi run &lt;script.py&gt;</code>
+                            <p>Zero-config recording. Auto-verifies and opens viewer. Simplest way to record.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi record --out &lt;file.epi&gt; -- &lt;cmd&gt;</code>
+                            <p>Advanced recording with explicit output filename. Record any shell command.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi verify &lt;file.epi&gt;</code>
+                            <p>Verify integrity and authenticity (structural, integrity, signature checks).</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi verify &lt;file.epi&gt; --verbose</code>
+                            <p>Verbose verification output with detailed check results.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi verify &lt;file.epi&gt; --json</code>
+                            <p>Output verification results as JSON for CI/CD integration.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi view &lt;file.epi&gt;</code>
+                            <p>Open recording in browser with interactive timeline viewer.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi ls</code>
+                            <p>List all recordings in ./epi-recordings/ directory.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                    </div>
+
+                    <!-- Key Management -->
+                    <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">🔐 Key
+                        Management</h4>
+                    <div class="cli-commands">
+                        <div class="cli-command">
+                            <code class="command-name">epi keys list</code>
+                            <p>List all Ed25519 keypairs in your keystore.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi keys generate</code>
+                            <p>Generate a new Ed25519 keypair (auto-generated on first use).</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi keys generate --name &lt;keyname&gt;</code>
+                            <p>Generate a named keypair for team/project separation.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi keys export --name &lt;keyname&gt;</code>
+                            <p>Export public key for sharing with verifiers.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                    </div>
+
+                    <!-- Help & Info -->
+                    <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">📚 Help &
+                        Info</h4>
+                    <div class="cli-commands">
+                        <div class="cli-command">
+                            <code class="command-name">epi --help</code>
+                            <p>Show all available commands and usage information.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi help</code>
+                            <p>Show extended quickstart guide with examples.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi version</code>
+                            <p>Show EPI version information (currently v2.0.0).</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">epi &lt;command&gt; --help</code>
+                            <p>Get detailed help for any specific command.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                    </div>
+
+                    <!-- Python API -->
+                    <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">🐍 Python API
+                    </h4>
+                    <div class="cli-commands">
+                        <div class="cli-command">
+                            <code class="command-name">@record</code>
+                            <p>Decorator to record a function. <code>@record(goal="test")</code></p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                        <div class="cli-command">
+                            <code class="command-name">with record("file.epi", goal="...")</code>
+                            <p>Context manager. <strong>Tip:</strong> Always provide an explicit filename when adding
+                                metadata like <code>goal</code> or <code>metrics</code>.</p>
+                            <span class="badge shipped">✅ Shipped</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="install-links">
+                    <a href="https://pypi.org/project/epi-recorder/" class="btn-primary" target="_blank">📦 PyPI</a>
+                    <a href="https://github.com/mohdibrahimaiml/EPI-V1.1" class="btn-secondary" target="_blank">💻
+                        GitHub</a>
+                    <a href="https://github.com/mohdibrahimaiml/EPI-V1.1#readme" class="btn-secondary"
+                        target="_blank">📚 Docs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" title="Go to Home">
+                        <img src="logo.png" alt="EPI LABS" class="footer-logo">
+                    </a>
+                    <p>Building the trust layer for the AI economy.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="how-it-works.html">How It Works</a>
+                        <a href="use-cases.html">Use Cases</a>
+                        <a href="https://github.com/mohdibrahimaiml/EPI-V1.1#readme" target="_blank">Documentation</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="vision.html">Vision</a>
+                        <a href="vision.html#founder">Team</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="https://github.com/mohdibrahimaiml/EPI-V1.1" target="_blank">GitHub</a>
+                        <a href="https://pypi.org/project/epi-recorder/" target="_blank">PyPI</a>
+                        <a href="https://github.com/mohdibrahimaiml/EPI-V1.1/blob/main/LICENSE"
+                            target="_blank">License</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Built with 🇮🇳 for the World. &copy; 2025 EPI LABS. Apache 2.0 License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="particles.js"></script>
+</body>
+
+</html>
