@@ -11,6 +11,7 @@ class TerminalDemo {
         this.body = this.container.querySelector('.terminal-body');
         this.inputLine = null;
         this.isTyping = false;
+        this.isAutoRunning = false;
 
         // Mock File System
         this.files = {
@@ -26,6 +27,9 @@ class TerminalDemo {
     }
 
     init() {
+        // Force scroll to top to prevent browser jump
+        window.scrollTo(0, 0);
+
         this.clear();
         this.clear();
         this.newLine(false); // Don't focus on init
@@ -33,7 +37,10 @@ class TerminalDemo {
         // Focus input on click
         this.container.addEventListener('click', () => {
             const input = this.body.querySelector('.command-input');
-            if (input) input.focus();
+            if (input) {
+                input.disabled = false;
+                input.focus();
+            }
         });
 
         // Initial welcome message
@@ -80,6 +87,8 @@ class TerminalDemo {
         this.inputLine = line.querySelector('.command-input');
         if (autoFocus) {
             this.inputLine.focus();
+        } else {
+            this.inputLine.disabled = true;
         }
 
         // Event Listeners
@@ -91,7 +100,9 @@ class TerminalDemo {
             const cmd = this.inputLine.value.trim();
             this.history.push(cmd);
             this.historyIndex = this.history.length;
-            this.execute(cmd);
+            this.history.push(cmd);
+            this.historyIndex = this.history.length;
+            this.execute(cmd, true); // User always focuses
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (this.historyIndex > 0) {
@@ -110,8 +121,8 @@ class TerminalDemo {
         }
     }
 
-    async execute(cmd) {
-        this.newLine(); // Lock previous line
+    async execute(cmd, autoFocus = true) {
+        this.newLine(!this.isAutoRunning && autoFocus); // Lock previous line
         const parts = cmd.split(' ');
         const program = parts[0];
         const args = parts.slice(1);
@@ -167,7 +178,7 @@ class TerminalDemo {
                 this.print([{ text: `command not found: ${program}`, color: 'text-red' }]);
         }
 
-        this.newLine();
+        this.newLine(!this.isAutoRunning && autoFocus);
         this.scrollToBottom();
     }
 
@@ -266,6 +277,7 @@ class TerminalDemo {
     }
 
     async startAutoDemo() {
+        this.isAutoRunning = true;
         await this.wait(1500);
         await this.type('pip install epi-recorder');
         await this.wait(1000);
@@ -290,7 +302,8 @@ class TerminalDemo {
         }
 
         await this.wait(300);
-        this.execute(text);
+        await this.wait(300);
+        this.execute(text, false); // No focus for auto-runner
         this.isTyping = false;
     }
 }
