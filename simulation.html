@@ -126,8 +126,8 @@
     <section class="section" style="padding-top: 8rem;">
         <div class="container">
             <div class="section-header">
-                <h1 class="section-title">EPI Flight Simulator</h1>
-                <p class="section-desc">Experience the full evidence workflow in real-time.</p>
+                <h1 class="section-title">EPI Workflow Simulator</h1>
+                <p class="section-desc">Experience the complete evidence lifecycle: Install, Record, Verify, View.</p>
             </div>
 
             <div class="sim-container">
@@ -223,6 +223,8 @@
 
                     if (phase === 'view') {
                         document.getElementById('restart-demo').style.display = 'block';
+                        // Open the viewer automatically for the full experience
+                        setTimeout(() => openViewerModal(), 1000);
                     }
                 }
             });
