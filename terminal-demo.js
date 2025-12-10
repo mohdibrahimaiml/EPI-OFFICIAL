@@ -27,7 +27,8 @@ class TerminalDemo {
 
     init() {
         this.clear();
-        this.newLine();
+        this.clear();
+        this.newLine(false); // Don't focus on init
 
         // Focus input on click
         this.container.addEventListener('click', () => {
@@ -50,7 +51,7 @@ class TerminalDemo {
         this.body.innerHTML = '';
     }
 
-    newLine() {
+    newLine(autoFocus = true) {
         // Remove old cursor if exists
         const oldCursor = this.body.querySelector('.cursor');
         if (oldCursor) oldCursor.remove();
@@ -77,7 +78,9 @@ class TerminalDemo {
         this.scrollToBottom();
 
         this.inputLine = line.querySelector('.command-input');
-        this.inputLine.focus();
+        if (autoFocus) {
+            this.inputLine.focus();
+        }
 
         // Event Listeners
         this.inputLine.addEventListener('keydown', (e) => this.handleInput(e));
