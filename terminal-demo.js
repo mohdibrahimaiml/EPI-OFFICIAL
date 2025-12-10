@@ -198,7 +198,9 @@ class TerminalDemo {
             await this.simulateRecording(args[1]);
         } else if (subcmd === 'view') {
             this.print([{ text: 'Opening viewer...', color: 'text-blue' }]);
-            setTimeout(() => openViewerModal(), 800);
+            if (!this.isAutoRunning) {
+                setTimeout(() => openViewerModal(), 800);
+            }
         } else if (subcmd === 'verify') {
             await this.simulateVerification(args[1]);
         } else {
