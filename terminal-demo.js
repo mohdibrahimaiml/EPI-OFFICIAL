@@ -4,8 +4,9 @@
  */
 
 class TerminalDemo {
-    constructor(elementId) {
+    constructor(elementId, options = {}) {
         this.container = document.getElementById(elementId);
+        this.options = options; // { onPhaseChange: (phase) => {} }
         if (!this.container) return;
 
         this.body = this.container.querySelector('.terminal-body');
@@ -229,6 +230,8 @@ class TerminalDemo {
     }
 
     async simulatePip(args) {
+        if (this.options.onPhaseChange) this.options.onPhaseChange('install');
+
         if (args[0] === 'install' && args[1] === 'epi-recorder') {
             const lines = [
                 { text: 'Collecting epi-recorder', color: 'text-dim' },
@@ -282,8 +285,12 @@ class TerminalDemo {
         this.isAutoRunning = true;
         await this.wait(1500);
         await this.type('pip install epi-recorder');
+
+        if (this.options.onPhaseChange) this.options.onPhaseChange('record');
         await this.wait(1000);
         await this.type('epi run experiment.py');
+
+        if (this.options.onPhaseChange) this.options.onPhaseChange('view');
         await this.wait(3000);
         await this.type('epi view output.epi');
         // Viewer opens automatically from execute logic if mapped? 
@@ -359,7 +366,9 @@ function openViewerModal() {
     modal.classList.add('active');
 }
 
-// Initialize on Load
+// Initialize on Load (only if not simulation page which handles it manually)
 document.addEventListener('DOMContentLoaded', () => {
-    new TerminalDemo('interactive-terminal');
+    if (!document.querySelector('body').innerHTML.includes('EPI Flight Simulator')) {
+        new TerminalDemo('interactive-terminal');
+    }
 });
