@@ -260,9 +260,10 @@ code {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(2, 6, 23, 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
+    background: rgba(2, 6, 23, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 1000;
     transition: all 0.3s ease;
 }
@@ -312,19 +313,35 @@ code {
 
 .nav-links {
     display: flex;
-    gap: var(--space-lg);
-    margin-left: 180px;
+    gap: var(--space-md);
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .nav-links a {
-    color: var(--color-gray-300);
+    color: var(--color-gray-400);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
 .nav-links a:hover {
-    color: var(--color-primary);
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.nav-links a.active {
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
 }
 
 .nav-cta {
@@ -1787,6 +1804,7 @@ html {
     align-items: center;
     gap: 0.25rem;
 }
+
 /* Footer Logo */
 .footer-logo {
     height: 200px;
@@ -2093,11 +2111,11 @@ html {
     .comparison-arrow {
         transform: rotate(90deg);
     }
-    
+
     .vision-metrics {
         gap: 1.5rem;
     }
-    
+
     .v-value {
         font-size: 2rem;
     }
@@ -2244,13 +2262,13 @@ html {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-    
+
     .contact-info {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
     }
-    
+
     .contact-form {
         padding: 1.5rem;
     }
@@ -2264,4 +2282,7 @@ html {
 }
 
 /* Active link state */
-.nav-links a.active { color: var(--color-primary) !important; font-weight: 700; }
+.nav-links a.active {
+    color: var(--color-primary) !important;
+    font-weight: 700;
+}
