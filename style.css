@@ -317,10 +317,13 @@ code {
     transform: translateX(-50%);
     display: flex;
     gap: var(--space-md);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 0.5rem 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    /* Slightly brighter bg */
+    padding: 0.6rem 0.8rem;
+    /* larger padding */
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links a {
