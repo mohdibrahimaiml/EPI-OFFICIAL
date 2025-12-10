@@ -152,6 +152,10 @@ class TerminalDemo {
                 }
                 break;
 
+            case 'pip':
+                await this.simulatePip(args);
+                break;
+
             case 'epi':
                 await this.handleEpiCommand(args);
                 break;
@@ -208,6 +212,23 @@ class TerminalDemo {
         }
     }
 
+    async simulatePip(args) {
+        if (args[0] === 'install' && args[1] === 'epi-recorder') {
+            const lines = [
+                { text: 'Collecting epi-recorder', color: 'text-dim' },
+                { text: '  Downloading epi_recorder-2.0.0-py3-none-any.whl (18 kB)' },
+                { text: 'Installing collected packages: epi-recorder', color: 'text-dim' },
+                { text: 'Successfully installed epi-recorder-2.0.0', color: 'text-green' }
+            ];
+            for (const line of lines) {
+                this.print([line]);
+                await this.wait(Math.random() * 200 + 100);
+            }
+        } else {
+            this.print([{ text: `pip: unknown command or package`, color: 'text-red' }]);
+        }
+    }
+
     async simulateVerification(filename) {
         this.print([
             { text: `Verifying ${filename || 'recording.epi'}...`, color: 'text-dim' }
@@ -243,6 +264,8 @@ class TerminalDemo {
 
     async startAutoDemo() {
         await this.wait(1500);
+        await this.type('pip install epi-recorder');
+        await this.wait(1000);
         await this.type('epi run experiment.py');
         await this.wait(3000);
         await this.type('epi view output.epi');
