@@ -1,0 +1,324 @@
+/**
+ * EPI Terminal Simulator
+ * Provides a realistic typing experience and mock execution of EPI commands.
+ */
+
+class TerminalDemo {
+    constructor(elementId) {
+        this.container = document.getElementById(elementId);
+        if (!this.container) return;
+
+        this.body = this.container.querySelector('.terminal-body');
+        this.inputLine = null;
+        this.isTyping = false;
+
+        // Mock File System
+        this.files = {
+            'experiment.py': '# AI Experiment Workflow\nimport openai\nfrom epi_recorder import record\n\nwith record("exp_01"):\n    print("Running model...")',
+            'README.md': '# My Project\nDocumentation here.',
+            'requirements.txt': 'openai\nepi-recorder\npandas'
+        };
+
+        this.history = [];
+        this.historyIndex = 0;
+
+        this.init();
+    }
+
+    init() {
+        this.clear();
+        this.newLine();
+
+        // Focus input on click
+        this.container.addEventListener('click', () => {
+            const input = this.body.querySelector('.command-input');
+            if (input) input.focus();
+        });
+
+        // Initial welcome message
+        this.print([
+            { text: 'EPI Portable Environment v2.0.0', color: 'text-dim' },
+            { text: 'Type "help" for a list of commands.', color: 'text-dim' },
+            { text: '' }
+        ]);
+
+        // Auto-start demo if visible
+        this.startAutoDemo();
+    }
+
+    clear() {
+        this.body.innerHTML = '';
+    }
+
+    newLine() {
+        // Remove old cursor if exists
+        const oldCursor = this.body.querySelector('.cursor');
+        if (oldCursor) oldCursor.remove();
+
+        // Disable old input
+        const oldInput = this.body.querySelector('.command-input');
+        if (oldInput) {
+            oldInput.disabled = true;
+            oldInput.parentElement.innerHTML = oldInput.value;
+        }
+
+        const line = document.createElement('div');
+        line.className = 'command-line';
+        line.innerHTML = `
+            <span class="prompt text-green">➜</span>
+            <span class="path text-blue">~/project</span>
+            <span class="prompt text-gray">$</span>
+            <div class="input-area">
+                <input type="text" class="command-input" spellcheck="false" autocomplete="off">
+            </div>
+        `;
+
+        this.body.appendChild(line);
+        this.scrollToBottom();
+
+        this.inputLine = line.querySelector('.command-input');
+        this.inputLine.focus();
+
+        // Event Listeners
+        this.inputLine.addEventListener('keydown', (e) => this.handleInput(e));
+    }
+
+    handleInput(e) {
+        if (e.key === 'Enter') {
+            const cmd = this.inputLine.value.trim();
+            this.history.push(cmd);
+            this.historyIndex = this.history.length;
+            this.execute(cmd);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (this.historyIndex > 0) {
+                this.historyIndex--;
+                this.inputLine.value = this.history[this.historyIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (this.historyIndex < this.history.length - 1) {
+                this.historyIndex++;
+                this.inputLine.value = this.history[this.historyIndex];
+            } else {
+                this.historyIndex = this.history.length;
+                this.inputLine.value = '';
+            }
+        }
+    }
+
+    async execute(cmd) {
+        this.newLine(); // Lock previous line
+        const parts = cmd.split(' ');
+        const program = parts[0];
+        const args = parts.slice(1);
+
+        if (!program) {
+            this.newLine();
+            return;
+        }
+
+        // Simulate processing delay
+        this.inputLine.disabled = true;
+
+        switch (program) {
+            case 'help':
+                this.print([
+                    { text: 'Available commands:', color: 'text-yellow' },
+                    { text: '  epi run <file>    Record and verify a script' },
+                    { text: '  epi view <file>   Open recording viewer' },
+                    { text: '  ls                List files' },
+                    { text: '  cat <file>        Show file content' },
+                    { text: '  clear             Clear screen' }
+                ]);
+                break;
+
+            case 'clear':
+                this.clear();
+                break;
+
+            case 'ls':
+                this.print([
+                    { text: Object.keys(this.files).join('  stdout.log  recording.epi  '), color: 'text-blue' }
+                ]);
+                break;
+
+            case 'cat':
+                const file = this.files[args[0]];
+                if (file) {
+                    this.print([{ text: file }]);
+                } else {
+                    this.print([{ text: `cat: ${args[0]}: No such file or directory`, color: 'text-red' }]);
+                }
+                break;
+
+            case 'epi':
+                await this.handleEpiCommand(args);
+                break;
+
+            default:
+                this.print([{ text: `command not found: ${program}`, color: 'text-red' }]);
+        }
+
+        this.newLine();
+        this.scrollToBottom();
+    }
+
+    async handleEpiCommand(args) {
+        const subcmd = args[0];
+
+        if (!subcmd) {
+            this.print([{ text: 'usage: epi <command> [options]', color: 'text-red' }]);
+            return;
+        }
+
+        if (subcmd === 'run') {
+            if (!args[1]) {
+                this.print([{ text: 'accusing: missing argument <file>', color: 'text-red' }]);
+                return;
+            }
+            await this.simulateRecording(args[1]);
+        } else if (subcmd === 'view') {
+            this.print([{ text: 'Opening viewer...', color: 'text-blue' }]);
+            setTimeout(() => openViewerModal(), 800);
+        } else if (subcmd === 'verify') {
+            await this.simulateVerification(args[1]);
+        } else {
+            this.print([{ text: `epi: unknown command '${subcmd}'`, color: 'text-red' }]);
+        }
+    }
+
+    async simulateRecording(filename) {
+        const steps = [
+            { text: `→ Starting EPI Recorder v2.0.0`, delay: 200 },
+            { text: `  Target: ${filename}`, delay: 100 },
+            { text: `  Environment: Python 3.11.4 | Windows 10`, color: 'text-dim', delay: 300 },
+            { text: `● Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },
+            { text: `  > Intercepted OpenAI: chat.completions.create (gpt-4)`, color: 'text-blue', delay: 800 },
+            { text: `  > Redacted API Key: sk-proj-***`, color: 'text-yellow', delay: 200 },
+            { text: `  > Captured artifact: results.json`, delay: 300 },
+            { text: `✓ Workflow verified: Integrity OK`, color: 'text-green', delay: 500 },
+            { text: `✓ Signature valid: Ed25519 (Key: default)`, color: 'text-green', delay: 200 },
+            { text: `\nOutput saved to: ./recording_20251211.epi [240KB]`, color: 'text-blue', delay: 0 }
+        ];
+
+        for (const step of steps) {
+            await this.wait(step.delay);
+            this.print([{ text: step.text, color: step.color }]);
+        }
+    }
+
+    async simulateVerification(filename) {
+        this.print([
+            { text: `Verifying ${filename || 'recording.epi'}...`, color: 'text-dim' }
+        ]);
+        await this.wait(800);
+        this.print([
+            { text: `+---------------------------------------+` },
+            { text: `| TRUST LEVEL: HIGH                     |`, color: 'text-green' },
+            { text: `| Message: Cryptographically Verified   |` },
+            { text: `| Integrity: OK                         |` },
+            { text: `| Signer:    Mohd Ibrahim (default)     |` },
+            { text: `+---------------------------------------+` }
+        ]);
+    }
+
+    print(lines) {
+        lines.forEach(line => {
+            const el = document.createElement('div');
+            el.className = `output-line ${line.color || ''}`;
+            el.textContent = line.text;
+            this.body.appendChild(el);
+        });
+        this.scrollToBottom();
+    }
+
+    scrollToBottom() {
+        this.body.scrollTop = this.body.scrollHeight;
+    }
+
+    wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async startAutoDemo() {
+        await this.wait(1500);
+        await this.type('epi run experiment.py');
+        await this.wait(3000);
+        await this.type('epi view output.epi');
+        // Viewer opens automatically from execute logic if mapped? 
+        // actually execute maps 'epi view' to open modal
+    }
+
+    async type(text) {
+        if (this.isTyping) return;
+        this.isTyping = true;
+
+        // Find current input
+        const input = this.body.querySelector('.command-input:not([disabled])');
+        if (!input) return;
+
+        for (let i = 0; i < text.length; i++) {
+            input.value += text[i];
+            await this.wait(Math.random() * 50 + 30); // Random typing speed
+        }
+
+        await this.wait(300);
+        this.execute(text);
+        this.isTyping = false;
+    }
+}
+
+// Viewer Logic
+function createViewerModal() {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'viewer-backdrop';
+
+    const modal = document.createElement('div');
+    modal.className = 'viewer-modal';
+
+    modal.innerHTML = `
+        <div class="viewer-header">
+            <h3 class="font-bold text-gray-800">EPI Viewer - recording_20251211.epi</h3>
+            <div class="viewer-close">✕</div>
+        </div>
+        <div style="flex:1; background: #f3f4f6; overflow: hidden; position: relative;">
+            <iframe src="demo_player.html" style="width:100%; height:100%; border:none;"></iframe>
+             <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; color: #6b7280;">
+                <p>Interactive Viewer Mockup</p>
+                <p class="text-xs mt-2">(Loads demo_player.html)</p>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.appendChild(modal);
+
+    const close = () => {
+        backdrop.classList.remove('active');
+        modal.classList.remove('active');
+        setTimeout(() => {
+            backdrop.remove();
+            modal.remove();
+        }, 500);
+    };
+
+    modal.querySelector('.viewer-close').onclick = close;
+    backdrop.onclick = close;
+
+    return { backdrop, modal };
+}
+
+function openViewerModal() {
+    let { backdrop, modal } = createViewerModal();
+    // Force reflow
+    void backdrop.offsetWidth;
+
+    backdrop.classList.add('active');
+    modal.classList.add('active');
+}
+
+// Initialize on Load
+document.addEventListener('DOMContentLoaded', () => {
+    new TerminalDemo('interactive-terminal');
+});

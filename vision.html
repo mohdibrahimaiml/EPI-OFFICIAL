@@ -25,6 +25,73 @@
 
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Vision Page Specific Styles */
+        .shift-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .shift-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .epi-card {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
+        }
+
+        .shift-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .shift-sub {
+            color: var(--color-text-dim);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .shift-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .shift-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .shift-vs {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--color-text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .shift-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shift-vs {
+                padding: 1rem 0;
+            }
+        }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -77,65 +144,111 @@
             </div>
 
             <div class="vision-tiers">
-                <div class="vision-tier tier-complete">
-                    <div class="tier-badge">✅ Shipped</div>
-                    <h3>Open Source Foundation</h3>
-                    <p>Production-ready <strong>epi-recorder</strong> on PyPI.
-                        Record any Python script with one command. Cryptographic signing with Ed25519.
-                        Verification that works offline.</p>
-                    <div class="tier-stats">
-                        <span class="tier-stat">📦 pip install epi-recorder</span>
-                        <span class="tier-stat">🔐 Ed25519 Signing</span>
+                <!-- NEW: The Paradigm Shift -->
+                <div class="paradigm-shift-container" style="margin-bottom: 5rem;">
+                    <div class="shift-grid">
+                        <div class="shift-card pdf-card">
+                            <div class="shift-icon">📄</div>
+                            <h3>Visual Fidelity</h3>
+                            <p class="shift-sub">The PDF Standard</p>
+                            <p>Before PDF, documents broke when moved between computers. PDF solved "Missing Fonts" by
+                                embedding them.</p>
+                            <ul class="shift-list">
+                                <li>Captures <strong>Appearance</strong></li>
+                                <li>Static & Visual</li>
+                                <li>Standard for <strong>Documents</strong></li>
+                            </ul>
+                        </div>
+                        <div class="shift-vs">VS</div>
+                        <div class="shift-card epi-card active-card">
+                            <div class="shift-icon">📦</div>
+                            <h3>Verifiable Execution</h3>
+                            <p class="shift-sub">The EPI Standard</p>
+                            <p>AI runs break without the right environment. EPI solves "Missing Context" by embedding
+                                the execution.</p>
+                            <ul class="shift-list">
+                                <li>Captures <strong>Behavior</strong></li>
+                                <li>Dynamic & Verifiable</li>
+                                <li>Standard for <strong>Agents</strong></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="vision-arrow">→</div>
-
-                <div class="vision-tier tier-next">
-                    <div class="tier-badge">🚧 Building Now</div>
-                    <h3>Deterministic Replay</h3>
-                    <p>Re-run any recorded session with <strong>identical results</strong>.
-                        Cached LLM responses. Time-travel debugging.
-                        True reproducibility without API calls.</p>
-                    <div class="tier-stats">
-                        <span class="tier-stat">🔄 epi replay</span>
-                        <span class="tier-stat">💾 Cached Responses</span>
-                    </div>
-                </div>
-
-                <div class="vision-arrow">→</div>
-
-                <div class="vision-tier tier-future">
-                    <div class="tier-badge">📋 Roadmap</div>
-                    <h3>Enterprise & Compliance</h3>
-                    <p>Cloud verification service. Team dashboards.
-                        <strong>One-click compliance reports</strong> for EU AI Act, FDA, and regulatory audits.
-                        Framework integrations.
+                <!-- NEW: The Receipt Economy -->
+                <div class="receipt-economy-section"
+                    style="text-align: center; margin-bottom: 5rem; padding: 2rem; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem;">The "Receipt" Economy</h3>
+                    <p style="max-width: 700px; margin: 0 auto 2rem; font-size: 1.1rem; color: var(--color-text-dim);">
+                        As AI agents start spending money and signing contracts, "log files" aren't enough.
+                        You can't take a log file to court. You need a <strong>signed receipt</strong> of computation.
                     </p>
-                    <div class="tier-stats">
-                        <span class="tier-stat">☁️ EPI Cloud</span>
-                        <span class="tier-stat">📊 Audit Reports</span>
+                    <div class="receipt-grid" <div class="receipt-grid" <div class="receipt-grid"
+                        style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">⚖️</span>
+                            <strong>Liability Defense</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;">The <strong>Black Box Defense</strong>.
+                                Irrefutable proof of intent when agents fail.</p>
+                        </div>
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">🧾</span>
+                            <strong>Compliance</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;"><strong>Zero-Touch.</strong> Automated "Article
+                                11" documentation for EU AI Act audits.</p>
+                        </div>
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">🛡️</span>
+                            <strong>Underwriting</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;"><strong>Actuarial Data.</strong> Turn "Unknown
+                                Risk" into "Calculated Risk" for insurers.</p>
+                        </div>
+                        <!-- Row 2 -->
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">🕵️</span>
+                            <strong>Forensics</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;"><strong>Incident Response.</strong> Replay the
+                                exact "Attack Path" of a jailbreak or prompt injection.</p>
+                        </div>
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">🧬</span>
+                            <strong>Science</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;"><strong>IP Preservation.</strong> Prevent "Bit
+                                Rot". Ensure drug discovery runs work 10 years later.</p>
+                        </div>
+                        <div class="receipt-item">
+                            <span style="display: block; font-size: 2rem; margin-bottom: 0.5rem;">🔗</span>
+                            <strong>Supply Chain</strong>
+                            <p style="font-size: 0.9rem; opacity: 0.8;"><strong>Model Provenance.</strong> A "Customs
+                                Declaration" for every fine-tune and dataset used.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="vision-cta">
-                <h3>Why This Matters</h3>
-                <p>The AI industry has a trust problem. <strong>70% of research can't be reproduced.</strong>
-                    Regulators are demanding audit trails. We're building the infrastructure to fix this —
-                    starting with a simple CLI tool that just works.</p>
-                <div class="vision-metrics">
-                    <div class="v-metric">
-                        <span class="v-value">v2.0</span>
-                        <span class="v-label">Current Version</span>
+                <!-- Existing Tiers (Slightly Refined) -->
+                <h3 style="text-align: center; margin-bottom: 2rem;">The Technology Stack</h3>
+                <div class="vision-tiers" style="margin-top: 0;">
+                    <div class="vision-tier tier-complete">
+                        <div class="tier-badge">✅ Phase 1</div>
+                        <h3>The Recorder</h3>
+                        <p>Capture the "Truth". System-level interception of shell, API, and file events. Ed25519
+                            signed.</p>
                     </div>
-                    <div class="v-metric">
-                        <span class="v-value">Apache 2.0</span>
-                        <span class="v-label">Open Source</span>
+
+                    <div class="vision-arrow">→</div>
+
+                    <div class="vision-tier tier-next">
+                        <div class="tier-badge">🚧 Phase 2</div>
+                        <h3>The Player</h3>
+                        <p>Deterministic Replay. Access the "Truth" without needing the original GPU or API keys.</p>
                     </div>
-                    <div class="v-metric">
-                        <span class="v-value">100%</span>
-                        <span class="v-label">Reproducible</span>
+
+                    <div class="vision-arrow">→</div>
+
+                    <div class="vision-tier tier-future">
+                        <div class="tier-badge">📋 Phase 3</div>
+                        <h3>The Network</h3>
+                        <p>Global Registry. A "DOI for AI" where every major run is publicly verifiable.</p>
                     </div>
                 </div>
             </div>

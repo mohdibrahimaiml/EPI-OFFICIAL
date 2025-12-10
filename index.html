@@ -25,6 +25,7 @@
 
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="terminal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -75,9 +76,9 @@
                 <h1 class="hero-title text-gradient" style="font-size: 4rem;">The PDF
                     for AI Evidence</h1>
                 <p class="hero-subtitle">Stop relying on screenshots. <strong>Evidence Packaged Infrastructure
-                        (.epi)</strong> is the open standard for
-                    <strong>self-contained, cryptographically signed evidence</strong> that makes AI verifiable
-                    everyday.
+                        (.epi)</strong> is the open standard for <strong>Verifiable Execution</strong>.
+                    It captures code, context, and computation into a <strong>verifiable signed receipt</strong> that
+                    works everywhere.
                 </p>
                 <div class="hero-cta" style="justify-content: center;">
                     <a href="how-it-works.html" class="btn-primary">See the Evidence Package →</a>
@@ -98,22 +99,18 @@
             </div>
             <div style="display: flex; gap: 3rem; align-items: center; justify-content: center; flex-wrap: wrap;">
                 <!-- The Terminal (Creation) -->
-                <div class="terminal-window terminal-interactive" style="flex: 1; min-width: 350px; max-width: 500px;">
+                <div id="interactive-terminal" class="terminal-window terminal-interactive"
+                    style="flex: 1; min-width: 350px; max-width: 500px;">
                     <div class="terminal-header">
-                        <span class="terminal-dot red"></span>
-                        <span class="terminal-dot yellow"></span>
-                        <span class="terminal-dot green"></span>
-                        <span class="terminal-title">epi-recorder v2.0</span>
+                        <div class="terminal-controls">
+                            <span class="control-dot dot-red"></span>
+                            <span class="control-dot dot-yellow"></span>
+                            <span class="control-dot dot-green"></span>
+                        </div>
+                        <div class="terminal-title">epi-recorder v2.0</div>
                     </div>
                     <div class="terminal-body">
-                        <div class="terminal-output">
-                            <div class="terminal-line"><span class="prompt">$</span> epi record experiment.py</div>
-                            <div class="terminal-line info">Capturing runtime context...</div>
-                            <div class="terminal-line info">Intercepting LLM calls...</div>
-                            <div class="terminal-line success">✔ Evidence packaged: <span
-                                    style="color: var(--color-primary-light);">scan_01.epi</span></div>
-                            <div class="terminal-line"><span class="prompt">$</span> _</div>
-                        </div>
+                        <!-- Content injected by terminal-demo.js -->
                     </div>
                 </div>
 
@@ -357,6 +354,7 @@
     </footer>
 
     <script src="app.js"></script>
+    <script src="terminal-demo.js"></script>
     <script src="particles.js"></script>
 </body>
 
