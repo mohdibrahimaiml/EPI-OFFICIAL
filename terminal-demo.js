@@ -292,8 +292,8 @@ class TerminalDemo {
         if (this.isTyping) return;
         this.isTyping = true;
 
-        // Find current input
-        const input = this.body.querySelector('.command-input:not([disabled])');
+        // Find current input (even if disabled by auto-runner)
+        const input = this.body.querySelector('.command-input:last-child');
         if (!input) return;
 
         for (let i = 0; i < text.length; i++) {
