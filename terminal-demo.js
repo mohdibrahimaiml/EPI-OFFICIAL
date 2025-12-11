@@ -51,8 +51,7 @@ class TerminalDemo {
             { text: '' }
         ]);
 
-        // Auto-start demo if visible
-        this.startAutoDemo();
+        // Auto-start demo removed from here to allow explicit control
     }
 
     clear() {
@@ -399,21 +398,19 @@ function openViewerModal() {
 }
 
 // Initialize on Load
+// Initialize on Load
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Homepage Terminal (ID: interactive-terminal)
-    const homeTerminal = document.getElementById('interactive-terminal');
-    // Only init if found AND NOT on simulation page (which handles it via inline script)
-    // Actually, safer to just check if it's already initialized or if we are on index.html context.
-    // The simulation.html script manually calls new TerminalDemo.
-    // The index.html does NOT have a manual script, so we must init here if element exists.
+    // 1. Homepage Terminal (ID: homepage-terminal)
+    // This ID is unique to index.html, so no conflict with simulation.html
+    const homeTerminal = document.getElementById('homepage-terminal');
 
-    // Check if we are on the simulation page to avoid double-init if that page has the same ID
-    const isSimulationPage = window.location.pathname.includes('simulation.html');
-
-    if (homeTerminal && !isSimulationPage) {
-        // Init specifically for homepage
-        const term = new TerminalDemo('interactive-terminal', {
+    if (homeTerminal) {
+        const term = new TerminalDemo('homepage-terminal', {
             skipAutoDemo: false
         });
+        term.startAutoDemo();
     }
+
+    // 2. Simulation Page is handled by inline script in simulation.html
+    // which targets 'interactive-terminal'.
 });

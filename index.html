@@ -180,31 +180,41 @@
                 <p class="section-desc">Production-ready MVP. Install in seconds, record your first workflow in minutes.
                 </p>
             </div>
-            <div class="install-demo">
-                <div class="install-steps">
-                    <div class="install-step">
-                        <div class="step-number">1</div>
-                        <h4>Install</h4>
-                        <div class="code-block">
-                            <code>pip install epi-recorder</code>
-                        </div>
+            <div class="install-demo" style="display: block; width: 100%; max-width: 900px; margin: 3rem auto;">
+
+                <!-- Terminal UI with Floating Badge -->
+                <div class="terminal-wrapper" style="position: relative;">
+                    <!-- Floating Secure Badge -->
+                    <div
+                        style="position: absolute; top: -15px; right: -10px; background: #10B981; color: white; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); z-index: 20; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.2);">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                        Cryptographically Signed
                     </div>
-                    <div class="install-step">
-                        <div class="step-number">2</div>
-                        <h4>Record</h4>
-                        <div class="code-block">
-                            <code>epi run my_script.py</code>
+
+                    <div class="terminal-window" id="homepage-terminal"
+                        style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+                        <div class="terminal-header">
+                            <div class="terminal-buttons">
+                                <span class="close"></span>
+                                <span class="minimize"></span>
+                                <span class="maximize"></span>
+                            </div>
+                            <div class="terminal-title">epi-recorder v2.0.0 -- bash -- 80x24</div>
                         </div>
-                    </div>
-                    <div class="install-step">
-                        <div class="step-number">3</div>
-                        <h4>Verify</h4>
-                        <div class="code-block">
-                            <code>epi verify output.epi</code>
+                        <div class="terminal-body">
+                            <!-- JS will inject lines here -->
                         </div>
                     </div>
                 </div>
 
+                <div class="cli-intro" style="text-align: center; margin-top: 3rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.5rem; color: white;">See It In Action</h3>
+                    <p style="color: var(--color-gray-400);">From code execution to sealed evidence in seconds.</p>
+                </div>
                 <div class="cli-reference">
                     <h3>Complete CLI Reference (v2.0.0)</h3>
 
