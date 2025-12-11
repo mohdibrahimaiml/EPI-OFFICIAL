@@ -455,11 +455,25 @@ function initEpiTerminals() {
         });
         // Slight delay to ensure DOM paint of init() before starting loop
         setTimeout(() => {
-            console.log('EPI: Triggering startAutoDemo');
+            console.log('EPI: Triggering startAutoDemo for home');
             term.startAutoDemo();
         }, 100);
+    }
+
+    // 2. Main Interactive Terminal (ID: interactive-terminal)
+    const interactiveTerminal = document.getElementById('interactive-terminal');
+    if (interactiveTerminal) {
+        console.log('EPI: Found interactive-terminal. Starting demo...');
+        const term = new TerminalDemo('interactive-terminal', {
+            skipAutoDemo: false,
+            mode: 'preview' // Loop the install -> record flow
+        });
+        setTimeout(() => {
+            console.log('EPI: Triggering startAutoDemo for interactive');
+            term.startAutoDemo();
+        }, 300); // Slightly offset start
     } else {
-        console.log('EPI: homepage-terminal not found (likely on simulation page or other)');
+        console.log('EPI: interactive-terminal not found');
     }
 }
 
