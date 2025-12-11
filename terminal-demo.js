@@ -57,6 +57,28 @@ class TerminalDemo {
         this.body.innerHTML = '';
     }
 
+    async print(lines) {
+        if (!Array.isArray(lines)) lines = [lines];
+
+        for (const line of lines) {
+            if (line.delay) {
+                await this.delay(line.delay);
+            }
+
+            const div = document.createElement('div');
+            // If it's a command line structure (not likely used here, but for safety)
+            // usually print just outputs text lines.
+
+            if (line.color) {
+                div.className = line.color;
+            }
+            div.textContent = line.text;
+
+            this.body.appendChild(div);
+        }
+        this.scrollToBottom();
+    }
+
     scrollToBottom() {
         if (this.body && this.body.parentElement) {
             this.body.parentElement.scrollTop = this.body.parentElement.scrollHeight;
