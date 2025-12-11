@@ -269,6 +269,20 @@ code {
     /* Structural Border */
     z-index: 1000;
     transition: all 0.3s ease;
+    animation: navSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Smooth Entrance */
+}
+
+@keyframes navSlideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .nav::after {
@@ -366,10 +380,45 @@ code {
     z-index: 20;
 }
 
-.nav-cta .btn-secondary {
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
+.nav-cta a {
+    /* Enforce symmetry for ALL buttons in CTA */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 40px;
+    /* Symmetry Core */
+    padding: 0 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    /* Standardized radius */
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+/* Primary/Secondary override styles only colors, not dimensions */
+.nav-cta .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    background: transparent;
+}
+
+.nav-cta .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: #fff;
+}
+
+.nav-cta .btn-primary {
+    background: #fff;
+    color: #0F172A;
+    border: 1px solid #fff;
+}
+
+.nav-cta .btn-primary:hover {
+    background: #e2e8f0;
+    border-color: #e2e8f0;
 }
 
 /* Hamburger Menu Toggle */
