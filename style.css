@@ -485,10 +485,12 @@ code {
     */
 
     .hamburger {
-        display: flex;
+        display: flex !important;
         /* Show Hamburger */
         margin-left: auto;
         /* Push to right */
+        z-index: 2000;
+        /* Ensure it's on top of everything */
     }
 
     /* Mobile Menu Overlay Logic */

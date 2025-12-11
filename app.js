@@ -19,6 +19,17 @@ window.addEventListener('scroll', () => {
 // Modified to work with multi-page structure
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        // Close mobile menu if open
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const navCta = document.querySelector('.nav-cta');
+
+        if (hamburger && hamburger.classList.contains('active')) {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            if (navCta) navCta.classList.remove('active');
+        }
+
         // Only prevent default if it's a hash link on the CURRENT page
         const href = this.getAttribute('href');
         if (href.startsWith('#')) {
