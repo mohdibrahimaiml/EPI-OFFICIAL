@@ -318,8 +318,15 @@ class TerminalDemo {
         if (this.isTyping) return;
         this.isTyping = true;
 
-        // Find current input (even if disabled by auto-runner)
-        const input = this.body.lastElementChild.querySelector('.command-input');
+        // Find the last command line explicitly, traversing backwards or using querySelectorAll
+        // Note: active command line might not be the absolute last element if other output exists, 
+        // but for typing we generally want the last *command line* added.
+        const commandLines = this.body.querySelectorAll('.command-line');
+        if (commandLines.length === 0) return;
+
+        const lastCommandLine = commandLines[commandLines.length - 1];
+        const input = lastCommandLine.querySelector('.command-input');
+
         if (!input) {
             this.isTyping = false;
             return;
@@ -391,5 +398,22 @@ function openViewerModal() {
     modal.classList.add('active');
 }
 
-// Initialize on Load (only if not simulation page which handles it manually)
-// Auto-init removed to prevent conflicts. Initialization is now manual in simulation.html.
+// Initialize on Load
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Homepage Terminal (ID: interactive-terminal)
+    const homeTerminal = document.getElementById('interactive-terminal');
+    // Only init if found AND NOT on simulation page (which handles it via inline script)
+    // Actually, safer to just check if it's already initialized or if we are on index.html context.
+    // The simulation.html script manually calls new TerminalDemo.
+    // The index.html does NOT have a manual script, so we must init here if element exists.
+
+    // Check if we are on the simulation page to avoid double-init if that page has the same ID
+    const isSimulationPage = window.location.pathname.includes('simulation.html');
+
+    if (homeTerminal && !isSimulationPage) {
+        // Init specifically for homepage
+        const term = new TerminalDemo('interactive-terminal', {
+            skipAutoDemo: false
+        });
+    }
+});
