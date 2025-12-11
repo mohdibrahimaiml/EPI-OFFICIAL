@@ -253,16 +253,16 @@ code {
 }
 
 /* ============================================
-   Navigation
+/* ============================================
+   Navigation (Industry Standard / "Perfect")
    ============================================ */
 
 .nav {
     position: fixed;
     top: 0;
     width: 100%;
-    /* Docker/Enterprise Style: Solid, Deep Navy Background */
-    background: #0B1120;
-    /* Subtle blur remains for elite feel, but opacity is high */
+    /* Deep Enterprise Navy */
+    background: rgba(11, 17, 32, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid #1E293B;
@@ -271,171 +271,170 @@ code {
     transition: all 0.3s ease;
 }
 
-/* Subtle gradient line at bottom of nav */
-/* Remove gradient line, use solid border instead */
 .nav::after {
     display: none;
+    /* Ensure no legacy gradients */
 }
 
 .nav.scrolled {
-    box-shadow: var(--shadow-lg);
-    background: rgba(2, 6, 23, 0.95);
+    background: rgba(11, 17, 32, 0.95);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 80px;
+    /* Standard Premium Height */
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.5rem var(--space-lg);
-    height: 90px;
-    /* Increased height to let logo breathe */
+    justify-content: space-between;
+    padding: 0 2rem;
 }
 
+/* 1. Logo Section */
 .nav-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    position: relative;
-    z-index: 10;
-    justify-self: start;
+    flex-shrink: 0;
+    z-index: 20;
 }
 
 .nav-logo a {
     display: flex;
-    /* Centers image vertically */
-    height: 100%;
-    /* Fill vertical space */
-    width: auto;
-    max-width: 320px;
-    /* Large but fitted */
     align-items: center;
+    height: 40px;
+    /* Industry Standard Logo Height */
+    width: auto;
     cursor: pointer;
 }
 
 .logo-img {
-    height: auto;
+    height: 100%;
     width: auto;
-    max-height: 100%;
-    /* Fill the 90px height completely */
-    max-width: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
-    transition: transform 0.3s ease;
+    /* No weird shadows, just clean clarity */
+    transition: opacity 0.2s ease;
 }
 
 .nav-logo a:hover .logo-img {
-    transform: scale(1.05);
+    opacity: 0.9;
 }
 
-/* Standard Desktop Nav */
+/* 2. Navigation Links (The Core) */
 .nav-links {
     display: flex;
-    gap: 2rem;
-    margin: 0 auto;
-    /* Standard Centering in remaining flex space */
-    background: transparent;
+    align-items: center;
+    gap: 32px;
+    /* Breathable, standard gap */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
     padding: 0;
-    border: none;
-    box-shadow: none;
-    backdrop-filter: none;
-    white-space: nowrap;
-    position: static;
-    /* NO ABSOLUTE */
-    transform: none;
-}
-
-/* 
-   CRITICAL SAFETY BREAKPOINT 
-   Force mobile menu early (1150px) to prevent ANY overlap 
-*/
-/* 
-   Safety Breakpoint - Adjusted for 320px Logo (1200px)
-*/
-@media (max-width: 1200px) {
-    .nav-links {
-        display: none !important;
-    }
-
-    .hamburger {
-        display: flex !important;
-        margin-left: auto;
-    }
-
-    /* Hide CTA on intermediate screens if needed, or keep it */
-    .nav-cta {
-        margin-right: 1rem;
-    }
+    list-style: none;
 }
 
 .nav-links a {
-    color: #94A3B8;
-    /* Slate-400 equivalent */
-    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    /* 15px */
     font-weight: 500;
-    padding: 0.5rem 0;
-    border-radius: 0;
-    transition: color 0.2s ease;
-    font-size: 0.95rem;
-    position: relative;
-    letter-spacing: 0.01em;
+    color: #94A3B8;
+    /* Slate-400 */
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
-    color: #F8FAFC;
-    /* White on hover */
+    color: #FFFFFF;
 }
 
-/* Remove underline animation for cleaner "Tech" look, or keep subtle */
-.nav-links a::after {
-    display: none;
+/* Active state if needed later */
+.nav-links a.active {
+    color: #FFFFFF;
 }
 
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--color-primary);
-    transition: width 0.3s ease;
-}
-
-.nav-links a:hover {
-    color: var(--color-white);
-    background: transparent;
-    box-shadow: none;
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-}
-
+/* 3. CTA Section */
 .nav-cta {
     display: flex;
-    gap: var(--space-sm);
-    justify-self: end;
-    /* Grid Right Align */
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    z-index: 20;
 }
 
+.nav-cta .btn-secondary {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+    height: 40px;
+}
+
+/* Hamburger Menu Toggle */
 .hamburger {
     display: none;
+    /* Hidden by default */
     flex-direction: column;
-    gap: 0.25rem;
+    justify-content: center;
+    gap: 6px;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    z-index: 50;
 }
 
 .hamburger span {
-    width: 1.5rem;
+    display: block;
+    width: 24px;
     height: 2px;
-    background: var(--color-white);
+    background-color: #94A3B8;
+    border-radius: 2px;
     transition: all 0.3s ease;
+    margin: 0 auto;
+}
+
+.hamburger:hover span {
+    background-color: #FFFFFF;
+}
+
+
+/* ============================================
+   Responsiveness (The Logic)
+   ============================================ */
+
+/* 
+   Switch to Mobile Menu at 1024px (Standard Laptop).
+   This prevents ANY chance of Logo/Link overlap.
+*/
+@media (max-width: 1024px) {
+    .nav-links {
+        display: none !important;
+        /* Hide centers links */
+    }
+
+    .nav-cta {
+        display: none;
+        /* Optional: Hide CTA functionality on mobile if desired, or keep */
+    }
+
+    /* If you want CTA + Hamburger, adjust here. 
+       For "Perfect" simple mobile nav, we usually hide desktop elements. 
+    */
+
+    .hamburger {
+        display: flex;
+        /* Show Hamburger */
+        margin-left: auto;
+        /* Push to right */
+    }
 }
 
 /* ============================================
-   Hero Section
+   Hero Section styling follows...
    ============================================ */
 
 .hero {
