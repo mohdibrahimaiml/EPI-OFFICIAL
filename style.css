@@ -303,17 +303,18 @@ code {
 .nav-logo a {
     display: flex;
     align-items: center;
-    height: 40px;
-    /* Industry Standard Logo Height */
-    width: auto;
+    width: 180px;
+    /* User Request: 180px width */
+    height: auto;
     cursor: pointer;
 }
 
 .logo-img {
-    height: 100%;
-    width: auto;
+    width: 100%;
+    /* Fill the 180px container */
+    height: auto;
+    /* Maintain aspect ratio */
     object-fit: contain;
-    /* No weird shadows, just clean clarity */
     transition: opacity 0.2s ease;
 }
 
