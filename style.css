@@ -287,11 +287,11 @@ code {
 }
 
 .nav-container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 0.5rem var(--space-lg);
-    height: 70px;
+    height: 80px;
 }
 
 .nav-logo {
@@ -300,17 +300,16 @@ code {
     gap: 0.75rem;
     position: relative;
     z-index: 10;
+    justify-self: start;
 }
 
 .nav-logo a {
     display: block;
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
+    height: auto;
+    width: 160px;
+    /* Reduced from 200px for better fit */
     cursor: pointer;
+    /* Removed absolute positioning */
 }
 
 .logo-img {
@@ -375,6 +374,8 @@ code {
 .nav-cta {
     display: flex;
     gap: var(--space-sm);
+    justify-self: end;
+    /* Grid alignment */
 }
 
 .hamburger {
