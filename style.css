@@ -497,19 +497,24 @@ code {
     .nav-links.active {
         display: flex !important;
         flex-direction: column;
-        position: absolute;
+        position: fixed;
         top: 80px;
         /* Below navbar */
         left: 0;
         width: 100%;
-        background: rgba(5, 10, 20, 0.95);
-        /* Premium Dark */
+        height: calc(100vh - 80px);
+        /* Full height minus header */
+        background: rgba(5, 10, 20, 0.98);
+        /* Premium Dark - High Opacity */
         backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 2rem;
+        padding: 2rem 2rem 150px 2rem;
+        /* Bottom padding for CTA space */
         gap: 1.5rem;
         animation: slideDownMenu 0.3s ease forwards;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        z-index: 1500;
+        /* High Z-Index */
+        overflow-y: auto;
+        /* Scrollable */
     }
 
     @keyframes slideDownMenu {
@@ -526,41 +531,22 @@ code {
 
     .nav-cta.active {
         display: flex !important;
-        /* Show CTA in mobile menu if desired */
-        position: absolute;
+        position: fixed;
         bottom: 0;
-        /* Or just append to nav-links via JS refactor, but keeping separate for now */
-        /* Actually, usually mobile menu includes CTA. 
-           For simplicity, let's make the mobile menu just the links, 
-           and maybe hide CTA or absolute position it below links. */
-        flex-direction: column;
+        left: 0;
         width: 100%;
-        padding: 0 2rem 2rem 2rem;
-        background: rgba(5, 10, 20, 0.95);
-        top: auto;
-        margin-top: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        flex-direction: column;
+        padding: 1.5rem 2rem 2rem 2rem;
+        background: rgba(5, 10, 20, 0.98);
+        /* Match link background */
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        z-index: 1501;
+        /* Above links */
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* Better Mobile Menu: Combine them visually */
-    .nav-links.active {
-        padding-bottom: 1rem;
-        border-bottom: none;
-    }
-
-    .nav-cta.active {
-        position: absolute;
-        top: 280px;
-        /* Adjust based on link count or simple flow */
-        /* Actually simpler: just rely on flow if container allowed. 
-           But container is flex-row. 
-           Best approach: The JS toggles both. Let's stack them. */
-        top: 100%;
-        margin-top: 250px;
-        /* Hacky? Let's use standard absolute flow. */
-        /* REFACTOR: The JS toggles .active on both. 
+    /* REFACTOR: The JS toggles .active on both. 
            Let's make nav-links take up the space. */
-    }
 }
 
 /* ============================================
