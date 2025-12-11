@@ -217,7 +217,7 @@ class TerminalDemo {
             return;
         }
 
-        if (subcmd === 'run') {
+        if (subcmd === 'run' || subcmd === 'record') {
             if (!args[1]) {
                 this.print([{ text: 'accusing: missing argument <file>', color: 'text-red' }]);
                 return;
@@ -313,7 +313,10 @@ class TerminalDemo {
         await this.delay(1500);
         if (this.options.onPhaseChange) this.options.onPhaseChange('record');
         await this.delay(1000);
-        await this.typeCommand('epi run experiment.py');
+
+        // Use 'epi record' for full simulation to match steps, 'epi run' for preview
+        const recordCmd = mode === 'full' ? 'epi record experiment.py' : 'epi run experiment.py';
+        await this.typeCommand(recordCmd);
 
         if (mode === 'preview') {
             // Preview Mode: Loop back after running
@@ -327,40 +330,35 @@ class TerminalDemo {
             return;
         }
 
-        // 3. Verify & View Phase (Full Mode Only)
+        // 3. Verify Phase (Full Mode)
+        await this.delay(1500);
+        if (this.options.onPhaseChange) this.options.onPhaseChange('verify');
+        await this.typeCommand('epi verify output.epi');
+
+        // 4. View Phase (Full Mode)
+        await this.delay(1500);
         if (this.options.onPhaseChange) this.options.onPhaseChange('view');
-        await this.delay(2000); // Allow time to read verifying message
         await this.typeCommand('epi view output.epi');
 
-        // Final: Open Viewer
+        // Final: Open Viewer handled by onPhaseChange callback in simulation.html or fallback here
         this.print([{ text: 'Opening viewer...', color: 'text-dim' }]);
         await this.delay(1000);
 
-        if (typeof openViewerModal === 'function') {
+        if (!this.options.onPhaseChange && typeof openViewerModal === 'function') {
+            // Only auto-open if no callback handles it (simulation.html handles it via callback)
             openViewerModal();
-        } else {
-            // Fallback if global function not found (e.g. scoping issue)
-            const event = new CustomEvent('open-viewer');
-            window.dispatchEvent(event);
         }
 
-        // Loop
-        await this.delay(5000);
-        this.print([{ text: '↺ Restarting simulation...', color: 'text-dim' }]);
-        await this.delay(1000);
-        this.clear();
-        this.newLine(false);
+        // Loop - typically stopped in full mode, or restart logic handled by UI
+        // keeping it ending here for full mode
         this.isAutoRunning = false;
-        this.startAutoDemo();
     }
 
     async typeCommand(text) {
         if (this.isTyping) return;
         this.isTyping = true;
 
-        // Find the last command line explicitly, traversing backwards or using querySelectorAll
-        // Note: active command line might not be the absolute last element if other output exists, 
-        // but for typing we generally want the last *command line* added.
+        // Find the last command line explicitly
         const commandLines = this.body.querySelectorAll('.command-line');
         if (commandLines.length === 0) return;
 
@@ -379,8 +377,7 @@ class TerminalDemo {
         }
 
         await this.delay(300);
-        await this.delay(300);
-        this.execute(text, false); // No focus for auto-runner
+        await this.execute(text, false); // No focus for auto-runner
         this.isTyping = false;
     }
 
@@ -462,7 +459,8 @@ function initEpiTerminals() {
 
     // 2. Main Interactive Terminal (ID: interactive-terminal)
     const interactiveTerminal = document.getElementById('interactive-terminal');
-    if (interactiveTerminal) {
+    // ONLY initialize if it does NOT have the data-manual-init attribute
+    if (interactiveTerminal && !interactiveTerminal.hasAttribute('data-manual-init')) {
         console.log('EPI: Found interactive-terminal. Starting demo...');
         const term = new TerminalDemo('interactive-terminal', {
             skipAutoDemo: false,
@@ -472,6 +470,8 @@ function initEpiTerminals() {
             console.log('EPI: Triggering startAutoDemo for interactive');
             term.startAutoDemo();
         }, 300); // Slightly offset start
+    } else if (interactiveTerminal) {
+        console.log('EPI: interactive-terminal found but has manual init override.');
     } else {
         console.log('EPI: interactive-terminal not found');
     }
