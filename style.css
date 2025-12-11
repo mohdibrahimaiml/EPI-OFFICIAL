@@ -261,16 +261,16 @@ code {
     position: fixed;
     top: 0;
     width: 100%;
-    /* Deep Enterprise Navy */
-    background: rgba(11, 17, 32, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #1E293B;
-    /* Structural Border */
+    /* Deep Enterprise Navy & Premium Glass */
+    background: rgba(5, 10, 20, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    /* Top highlight for depth */
     z-index: 1000;
-    transition: all 0.3s ease;
-    animation: navSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    /* Smooth Entrance */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: navSlideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes navSlideDown {
@@ -287,12 +287,12 @@ code {
 
 .nav::after {
     display: none;
-    /* Ensure no legacy gradients */
 }
 
 .nav.scrolled {
-    background: rgba(11, 17, 32, 0.95);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: rgba(5, 10, 20, 0.9);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-container {
@@ -368,8 +368,9 @@ code {
 
 .nav-links a:hover {
     color: #FFFFFF;
-    background: rgba(255, 255, 255, 0.05);
-    /* Subtle hover pill */
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
 }
 
 /* Active State - Premium Pill */
@@ -499,10 +500,10 @@ code {
         /* Below navbar */
         left: 0;
         width: 100%;
-        background: #0B1120;
-        /* Solid Navy */
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid #1E293B;
+        background: rgba(5, 10, 20, 0.95);
+        /* Premium Dark */
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         padding: 2rem;
         gap: 1.5rem;
         animation: slideDownMenu 0.3s ease forwards;
@@ -533,10 +534,10 @@ code {
         flex-direction: column;
         width: 100%;
         padding: 0 2rem 2rem 2rem;
-        background: #0B1120;
+        background: rgba(5, 10, 20, 0.95);
         top: auto;
         margin-top: 0;
-        border-bottom: 1px solid #1E293B;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     /* Better Mobile Menu: Combine them visually */
