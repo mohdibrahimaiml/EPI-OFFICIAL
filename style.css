@@ -287,11 +287,13 @@ code {
 }
 
 .nav-container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 0.5rem var(--space-lg);
     height: 80px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .nav-logo {
@@ -301,8 +303,6 @@ code {
     position: relative;
     z-index: 10;
     justify-self: start;
-    white-space: nowrap;
-    /* Prevent wrapping */
 }
 
 .nav-logo a {
@@ -310,7 +310,6 @@ code {
     height: auto;
     width: 160px;
     cursor: pointer;
-    /* Clean block, no absolute positioning */
 }
 
 .logo-img {
@@ -327,15 +326,19 @@ code {
 .nav-links {
     display: flex;
     gap: 2rem;
-    margin: 0;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    justify-self: center;
+    /* Grid Center */
     background: transparent;
     padding: 0;
     border: none;
     box-shadow: none;
     backdrop-filter: none;
+    white-space: nowrap;
+    position: static;
+    /* Force static */
+    transform: none;
+    /* Force no transform */
+    margin: 0;
 }
 
 .nav-links a {
@@ -375,6 +378,8 @@ code {
 .nav-cta {
     display: flex;
     gap: var(--space-sm);
+    justify-self: end;
+    /* Grid Right Align */
 }
 
 .hamburger {
