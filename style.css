@@ -301,6 +301,8 @@ code {
     position: relative;
     z-index: 10;
     justify-self: start;
+    white-space: nowrap;
+    /* Prevent wrapping */
 }
 
 .nav-logo a {
@@ -325,9 +327,9 @@ code {
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
+    /* Optimized gap */
     margin: 0 auto;
-    /* Center in the available space */
     background: transparent;
     padding: 0;
     border: none;
@@ -335,6 +337,8 @@ code {
     backdrop-filter: none;
     position: static;
     transform: none;
+    white-space: nowrap;
+    /* CRITICAL: Prevent overlapping wrap */
 }
 
 .nav-links a {
@@ -376,6 +380,8 @@ code {
     gap: var(--space-sm);
     justify-self: end;
     /* Grid alignment */
+    white-space: nowrap;
+    /* Prevent wrapping */
 }
 
 .hamburger {
