@@ -193,46 +193,59 @@
     </section>
 
     <script src="app.js"></script>
-    <script src="terminal-demo.js?v=2.3"></script>
+    <script src="terminal-demo.js?v=2.7"></script>
     <script>
         // Custom Logic to link Terminal to Stepper
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('EPI Simulation: DOMContentLoaded fired');
+
             // Create a custom instance for this page with callbacks
+            console.log('EPI Simulation: Creating TerminalDemo instance');
             const term = new TerminalDemo('interactive-terminal', {
                 mode: 'full',
                 onPhaseChange: (phase) => {
-                    // Reset all
-                    document.querySelectorAll('.step-item').forEach(el => {
-                        el.classList.remove('active');
-                        el.classList.add('completed'); // Mark past as completed
-                    });
+                    console.log('EPI Simulation: Phase changed to:', phase);
 
-                    // Activate current
                     const validPhases = ['install', 'record', 'verify', 'view'];
-                    const idx = validPhases.indexOf(phase);
+                    const currentIdx = validPhases.indexOf(phase);
 
-                    // Un-complete future steps
-                    for (let i = idx; i < validPhases.length; i++) {
-                        const step = document.getElementById('step-' + validPhases[i]);
-                        if (step) step.classList.remove('completed');
-                    }
+                    // Update each step based on its position relative to current
+                    validPhases.forEach((stepPhase, idx) => {
+                        const step = document.getElementById('step-' + stepPhase);
+                        if (!step) return;
 
-                    const current = document.getElementById('step-' + phase);
-                    if (current) {
-                        current.classList.remove('completed');
-                        current.classList.add('active');
-                    }
+                        // Clear all states first
+                        step.classList.remove('active', 'completed');
+
+                        if (idx < currentIdx) {
+                            // Past steps are completed
+                            step.classList.add('completed');
+                        } else if (idx === currentIdx) {
+                            // Current step is active
+                            step.classList.add('active');
+                        }
+                        // Future steps have no class (pending)
+                    });
 
                     if (phase === 'view') {
                         document.getElementById('restart-demo').style.display = 'block';
                         // Open the viewer automatically for the full experience
-                        setTimeout(() => openViewerModal(), 1000);
+                        console.log('EPI Simulation: About to open viewer modal');
+                        setTimeout(() => {
+                            if (typeof openViewerModal === 'function') {
+                                openViewerModal();
+                            } else {
+                                console.error('EPI Simulation: openViewerModal is not defined');
+                            }
+                        }, 1000);
                     }
                 }
             });
 
             // Explicitly start the demo
+            console.log('EPI Simulation: About to call startAutoDemo');
             term.startAutoDemo();
+            console.log('EPI Simulation: startAutoDemo called');
 
             document.getElementById('restart-demo').addEventListener('click', () => {
                 location.reload();

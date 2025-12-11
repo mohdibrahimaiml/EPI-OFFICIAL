@@ -32,7 +32,6 @@ class TerminalDemo {
         window.scrollTo(0, 0);
 
         this.clear();
-        this.newLine(false); // Don't focus on init
 
         // Focus input on click
         this.container.addEventListener('click', () => {
@@ -43,12 +42,15 @@ class TerminalDemo {
             }
         });
 
-        // Initial welcome message
+        // Initial welcome message - print FIRST before creating command line
         this.print([
             { text: 'EPI Portable Environment v2.0.0', color: 'text-dim' },
             { text: 'Type "help" for a list of commands.', color: 'text-dim' },
             { text: '' }
         ]);
+
+        // Now create the command line AFTER welcome message
+        this.newLine(false); // Don't focus on init
 
         // Auto-start demo removed from here to allow explicit control
     }
@@ -290,23 +292,27 @@ class TerminalDemo {
     }
 
     async startAutoDemo() {
-        if (this.isAutoRunning || this.options.skipAutoDemo) return;
+        console.log('EPI Terminal: startAutoDemo called, isAutoRunning:', this.isAutoRunning, 'skipAutoDemo:', this.options.skipAutoDemo);
+
+        if (this.isAutoRunning || this.options.skipAutoDemo) {
+            console.log('EPI Terminal: Skipping startAutoDemo (already running or skip requested)');
+            return;
+        }
         this.isAutoRunning = true;
+        console.log('EPI Terminal: Starting auto demo in mode:', this.options.mode || 'full');
 
         const mode = this.options.mode || 'full'; // 'preview' or 'full'
 
         // Sequence: Install -> Record -> [Verify -> View]
 
         // 1. Install Phase
+        console.log('EPI Terminal: Phase 1 - Install starting');
         await this.delay(1000);
         if (this.options.onPhaseChange) this.options.onPhaseChange('install');
+        console.log('EPI Terminal: About to type pip install command');
         await this.typeCommand('pip install epi-recorder');
-        await this.print([
-            { text: 'Collecting epi-recorder', color: 'text-white' },
-            { text: 'Downloading epi_recorder-2.0.0-py3-none-any.whl (18 kB)', color: 'text-white' },
-            { text: 'Installing collected packages: epi-recorder', color: 'text-white' },
-            { text: 'Successfully installed epi-recorder-2.0.0', color: 'text-green' }
-        ]);
+        console.log('EPI Terminal: pip install typed successfully');
+        // Note: simulatePip() already prints the install output via execute()
         this.newLine(false);
 
         // 2. Record Phase
@@ -355,30 +361,46 @@ class TerminalDemo {
     }
 
     async typeCommand(text) {
-        if (this.isTyping) return;
-        this.isTyping = true;
-
-        // Find the last command line explicitly
-        const commandLines = this.body.querySelectorAll('.command-line');
-        if (commandLines.length === 0) return;
-
-        const lastCommandLine = commandLines[commandLines.length - 1];
-        const input = lastCommandLine.querySelector('.command-input');
-
-        if (!input) {
-            this.isTyping = false;
+        if (this.isTyping) {
+            console.warn('EPI Terminal: Already typing, skipping command:', text);
             return;
         }
+        this.isTyping = true;
 
-        // Simulate typing
-        for (let i = 0; i < text.length; i++) {
-            input.value += text[i];
-            await this.delay(Math.random() * 50 + 30); // Random typing speed
+        try {
+            // Find the last command line explicitly
+            const commandLines = this.body.querySelectorAll('.command-line');
+            if (commandLines.length === 0) {
+                console.error('EPI Terminal: No command lines found');
+                this.isTyping = false;
+                return;
+            }
+
+            const lastCommandLine = commandLines[commandLines.length - 1];
+            const input = lastCommandLine.querySelector('.command-input');
+
+            if (!input) {
+                console.error('EPI Terminal: No input found in command line');
+                this.isTyping = false;
+                return;
+            }
+
+            // Enable input for typing
+            input.disabled = false;
+
+            // Simulate typing
+            for (let i = 0; i < text.length; i++) {
+                input.value += text[i];
+                await this.delay(Math.random() * 50 + 30); // Random typing speed
+            }
+
+            await this.delay(300);
+            await this.execute(text, false); // No focus for auto-runner
+        } catch (err) {
+            console.error('EPI Terminal: Error in typeCommand:', err);
+        } finally {
+            this.isTyping = false;
         }
-
-        await this.delay(300);
-        await this.execute(text, false); // No focus for auto-runner
-        this.isTyping = false;
     }
 
     delay(ms) {
