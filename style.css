@@ -312,8 +312,13 @@ code {
 }
 
 .logo-img {
-    height: 100%;
-    width: auto;
+    width: 100%;
+    /* Fill the 200px container */
+    height: auto;
+    /* Maintain proper aspect ratio */
+    max-height: 70px;
+    /* Safety cap to fit in 80px navbar */
+    object-fit: contain;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
 }
