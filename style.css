@@ -291,7 +291,8 @@ code {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem var(--space-lg);
-    height: 80px;
+    height: 90px;
+    /* Increased height to let logo breathe */
 }
 
 .nav-logo {
@@ -304,19 +305,23 @@ code {
 }
 
 .nav-logo a {
-    display: block;
-    height: auto;
+    display: flex;
+    /* Centers image vertically */
+    height: 100%;
+    /* Fill vertical space */
     width: auto;
-    max-width: 180px;
-    /* Goldilocks size: fits nicely, presentable */
+    max-width: 320px;
+    /* Large but fitted */
+    align-items: center;
     cursor: pointer;
 }
 
 .logo-img {
-    height: 45px;
-    /* Fixed height for consistency */
+    height: auto;
     width: auto;
-    /* Width adjusts naturally */
+    max-height: 100%;
+    /* Fill the 90px height completely */
+    max-width: 100%;
     object-fit: contain;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
@@ -348,10 +353,9 @@ code {
    Force mobile menu early (1150px) to prevent ANY overlap 
 */
 /* 
-   Safety Breakpoint - Standard Laptop/Tablet (1024px)
-   Matches standard industry transitions
+   Safety Breakpoint - Adjusted for 320px Logo (1200px)
 */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .nav-links {
         display: none !important;
     }
