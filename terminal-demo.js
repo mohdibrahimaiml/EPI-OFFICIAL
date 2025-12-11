@@ -284,33 +284,61 @@ class TerminalDemo {
         // 2. Record Phase
         await this.delay(1500);
         if (this.options.onPhaseChange) this.options.onPhaseChange('record');
-        await this.wait(1000);
-        await this.type('epi run experiment.py');
+        await this.delay(1000);
+        await this.typeCommand('epi run experiment.py');
 
+        // 3. Verify & View Phase
         if (this.options.onPhaseChange) this.options.onPhaseChange('view');
-        await this.wait(3000);
-        await this.type('epi view output.epi');
-        // Viewer opens automatically from execute logic if mapped? 
-        // actually execute maps 'epi view' to open modal
+        await this.delay(2000); // Allow time to read verifying message
+        await this.typeCommand('epi view output.epi');
+
+        // Final: Open Viewer
+        this.print([{ text: 'Opening viewer...', color: 'text-dim' }]);
+        await this.delay(1000);
+
+        if (typeof openViewerModal === 'function') {
+            openViewerModal();
+        } else {
+            // Fallback if global function not found (e.g. scoping issue)
+            const event = new CustomEvent('open-viewer');
+            window.dispatchEvent(event);
+        }
+
+        // Loop
+        await this.delay(5000);
+        this.print([{ text: '↺ Restarting simulation...', color: 'text-dim' }]);
+        await this.delay(1000);
+        this.clear();
+        this.newLine(false);
+        this.isAutoRunning = false;
+        this.startAutoDemo();
     }
 
-    async type(text) {
+    async typeCommand(text) {
         if (this.isTyping) return;
         this.isTyping = true;
 
         // Find current input (even if disabled by auto-runner)
-        const input = this.body.querySelector('.command-input:last-child');
-        if (!input) return;
-
-        for (let i = 0; i < text.length; i++) {
-            input.value += text[i];
-            await this.wait(Math.random() * 50 + 30); // Random typing speed
+        const input = this.body.lastElementChild.querySelector('.command-input');
+        if (!input) {
+            this.isTyping = false;
+            return;
         }
 
-        await this.wait(300);
-        await this.wait(300);
+        // Simulate typing
+        for (let i = 0; i < text.length; i++) {
+            input.value += text[i];
+            await this.delay(Math.random() * 50 + 30); // Random typing speed
+        }
+
+        await this.delay(300);
+        await this.delay(300);
         this.execute(text, false); // No focus for auto-runner
         this.isTyping = false;
+    }
+
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
 
