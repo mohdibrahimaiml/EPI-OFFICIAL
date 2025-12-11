@@ -469,6 +469,10 @@ code {
    Switch to Mobile Menu at 1024px (Standard Laptop).
    This prevents ANY chance of Logo/Link overlap.
 */
+.mobile-back {
+    display: none;
+}
+
 @media (max-width: 1024px) {
     .nav-links {
         display: none !important;
@@ -494,6 +498,24 @@ code {
     }
 
     /* Mobile Menu Overlay Logic */
+    .mobile-back {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 0.5rem;
+        transition: color 0.2s ease;
+    }
+
+    .mobile-back:hover {
+        color: var(--color-white);
+    }
+
     .nav-links.active {
         display: flex !important;
         flex-direction: column;

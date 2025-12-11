@@ -80,6 +80,16 @@ if (hamburger) {
         navLinksContainer.classList.toggle('active');
         navCta.classList.toggle('active');
     });
+
+    // Mobile Back Button logic
+    const mobileBack = document.querySelector('.mobile-back');
+    if (mobileBack) {
+        mobileBack.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinksContainer.classList.remove('active');
+            navCta.classList.remove('active');
+        });
+    }
 }
 
 // ============================================
