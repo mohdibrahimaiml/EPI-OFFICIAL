@@ -309,9 +309,8 @@ code {
     display: block;
     height: auto;
     width: 160px;
-    /* Reduced from 200px for better fit */
     cursor: pointer;
-    /* Removed absolute positioning */
+    /* Clean block, no absolute positioning */
 }
 
 .logo-img {
