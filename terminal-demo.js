@@ -82,8 +82,8 @@ class TerminalDemo {
     }
 
     scrollToBottom() {
-        if (this.body && this.body.parentElement) {
-            this.body.parentElement.scrollTop = this.body.parentElement.scrollHeight;
+        if (this.body) {
+            this.body.scrollTop = this.body.scrollHeight;
         }
     }
 
