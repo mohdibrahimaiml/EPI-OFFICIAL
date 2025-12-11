@@ -306,7 +306,8 @@ code {
 .nav-logo a {
     display: block;
     height: auto;
-    width: 160px;
+    width: 200px;
+    /* USER REQUEST: 200px explicitly */
     cursor: pointer;
 }
 
