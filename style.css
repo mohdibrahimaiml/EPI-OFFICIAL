@@ -306,8 +306,8 @@ code {
 .nav-logo a {
     display: block;
     height: auto;
-    width: 200px;
-    /* USER REQUEST: 200px explicitly */
+    width: 400px;
+    /* USER REQUEST: 400px explicitly */
     cursor: pointer;
 }
 
@@ -348,7 +348,11 @@ code {
    CRITICAL SAFETY BREAKPOINT 
    Force mobile menu early (1150px) to prevent ANY overlap 
 */
-@media (max-width: 1150px) {
+/* 
+   CRITICAL SAFETY BREAKPOINT 
+   Force mobile menu early (1300px) to prevent ANY overlap with 400px Logo
+*/
+@media (max-width: 1300px) {
     .nav-links {
         display: none !important;
     }
