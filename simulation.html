@@ -192,12 +192,13 @@
     </section>
 
     <script src="app.js"></script>
-    <script src="terminal-demo.js"></script>
+    <script src="terminal-demo.js?v=2.3"></script>
     <script>
         // Custom Logic to link Terminal to Stepper
         document.addEventListener('DOMContentLoaded', () => {
             // Create a custom instance for this page with callbacks
             const term = new TerminalDemo('interactive-terminal', {
+                mode: 'full',
                 onPhaseChange: (phase) => {
                     // Reset all
                     document.querySelectorAll('.step-item').forEach(el => {

@@ -293,7 +293,9 @@ class TerminalDemo {
         if (this.isAutoRunning || this.options.skipAutoDemo) return;
         this.isAutoRunning = true;
 
-        // Sequence: Install -> Record -> Verify -> View
+        const mode = this.options.mode || 'full'; // 'preview' or 'full'
+
+        // Sequence: Install -> Record -> [Verify -> View]
 
         // 1. Install Phase
         await this.delay(1000);
@@ -313,7 +315,19 @@ class TerminalDemo {
         await this.delay(1000);
         await this.typeCommand('epi run experiment.py');
 
-        // 3. Verify & View Phase
+        if (mode === 'preview') {
+            // Preview Mode: Loop back after running
+            await this.delay(3000);
+            this.print([{ text: '↺ Restarting preview...', color: 'text-dim' }]);
+            await this.delay(1000);
+            this.clear();
+            this.newLine(false);
+            this.isAutoRunning = false;
+            this.startAutoDemo();
+            return;
+        }
+
+        // 3. Verify & View Phase (Full Mode Only)
         if (this.options.onPhaseChange) this.options.onPhaseChange('view');
         await this.delay(2000); // Allow time to read verifying message
         await this.typeCommand('epi view output.epi');
@@ -436,7 +450,8 @@ function initEpiTerminals() {
     if (homeTerminal) {
         console.log('EPI: Found homepage-terminal. Starting demo...');
         const term = new TerminalDemo('homepage-terminal', {
-            skipAutoDemo: false
+            skipAutoDemo: false,
+            mode: 'preview'
         });
         // Slight delay to ensure DOM paint of init() before starting loop
         setTimeout(() => {
