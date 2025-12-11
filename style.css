@@ -306,18 +306,17 @@ code {
 .nav-logo a {
     display: block;
     height: auto;
-    width: 400px;
-    /* USER REQUEST: 400px explicitly */
+    width: auto;
+    max-width: 180px;
+    /* Goldilocks size: fits nicely, presentable */
     cursor: pointer;
 }
 
 .logo-img {
-    width: 100%;
-    /* Fill the 200px container */
-    height: auto;
-    /* Maintain proper aspect ratio */
-    max-height: 70px;
-    /* Safety cap to fit in 80px navbar */
+    height: 45px;
+    /* Fixed height for consistency */
+    width: auto;
+    /* Width adjusts naturally */
     object-fit: contain;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
@@ -349,10 +348,10 @@ code {
    Force mobile menu early (1150px) to prevent ANY overlap 
 */
 /* 
-   CRITICAL SAFETY BREAKPOINT 
-   Force mobile menu early (1300px) to prevent ANY overlap with 400px Logo
+   Safety Breakpoint - Standard Laptop/Tablet (1024px)
+   Matches standard industry transitions
 */
-@media (max-width: 1300px) {
+@media (max-width: 1024px) {
     .nav-links {
         display: none !important;
     }
