@@ -399,18 +399,31 @@ function openViewerModal() {
 
 // Initialize on Load
 // Initialize on Load
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize on Load
+function initEpiTerminals() {
+    console.log('EPI: Initializing Terminals...');
+
     // 1. Homepage Terminal (ID: homepage-terminal)
-    // This ID is unique to index.html, so no conflict with simulation.html
     const homeTerminal = document.getElementById('homepage-terminal');
 
     if (homeTerminal) {
+        console.log('EPI: Found homepage-terminal. Starting demo...');
         const term = new TerminalDemo('homepage-terminal', {
             skipAutoDemo: false
         });
-        term.startAutoDemo();
+        // Slight delay to ensure DOM paint of init() before starting loop
+        setTimeout(() => {
+            console.log('EPI: Triggering startAutoDemo');
+            term.startAutoDemo();
+        }, 100);
+    } else {
+        console.log('EPI: homepage-terminal not found (likely on simulation page or other)');
     }
+}
 
-    // 2. Simulation Page is handled by inline script in simulation.html
-    // which targets 'interactive-terminal'.
-});
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEpiTerminals);
+} else {
+    // DOM already ready, run immediately
+    initEpiTerminals();
+}
