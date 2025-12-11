@@ -32,7 +32,6 @@ class TerminalDemo {
         window.scrollTo(0, 0);
 
         this.clear();
-        this.clear();
         this.newLine(false); // Don't focus on init
 
         // Focus input on click
@@ -56,6 +55,12 @@ class TerminalDemo {
 
     clear() {
         this.body.innerHTML = '';
+    }
+
+    scrollToBottom() {
+        if (this.body && this.body.parentElement) {
+            this.body.parentElement.scrollTop = this.body.parentElement.scrollHeight;
+        }
     }
 
     newLine(autoFocus = true) {
