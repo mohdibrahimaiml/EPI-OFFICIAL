@@ -260,25 +260,21 @@ code {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(2, 6, 23, 0.6);
-    /* More transparent for blur to shine */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Docker/Enterprise Style: Solid, Deep Navy Background */
+    background: #0B1120;
+    /* Subtle blur remains for elite feel, but opacity is high */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1E293B;
+    /* Structural Border */
     z-index: 1000;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 
 /* Subtle gradient line at bottom of nav */
+/* Remove gradient line, use solid border instead */
 .nav::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    pointer-events: none;
+    display: none;
 }
 
 .nav.scrolled {
@@ -372,16 +368,26 @@ code {
 }
 
 .nav-links a {
-    color: var(--color-gray-400);
+    color: #94A3B8;
+    /* Slate-400 equivalent */
     text-decoration: none;
     font-weight: 500;
     padding: 0.5rem 0;
-    /* Minimal padding */
     border-radius: 0;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
     font-size: 0.95rem;
     position: relative;
-    overflow: visible;
+    letter-spacing: 0.01em;
+}
+
+.nav-links a:hover {
+    color: #F8FAFC;
+    /* White on hover */
+}
+
+/* Remove underline animation for cleaner "Tech" look, or keep subtle */
+.nav-links a::after {
+    display: none;
 }
 
 .nav-links a::after {
