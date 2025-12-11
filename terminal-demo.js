@@ -224,7 +224,7 @@ class TerminalDemo {
         ];
 
         for (const step of steps) {
-            await this.wait(step.delay);
+            await this.delay(step.delay);
             this.print([{ text: step.text, color: step.color }]);
         }
     }
@@ -241,7 +241,7 @@ class TerminalDemo {
             ];
             for (const line of lines) {
                 this.print([line]);
-                await this.wait(Math.random() * 200 + 100);
+                await this.delay(Math.random() * 200 + 100);
             }
         } else {
             this.print([{ text: `pip: unknown command or package`, color: 'text-red' }]);
@@ -252,7 +252,7 @@ class TerminalDemo {
         this.print([
             { text: `Verifying ${filename || 'recording.epi'}...`, color: 'text-dim' }
         ]);
-        await this.wait(800);
+        await this.delay(800);
         this.print([
             { text: `+---------------------------------------+` },
             { text: `| TRUST LEVEL: HIGH                     |`, color: 'text-green' },
@@ -263,29 +263,26 @@ class TerminalDemo {
         ]);
     }
 
-    print(lines) {
-        lines.forEach(line => {
-            const el = document.createElement('div');
-            el.className = `output-line ${line.color || ''}`;
-            el.textContent = line.text;
-            this.body.appendChild(el);
-        });
-        this.scrollToBottom();
-    }
-
-    scrollToBottom() {
-        this.body.scrollTop = this.body.scrollHeight;
-    }
-
-    wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     async startAutoDemo() {
+        if (this.isAutoRunning || this.options.skipAutoDemo) return;
         this.isAutoRunning = true;
-        await this.wait(1500);
-        await this.type('pip install epi-recorder');
 
+        // Sequence: Install -> Record -> Verify -> View
+
+        // 1. Install Phase
+        await this.delay(1000);
+        if (this.options.onPhaseChange) this.options.onPhaseChange('install');
+        await this.typeCommand('pip install epi-recorder');
+        await this.print([
+            { text: 'Collecting epi-recorder', color: 'text-white' },
+            { text: 'Downloading epi_recorder-2.0.0-py3-none-any.whl (18 kB)', color: 'text-white' },
+            { text: 'Installing collected packages: epi-recorder', color: 'text-white' },
+            { text: 'Successfully installed epi-recorder-2.0.0', color: 'text-green' }
+        ]);
+        this.newLine(false);
+
+        // 2. Record Phase
+        await this.delay(1500);
         if (this.options.onPhaseChange) this.options.onPhaseChange('record');
         await this.wait(1000);
         await this.type('epi run experiment.py');
@@ -367,8 +364,4 @@ function openViewerModal() {
 }
 
 // Initialize on Load (only if not simulation page which handles it manually)
-document.addEventListener('DOMContentLoaded', () => {
-    if (!document.querySelector('body').innerHTML.includes('EPI Flight Simulator')) {
-        new TerminalDemo('interactive-terminal');
-    }
-});
+// Auto-init removed to prevent conflicts. Initialization is now manual in simulation.html.
