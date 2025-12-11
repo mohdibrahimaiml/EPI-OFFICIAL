@@ -358,17 +358,25 @@ code {
     color: #94A3B8;
     /* Slate-400 */
     text-decoration: none;
-    transition: color 0.15s ease-in-out;
+    padding: 0.5rem 1rem;
+    /* Added padding for pill */
+    border-radius: 99px;
+    /* Pill shape */
+    transition: all 0.2s ease-in-out;
     white-space: nowrap;
 }
 
 .nav-links a:hover {
     color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+    /* Subtle hover pill */
 }
 
-/* Active state if needed later */
+/* Active State - Premium Pill */
 .nav-links a.active {
     color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
 }
 
 /* 3. CTA Section */
@@ -480,6 +488,75 @@ code {
         /* Show Hamburger */
         margin-left: auto;
         /* Push to right */
+    }
+
+    /* Mobile Menu Overlay Logic */
+    .nav-links.active {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        /* Below navbar */
+        left: 0;
+        width: 100%;
+        background: #0B1120;
+        /* Solid Navy */
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #1E293B;
+        padding: 2rem;
+        gap: 1.5rem;
+        animation: slideDownMenu 0.3s ease forwards;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideDownMenu {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .nav-cta.active {
+        display: flex !important;
+        /* Show CTA in mobile menu if desired */
+        position: absolute;
+        bottom: 0;
+        /* Or just append to nav-links via JS refactor, but keeping separate for now */
+        /* Actually, usually mobile menu includes CTA. 
+           For simplicity, let's make the mobile menu just the links, 
+           and maybe hide CTA or absolute position it below links. */
+        flex-direction: column;
+        width: 100%;
+        padding: 0 2rem 2rem 2rem;
+        background: #0B1120;
+        top: auto;
+        margin-top: 0;
+        border-bottom: 1px solid #1E293B;
+    }
+
+    /* Better Mobile Menu: Combine them visually */
+    .nav-links.active {
+        padding-bottom: 1rem;
+        border-bottom: none;
+    }
+
+    .nav-cta.active {
+        position: absolute;
+        top: 280px;
+        /* Adjust based on link count or simple flow */
+        /* Actually simpler: just rely on flow if container allowed. 
+           But container is flex-row. 
+           Best approach: The JS toggles both. Let's stack them. */
+        top: 100%;
+        margin-top: 250px;
+        /* Hacky? Let's use standard absolute flow. */
+        /* REFACTOR: The JS toggles .active on both. 
+           Let's make nav-links take up the space. */
     }
 }
 
@@ -1935,103 +2012,57 @@ html {
    ============================================ */
 
 /* Tablet (768px and below) */
-@media (max-width: 768px) {
-    .nav-container {
-        height: auto;
-        padding: 1rem;
-        flex-wrap: wrap;
-    }
+/* Legacy Mobile Nav Removed - Handled by Perfect Navbar Logic */
+.hero-title {
+    font-size: 2.5rem !important;
+}
 
-    .nav-logo a {
-        position: relative;
-        height: 80px;
-        width: auto;
-        top: auto;
-        transform: none;
-    }
+.hero-subtitle {
+    font-size: 1rem;
+}
 
-    .logo-img {
-        height: 80px;
-    }
+.hero-cta {
+    flex-direction: column;
+    gap: 1rem;
+}
 
-    .nav-links {
-        display: none;
-        margin-left: 0;
-    }
+.section-title {
+    font-size: 2rem;
+}
 
-    .nav-links.active {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 1rem;
-        padding: 1rem 0;
-    }
+.crisis-grid,
+.lifecycle-grid,
+.use-cases-grid {
+    grid-template-columns: 1fr;
+}
 
-    .nav-cta {
-        display: none;
-    }
+.terminal-window {
+    min-width: 100% !important;
+    max-width: 100% !important;
+}
 
-    .nav-cta.active {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 1rem;
-    }
+.epi-file-visual {
+    display: none;
+}
 
-    .hamburger {
-        display: flex !important;
-    }
+.hero-stats {
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
-    .hero-title {
-        font-size: 2.5rem !important;
-    }
+.footer-content {
+    flex-direction: column;
+    gap: 2rem;
+}
 
-    .hero-subtitle {
-        font-size: 1rem;
-    }
+.footer-links {
+    flex-direction: column;
+    gap: 2rem;
+}
 
-    .hero-cta {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .crisis-grid,
-    .lifecycle-grid,
-    .use-cases-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .terminal-window {
-        min-width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .epi-file-visual {
-        display: none;
-    }
-
-    .hero-stats {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .footer-content {
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .footer-links {
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .footer-logo {
-        height: 120px;
-    }
+.footer-logo {
+    height: 120px;
+}
 }
 
 /* Phone (480px and below) */
