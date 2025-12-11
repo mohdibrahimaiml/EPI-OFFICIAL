@@ -463,9 +463,12 @@ function initEpiTerminals() {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEpiTerminals);
-} else {
-    // DOM already ready, run immediately
+// Initialize on Window Load to ensure all CSS and assets are parsed
+window.addEventListener('load', () => {
+    initEpiTerminals();
+});
+
+// Fallback for fast loads or if already loaded
+if (document.readyState === 'complete') {
     initEpiTerminals();
 }
