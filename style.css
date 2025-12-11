@@ -326,15 +326,17 @@ code {
 .nav-links {
     display: flex;
     gap: 2rem;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto;
+    /* Standard Centering in remaining flex space */
     background: transparent;
     padding: 0;
     border: none;
     box-shadow: none;
     backdrop-filter: none;
     white-space: nowrap;
+    position: static;
+    /* NO ABSOLUTE */
+    transform: none;
 }
 
 /* 
