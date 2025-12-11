@@ -700,6 +700,107 @@ code {
     background: #27C93F;
 }
 
+.terminal-title {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateX(-26px);
+}
+
+.terminal-body {
+    background: var(--color-navy-800);
+    padding: 1.5rem;
+    height: 350px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Terminal Utilities (Required for JS) */
+.prompt {
+    color: var(--color-success);
+    margin-right: 0.5rem;
+    font-weight: 700;
+}
+
+.path {
+    color: var(--color-primary-light);
+}
+
+.command-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.text-green {
+    color: var(--color-success) !important;
+}
+
+.text-blue {
+    color: var(--color-primary-light) !important;
+}
+
+.text-yellow {
+    color: var(--color-warning) !important;
+}
+
+.text-red {
+    color: var(--color-error) !important;
+}
+
+.text-gray {
+    color: var(--text-muted) !important;
+}
+
+.text-white {
+    color: #FFFFFF !important;
+}
+
+.text-dim {
+    color: var(--text-disabled) !important;
+}
+
+/* Cursor Animation */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.2em;
+    background: var(--text-secondary);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Input Override */
+.command-input {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    flex: 1;
+    min-width: 50px;
+}
+
 .terminal-body {
     padding: var(--space-lg);
     font-family: var(--font-mono);
