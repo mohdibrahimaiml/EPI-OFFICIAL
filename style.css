@@ -373,11 +373,12 @@ code {
     transform: translateY(-1px);
 }
 
-/* Active State - Premium Pill */
+/* Active State - Premium Pill with Smooth Transition */
 .nav-links a.active {
     color: #FFFFFF;
     background: rgba(255, 255, 255, 0.1);
     font-weight: 600;
+    transition: background 0.3s ease, color 0.3s ease, font-weight 0.2s ease;
 }
 
 /* Focus States - Accessibility */

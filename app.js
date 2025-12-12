@@ -45,27 +45,98 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Highlight Active Nav Link based on URL
+// ============================================
+// Scroll-Spy: Highlight Active Nav Link
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = [];
 
+    // Build a map of nav links to their target sections
     navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        // Check if link matches current path
-        // Handle root path case where currentPath might be empty string or '/'
-        if (linkHref === currentPath || (currentPath === 'index.html' && linkHref === 'index.html') || (currentPath === '' && linkHref === 'index.html')) {
-            link.classList.add('active');
-        }
+        const href = link.getAttribute('href');
 
-        // Handle hash links on the same page (e.g. vision.html#founder on vision.html)
-        if (linkHref.includes('#')) {
-            const [path, hash] = linkHref.split('#');
-            if ((path === currentPath || (path === '' && currentPath === 'index.html')) && hash) {
-                // Optional: could highlight hash links specifically, but usually page-level highlight is enough
+        // Handle same-page hash links (e.g., #get-started, index.html#get-started)
+        if (href.includes('#')) {
+            const [path, hash] = href.split('#');
+            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+
+            // Only track if it's for the current page or no path specified
+            if (!path || path === currentPath || path === 'index.html') {
+                const section = document.getElementById(hash);
+                if (section) {
+                    sections.push({ link, section, hash });
+                }
             }
         }
     });
+
+    // Function to update active link
+    function updateActiveLink(activeHash = null) {
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+
+            // Check if this link matches the active hash
+            if (activeHash && href.includes('#' + activeHash)) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+
+            // Also highlight based on current page (for non-hash links)
+            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+            if (!href.includes('#') && (href === currentPath || href.includes(currentPath))) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // IntersectionObserver for scroll-spy
+    if (sections.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -75% 0px', // Trigger when section is in the top 25% of viewport
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Find the section in our map
+                    const activeSection = sections.find(s => s.section === entry.target);
+                    if (activeSection) {
+                        updateActiveLink(activeSection.hash);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        sections.forEach(({ section }) => observer.observe(section));
+    }
+
+    // Handle hash changes (when user clicks a link)
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1); // Remove #
+        if (hash) {
+            updateActiveLink(hash);
+        }
+    });
+
+    // Initial highlight based on URL hash or current page
+    const initialHash = window.location.hash.substring(1);
+    if (initialHash) {
+        updateActiveLink(initialHash);
+    } else {
+        // Highlight current page link if no hash
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href.includes('#') && (href === currentPath || href.includes(currentPath))) {
+                link.classList.add('active');
+            }
+        });
+    }
 });
 
 
