@@ -51,6 +51,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-links a');
     const sections = [];
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
 
     // Build a map of nav links to their target sections
     navLinks.forEach(link => {
@@ -59,8 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle same-page hash links (e.g., #get-started, index.html#get-started)
         if (href.includes('#')) {
             const [path, hash] = href.split('#');
-            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-
             // Only track if it's for the current page or no path specified
             if (!path || path === currentPath || path === 'index.html') {
                 const section = document.getElementById(hash);
@@ -75,23 +74,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateActiveLink(activeHash = null) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
+            let shouldBeActive = false;
 
-            // Check if this link matches the active hash
-            if (activeHash && href.includes('#' + activeHash)) {
+            if (activeHash && href.includes('#')) {
+                // For hash links, check if the hash matches
+                const [path, hash] = href.split('#');
+                if (hash === activeHash && (!path || path === currentPath || path === 'index.html')) {
+                    shouldBeActive = true;
+                }
+            } else if (!activeHash && !href.includes('#')) {
+                // For non-hash links, check if page matches
+                if (href === currentPath || href.includes(currentPath)) {
+                    shouldBeActive = true;
+                }
+            }
+
+            if (shouldBeActive) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
             }
-
-            // Also highlight based on current page (for non-hash links)
-            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-            if (!href.includes('#') && (href === currentPath || href.includes(currentPath))) {
-                link.classList.add('active');
-            }
         });
     }
 
-    // IntersectionObserver for scroll-spy
+    // IntersectionObserver for scroll-spy (only if we have sections to track)
     if (sections.length > 0) {
         const observerOptions = {
             root: null,
@@ -113,29 +119,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Observe all sections
         sections.forEach(({ section }) => observer.observe(section));
-    }
 
-    // Handle hash changes (when user clicks a link)
-    window.addEventListener('hashchange', () => {
-        const hash = window.location.hash.substring(1); // Remove #
-        if (hash) {
-            updateActiveLink(hash);
-        }
-    });
-
-    // Initial highlight based on URL hash or current page
-    const initialHash = window.location.hash.substring(1);
-    if (initialHash) {
-        updateActiveLink(initialHash);
-    } else {
-        // Highlight current page link if no hash
-        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (!href.includes('#') && (href === currentPath || href.includes(currentPath))) {
-                link.classList.add('active');
+        // Handle hash changes (when user clicks a link)
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1); // Remove #
+            if (hash) {
+                updateActiveLink(hash);
             }
         });
+
+        // Initial highlight based on URL hash
+        const initialHash = window.location.hash.substring(1);
+        if (initialHash) {
+            updateActiveLink(initialHash);
+        } else {
+            updateActiveLink(null); // Will highlight page-level link
+        }
+    } else {
+        // No hash sections on this page, just highlight current page link
+        updateActiveLink(null);
     }
 });
 
