@@ -380,6 +380,23 @@ code {
     font-weight: 600;
 }
 
+/* Focus States - Accessibility */
+.nav-links a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-links a:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.nav-links a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 /* 3. CTA Section */
 .nav-cta {
     display: flex;
@@ -430,6 +447,18 @@ code {
     border-color: #e2e8f0;
 }
 
+/* Focus States for CTA Buttons - Accessibility */
+.nav-cta .btn-secondary:focus,
+.nav-cta .btn-primary:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+.nav-cta .btn-secondary:focus:not(:focus-visible),
+.nav-cta .btn-primary:focus:not(:focus-visible) {
+    outline: none;
+}
+
 /* Hamburger Menu Toggle */
 .hamburger {
     display: none;
@@ -460,6 +489,31 @@ code {
     background-color: #FFFFFF;
 }
 
+/* Hamburger Active State - Animate to X */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+    background-color: #FFFFFF;
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+    background-color: #FFFFFF;
+}
+
+/* Hamburger Focus State - Accessibility */
+.hamburger:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.hamburger:focus:not(:focus-visible) {
+    outline: none;
+}
 
 /* ============================================
    Responsiveness (The Logic)
@@ -531,12 +585,23 @@ code {
         backdrop-filter: blur(20px);
         padding: 2rem 2rem 150px 2rem;
         /* Bottom padding for CTA space */
-        gap: 1.5rem;
+        gap: 0.5rem;
+        /* Reduced gap for cleaner look */
         animation: slideDownMenu 0.3s ease forwards;
         z-index: 1500;
         /* High Z-Index */
         overflow-y: auto;
         /* Scrollable */
+    }
+
+    /* Mobile Menu Links - Enhanced Spacing */
+    .nav-links.active a {
+        padding: 1rem 1.5rem;
+        /* Increased touch target */
+        font-size: 1.125rem;
+        /* Slightly larger text for readability */
+        border-radius: 12px;
+        /* Larger radius for premium feel */
     }
 
     @keyframes slideDownMenu {
