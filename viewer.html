@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPI Viewer | Verify Evidence</title>
-    <link rel="stylesheet" href="viewer.css">
+    <link rel="stylesheet" href="viewer.css?v=2">
 
     <!-- JSZip for unzipping files in the browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -87,9 +87,9 @@
         <div id="viewer-state" class="state-view">
             <!-- Status Banner -->
             <div class="status-banner">
-                <div class="status-indicator verified">
-                    <span class="status-icon">✓</span>
-                    <span>VERIFIED EVIDENCE</span>
+                <div class="status-indicator">
+                    <span class="status-icon"></span>
+                    <span>ANALYZING EVIDENCE...</span>
                 </div>
                 <div class="status-details">
                     <span id="status-algorithm">Ed25519</span>
@@ -167,7 +167,7 @@
         </div>
     </div>
 
-    <script src="viewer.js"></script>
+    <script src="viewer.js?v=2"></script>
 </body>
 
 </html>
