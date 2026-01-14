@@ -252,14 +252,12 @@ function displayVerifiedEvidence(result) {
 
     if (result.viewerHtml) {
         const iframe = document.createElement('iframe');
-        iframe.sandbox = "allow-scripts"; // Only allow scripts if necessary, but keep it secure
+        iframe.sandbox = "allow-scripts allow-popups allow-forms";
         container.appendChild(iframe);
 
-        // Write content to iframe
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(result.viewerHtml);
-        doc.close();
+        // Use Blob URL to safely load content without cross-origin issues
+        const blob = new Blob([result.viewerHtml], { type: 'text/html' });
+        iframe.src = URL.createObjectURL(blob);
     } else {
         container.innerHTML = '<div style="padding:20px; text-align:center; color:#666;">No embedded viewer found.</div>';
     }
