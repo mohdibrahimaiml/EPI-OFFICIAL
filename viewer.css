@@ -457,8 +457,19 @@ body {
     /* Iframe usually needs white bg unless dark mode supported content */
     border: 1px solid var(--border-default);
     border-radius: var(--radius-sm);
-    height: 700px;
+    height: 85vh;
+    /* Increased from 600px to give maximum space */
+    width: 100%;
     overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.embedded-viewer-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
 }
 
 /* Facts Table */

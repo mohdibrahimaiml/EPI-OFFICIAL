@@ -255,8 +255,34 @@ function displayVerifiedEvidence(result) {
         iframe.sandbox = "allow-scripts allow-popups allow-forms";
         container.appendChild(iframe);
 
-        // Use Blob URL to safely load content without cross-origin issues
-        const blob = new Blob([result.viewerHtml], { type: 'text/html' });
+        // Inject layout fixes into the embedded HTML
+        // This forces the content to fit the iframe and handle scrolling
+        let htmlContent = result.viewerHtml;
+        const layoutFix = `
+            <style>
+                html, body { 
+                    height: 100% !important; 
+                    width: 100% !important; 
+                    margin: 0 !important; 
+                    padding: 0 !important; 
+                    overflow: auto !important; 
+                }
+                /* Ensure terminal/content containers fill space */
+                #terminal, .terminal, .xterm-viewport {
+                     height: 100% !important;
+                }
+            </style>
+        `;
+
+        // Try to inject before </head>, otherwise append
+        if (htmlContent.includes('</head>')) {
+            htmlContent = htmlContent.replace('</head>', layoutFix + '</head>');
+        } else {
+            htmlContent += layoutFix;
+        }
+
+        // Use Blob URL to safely load content
+        const blob = new Blob([htmlContent], { type: 'text/html' });
         iframe.src = URL.createObjectURL(blob);
     } else {
         container.innerHTML = '<div style="padding:20px; text-align:center; color:#666;">No embedded viewer found.</div>';
