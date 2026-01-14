@@ -155,15 +155,10 @@ async function verifyEpiFile(file) {
             };
         }
 
-        // 5. Signature Check (Format only for now, mirroring desktop app)
+        // 5. Signature Check (Non-blocking for viewer, merely informative)
         const signatureResult = checkSignatureFormat(manifest.signature);
-        if (!signatureResult.valid) {
-            return {
-                success: false,
-                error: 'Signature verification failed: ' + signatureResult.error,
-                details: { signature: signatureResult }
-            };
-        }
+        // We do NOT return success:false here anymore. We allow viewing unsigned files.
+        // The displayVerifiedEvidence function will handle the UI status.
 
         // 6. Extract Viewer
         let viewerHtml = null;
@@ -230,8 +225,41 @@ function updateVerificationStep(stepId, status) {
 function displayVerifiedEvidence(result) {
     const manifest = result.manifest;
 
-    // Banner
-    document.getElementById('status-algorithm').textContent = 'Ed25519';
+    // Banner Status Logic
+    const statusIndicator = document.querySelector('.status-indicator');
+    const statusIcon = statusIndicator.querySelector('.status-icon');
+    const statusText = statusIndicator.querySelector('span:last-child');
+    const banner = document.querySelector('.status-banner');
+
+    const sig = result.verificationDetails.signature;
+
+    // Reset classes
+    statusIndicator.className = 'status-indicator';
+    banner.style.borderBottomColor = '';
+
+    if (sig.valid) {
+        // Signed & Format Valid
+        statusIndicator.classList.add('verified');
+        statusIcon.textContent = '✓';
+        statusText.textContent = 'SIGNED EVIDENCE';
+        banner.style.borderBottomColor = 'var(--color-verified)';
+    } else if (sig.level === 'UNSIGNED') {
+        // Unsigned
+        statusIndicator.classList.add('unsigned'); // Need to ensure css has this or defaults
+        statusIcon.textContent = '⚠️';
+        statusText.textContent = 'UNSIGNED EVIDENCE';
+        banner.style.borderBottomColor = 'var(--color-text-secondary)';
+        statusIndicator.style.color = 'var(--color-text-secondary)';
+    } else {
+        // Invalid Signature Format
+        statusIndicator.classList.add('error');
+        statusIcon.textContent = '✗';
+        statusText.textContent = 'INVALID SIGNATURE';
+        banner.style.borderBottomColor = 'var(--color-error)';
+        statusIndicator.style.color = 'var(--color-error)';
+    }
+
+    document.getElementById('status-algorithm').textContent = sig.algorithm || 'None';
     document.getElementById('status-timestamp').textContent = new Date(manifest.created_at).toISOString();
     document.getElementById('status-version').textContent = `EPI ${manifest.spec_version}`;
 
