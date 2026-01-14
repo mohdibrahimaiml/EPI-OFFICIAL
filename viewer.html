@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPI Viewer | Verify Evidence</title>
+    <link rel="stylesheet" href="viewer.css">
+
+    <!-- JSZip for unzipping files in the browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 1. INITIAL STATE: Drag & Drop -->
+        <div id="initial-state" class="state-view active">
+            <div class="initial-content">
+                <div class="epi-logo">
+                    <a href="index.html" title="Back to Home">
+                        <svg width="64" height="64" viewBox="0 0 100 100" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="100" rx="20" fill="#1F2937" />
+                            <path d="M30 30H70V38H38V46H65V54H38V70H30V30Z" fill="white" />
+                        </svg>
+                    </a>
+                </div>
+                <h1>EPI Viewer</h1>
+                <p class="subtitle">Securely inspect and verify cryptographic evidence files</p>
+
+                <div id="drop-zone" class="drop-zone">
+                    <p style="font-size: 18px; margin-bottom: 8px;">Drag & Drop .epi file here</p>
+                    <p style="font-size: 14px; margin-bottom: 24px;">or</p>
+                    <input type="file" id="file-input" accept=".epi" style="display: none;">
+                    <button id="btn-open-file" class="btn-primary">Select File</button>
+                </div>
+
+                <div class="info-text">
+                    <p>This viewer runs <strong>entirely in your browser</strong>. Your evidence files are never
+                        uploaded to any server. Verification happens locally on your device using verified cryptographic
+                        libraries.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. LOADING STATE: Verifying -->
+        <div id="loading-state" class="state-view">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>Verifying Evidence...</h2>
+
+                <div id="verification-steps">
+                    <div id="step-parsing" class="step loading">
+                        <span class="step-icon">⏳</span>
+                        <span>Parsing Container Structure</span>
+                    </div>
+                    <div id="step-integrity" class="step">
+                        <span class="step-icon"></span>
+                        <span>Verifying File Integrity (Merkle Check)</span>
+                    </div>
+                    <div id="step-signature" class="step">
+                        <span class="step-icon"></span>
+                        <span>Checking Cryptographic Signature</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. ERROR STATE: Failed -->
+        <div id="error-state" class="state-view">
+            <div class="error-content">
+                <div class="error-icon">!</div>
+                <h2>Verification Failed</h2>
+                <p id="error-message" class="error-message">The file structure is invalid.</p>
+
+                <div id="error-details" class="error-details"></div>
+
+                <div class="error-actions">
+                    <button id="btn-try-another-error" class="btn-secondary">Try Another File</button>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- 4. VIEWER STATE: Verified -->
+        <div id="viewer-state" class="state-view">
+            <!-- Status Banner -->
+            <div class="status-banner">
+                <div class="status-indicator verified">
+                    <span class="status-icon">✓</span>
+                    <span>VERIFIED EVIDENCE</span>
+                </div>
+                <div class="status-details">
+                    <span id="status-algorithm">Ed25519</span>
+                    <span class="separator">|</span>
+                    <span id="status-timestamp">2024-12-19T10:00:00Z</span>
+                    <span class="separator">|</span>
+                    <span id="status-version">EPI v1.0</span>
+                </div>
+                <div class="status-actions">
+                    <button id="btn-export-report" class="btn-small">Copy Verification Report</button>
+                    <button id="btn-close-file" class="btn-small">Close</button>
+                </div>
+            </div>
+
+            <!-- Evidence Summary -->
+            <div class="evidence-summary">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Workflow ID</span>
+                        <span id="summary-workflow" class="summary-value">—</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Created</span>
+                        <span id="summary-created" class="summary-value">—</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Signer</span>
+                        <span id="summary-signer" class="summary-value">Unsigned</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Files</span>
+                        <span id="summary-files" class="summary-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer Tabs -->
+            <div class="layer-tabs">
+                <button class="tab-btn active" data-layer="viewer">1. Visual Evidence</button>
+                <button class="tab-btn" data-layer="facts">2. Structured Facts</button>
+                <button class="tab-btn" data-layer="crypto">3. Cryptography</button>
+            </div>
+
+            <!-- Layer Content -->
+            <div class="layer-content">
+                <!-- Layer 1: Visual Viewer -->
+                <div id="layer-viewer" class="layer-panel active">
+                    <div class="layer-header">
+                        <h3>Embedded Viewer</h3>
+                        <p class="layer-description">Visual representation of the evidence as captured.</p>
+                    </div>
+                    <div id="embedded-viewer" class="embedded-viewer-container"></div>
+                </div>
+
+                <!-- Layer 2: Structured Facts -->
+                <div id="layer-facts" class="layer-panel">
+                    <div class="layer-header">
+                        <h3>Structured Facts</h3>
+                        <p class="layer-description">Key metadata and attributes extracted from the evidence manifest.
+                        </p>
+                    </div>
+                    <div id="facts-table" class="facts-table"></div>
+                </div>
+
+                <!-- Layer 3: Cryptography -->
+                <div id="layer-crypto" class="layer-panel">
+                    <div class="layer-header">
+                        <h3>Cryptographic Verification</h3>
+                        <p class="layer-description">Technical details of the integrity checks and digital signatures.
+                        </p>
+                    </div>
+                    <div id="crypto-details" class="crypto-details"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="viewer.js"></script>
+</body>
+
+</html>
