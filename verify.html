@@ -319,7 +319,7 @@
     </main>
 
     <footer class="py-6 text-center text-gray-400 text-xs font-medium">
-        &copy; 2026 EPI Labs. Enterprise Trust Platform. v2.1.1
+        &copy; 2026 EPI Labs. Enterprise Trust Platform. v2.1.2
     </footer>
 
     <!-- Visualizer Modal (Full Screen) -->
@@ -454,11 +454,26 @@
                 if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature");
 
                 const keyName = parts[1];
-                const pubKeyHex = document.getElementById('pubKeyInput').value.trim();
+                const manualKey = document.getElementById('pubKeyInput').value.trim();
+                const embeddedKey = manifest.public_key;
 
-                // Result
-                if (pubKeyHex) {
-                    showResult("yellow", manifest, keyName, "Signature Present (Verification Skipped - Client limitation)");
+                // Determine verification strategy
+                if (manualKey || embeddedKey) {
+                    const verificationKey = manualKey || embeddedKey;
+
+                    // Perform actual cryptographic verification
+                    try {
+                        const isValid = await verifySignature(manifest, verificationKey);
+                        if (isValid) {
+                            const trustMsg = manualKey ? "Verified (Trusted Key)" : "Integrity Verified (Self-Contained Key)";
+                            showResult("green", manifest, keyName, trustMsg);
+                        } else {
+                            showResult("red", manifest, keyName, "Signature Verification Failed! (Tampered Evidence)");
+                        }
+                    } catch (verifyErr) {
+                        console.error(verifyErr);
+                        showResult("red", manifest, keyName, "Verification Error: " + verifyErr.message);
+                    }
                 } else {
                     showResult("yellow", manifest, keyName, "Identity Unverified (No Public Key Provided)");
                 }
@@ -470,6 +485,56 @@
             } catch (err) {
                 showResult("red", null, null, err.message);
             }
+        }
+
+        async function verifySignature(manifest, pubKeyHex) {
+            const signatureRaw = manifest.signature;
+            const parts = signatureRaw.split(':');
+            const sigHex = parts[2];
+
+            // 1. Prepare Public Key
+            const pubKeyBytes = hexToBytes(pubKeyHex);
+
+            // 2. Prepare Canonical Message
+            const manifestCopy = JSON.parse(JSON.stringify(manifest));
+            delete manifestCopy.signature;
+            const jsonString = canonicalJson(manifestCopy);
+            const msgBytes = new TextEncoder().encode(jsonString);
+
+            // 3. Hash Message (SHA-256) - Backend signs the hash
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBytes);
+            const hashArray = new Uint8Array(hashBuffer);
+
+            // 4. Verify
+            const sigBytes = hexToBytes(sigHex);
+            return await ed.verifyAsync(sigBytes, hashArray, pubKeyBytes);
+        }
+
+        // Helper: Canonical JSON Stringify (Recursive)
+        function canonicalJson(obj) {
+            if (Array.isArray(obj)) {
+                return '[' + obj.map(canonicalJson).join(',') + ']';
+            } else if (typeof obj === 'object' && obj !== null) {
+                const keys = Object.keys(obj).sort();
+                let result = '{';
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    if (i > 0) result += ',';
+                    result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
+                }
+                result += '}';
+                return result;
+            } else {
+                return JSON.stringify(obj);
+            }
+        }
+
+        function hexToBytes(hex) {
+            const bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) {
+                bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+            }
+            return bytes;
         }
 
         async function showResult(status, manifest, signer, errorMsg) {

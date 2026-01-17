@@ -1,0 +1,34 @@
+{
+    "name": "EPI Verifier",
+    "short_name": "EPI Verify",
+    "start_url": "./verify.html",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#8b5cf6",
+    "scope": "./",
+    "icons": [
+        {
+            "src": "logo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "file_handlers": [
+        {
+            "action": "./verify.html",
+            "accept": {
+                "application/epi+zip": [
+                    ".epi"
+                ]
+            },
+            "icons": [
+                {
+                    "src": "logo.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        }
+    ]
+}
