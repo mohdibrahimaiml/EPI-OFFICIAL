@@ -63,8 +63,6 @@
                 <a href="use-cases.html#top">Use Cases</a>
                 <a href="verify.html">Verify</a>
                 <a href="vision.html#vision">Vision</a>
-                <a href="index.html#get-started">Get Started</a>
-                <a href="vision.html#founder">Team</a>
                 <a href="contact.html#top">Contact</a>
             </div>
             <div class="nav-cta">
@@ -118,14 +116,16 @@
                     Kernel</h3>
                 <p>Trust is not achieved by "logs" but by <strong>Cryptographic Signatures</strong>. Before signing, the
                     <code>manifest.json</code> is canonicalized (sorted keys, stripped whitespace) to ensure
-                    deterministic hashing across platforms.</p>
+                    deterministic hashing across platforms.
+                </p>
                 <div
                     style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 1rem;">
                     <ul style="list-style-type: none; padding: 0;">
                         <li style="margin-bottom: 0.5rem;"><strong>Algorithm:</strong> Ed25519 (Edwards-curve Digital
                             Signature Algorithm)</li>
                         <li style="margin-bottom: 0.5rem;"><strong>Library:</strong>
-                            <code>cryptography.hazmat.primitives.asymmetric.ed25519</code></li>
+                            <code>cryptography.hazmat.primitives.asymmetric.ed25519</code>
+                        </li>
                         <li><strong>Key Size:</strong> 32 bytes (High performance, low overhead)</li>
                     </ul>
                 </div>
@@ -137,12 +137,14 @@
                     Verifier</h2>
                 <p>The Verifier is a Zero-Knowledge application. It proves the validity of a file without ever needing
                     to see its contents on a server. The Python backend logic was ported entirely to JavaScript using
-                    <code>JSZip</code> and <code>@noble/ed25519</code>.</p>
+                    <code>JSZip</code> and <code>@noble/ed25519</code>.
+                </p>
 
                 <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">The "Integrated
                     Visualizer" Sandbox</h3>
                 <p>Rendering an embedded `viewer.html` inside the Verifier carries XSS risks. We solved this using a
-                    <strong>Sandboxed Blob Iframe</strong> architecture:</p>
+                    <strong>Sandboxed Blob Iframe</strong> architecture:
+                </p>
 
                 <div
                     style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
@@ -171,9 +173,11 @@ vizFrame.src = URL.createObjectURL(blob);
                             <li style="margin-bottom: 0.5rem;"><strong>Trigger:</strong> Runs on pull_request or push.
                             </li>
                             <li style="margin-bottom: 0.5rem;"><strong>Gen:</strong> Runs tests wrapped in
-                                <code>epi run</code>.</li>
+                                <code>epi run</code>.
+                            </li>
                             <li style="margin-bottom: 0.5rem;"><strong>Verify:</strong> Immediately runs
-                                <code>epi verify</code>.</li>
+                                <code>epi verify</code>.
+                            </li>
                             <li><strong>Block:</strong> Fails the build if verification fails.</li>
                         </ol>
                     </div>
