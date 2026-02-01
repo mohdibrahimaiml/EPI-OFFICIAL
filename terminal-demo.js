@@ -239,7 +239,7 @@ class TerminalDemo {
 
     async simulateRecording(filename) {
         const steps = [
-            { text: `→ Starting EPI Recorder v2.1.3`, delay: 200 },
+            { text: `→ Starting EPI Recorder v2.2.0`, delay: 200 },
             { text: `  Target: ${filename}`, delay: 100 },
             { text: `  Environment: Python 3.11.4 | Windows 10`, color: 'text-dim', delay: 300 },
             { text: `● Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },
