@@ -23,8 +23,8 @@
         content="Transform any AI workflow into a self-contained, verifiable evidence package.">
     <meta property="twitter:image" content="https://epilabs.org/cryptographic_visual.png">
 
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="stylesheet" href="style.css?v=2.2">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="css/style.css?v=2.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -41,7 +41,7 @@
         <div class="container nav-container">
             <div class="nav-logo">
                 <a href="index.html" title="Go to Home">
-                    <img src="logo.png" alt="EPI LABS" class="logo-img">
+                    <img src="assets/logo.png" alt="EPI LABS" class="logo-img">
                 </a>
             </div>
             <div class="nav-links">
@@ -80,21 +80,23 @@
             <div class="lifecycle-grid">
                 <div class="lifecycle-step install-step">
                     <div class="step-icon">📥</div>
-                    <div class="stat-value">v2.2.0</div>
                     <h3>0. Install</h3>
                     <p>Get started in seconds. Install the <strong>epi-recorder</strong> package from PyPI with a single
                         command.</p>
                     <div class="step-code"><code>$ pip install epi-recorder</code></div>
-                    <strong>✨ New in v2.1.3:</strong> Client-side Verification for secure, offline evidence checks
-                    automatic PATH setup. See <a href="index.html#get-started"
-                        style="color: var(--color-primary-light); text-decoration: underline;">Get Started</a> for
-                    details.
+                    <p
+                        style="margin-top: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--color-primary); border-radius: 4px; font-size: 0.9rem; color: var(--color-gray-300);">
+                        <strong>✨ New in v2.3.0:</strong> 100% stable <strong>Explicit Capture</strong> and Wrapper
+                        Clients. No more implicit monkey-patching. See <a href="index.html#get-started"
+                            style="color: var(--color-primary-light); text-decoration: underline;">Get Started</a> for
+                        details.
                     </p>
                 </div>
                 <div class="lifecycle-step">
                     <div class="step-icon">📹</div>
                     <h3>1. Record <span class="status-badge shipped">✅ Shipped</span></h3>
-                    <p>Transparent "Flight Recorder" for your AI. Wrap your script to capture inputs, LLM calls, and
+                    <p>Explicit "Flight Recorder" for your AI. Use <code>log_llm_call()</code> or wrappers to capture
+                        inputs, calls, and
                         outputs into a <strong>single sealed file</strong>.</p>
                     <div class="step-code"><code>$ epi record script.py</code></div>
                 </div>
@@ -197,7 +199,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <a href="index.html" title="Go to Home">
-                        <img src="logo.png" alt="EPI LABS" class="footer-logo">
+                        <img src="assets/logo.png" alt="EPI LABS" class="footer-logo">
                     </a>
                     <p>Building the trust layer for the AI economy.</p>
                 </div>
@@ -231,7 +233,7 @@
         </div>
     </footer>
 
-    <script src="app.js"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

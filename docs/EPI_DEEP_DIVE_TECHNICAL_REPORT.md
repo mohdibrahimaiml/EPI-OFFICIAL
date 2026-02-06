@@ -7,21 +7,20 @@
 
 ## 1. The Recorder Engine (`epi-recorder`)
 
-The heart of EPI is its ability to capture code execution "autonomously" without requiring the developer to rewrite their application. This is achieved through **Dynamic Runtime Patching**.
+The heart of EPI is its ability to capture code execution **deterministically**. This is achieved through **Explicit Capture**.
 
-### A. The "Magic" Mechanism: Monkey-Patching (`patcher.py`)
-Instead of asking developers to use a custom SDK (e.g., `epi.chat_completion(...)`), we intercept the standard libraries they already use.
+### A. The Capture Mechanism: Explicit Wrappers
+Instead of implicitly monkey-patching standard libraries, EPI v2.3.0 uses explicit wrappers to ensure reliability and compatibility.
 
-**Code Analysis (`epi_recorder/patcher.py`):**
-1.  **Detection:** The patcher checks for installed libraries (`openai`, `requests`).
-2.  **Wrapping:** It uses `functools.wraps` to replace the original methods (e.g., `openai.resources.chat.completions.Completions.create`) with a wrapper.
-3.  **Capture:**
-    *   **Pre-Call:** Captures arguments (prompt, model, temp).
-    *   **Execution:** Calls the *original* method to ensure zero functional change.
-    *   **Post-Call:** Captures the return value (response, token usage) and latency.
-4.  **Logging:** Writes a structured JSON object to `steps.jsonl`.
+**Code Analysis (`epi_recorder/wrappers/openai.py`):**
+1.  **Wrapping:** The developer wraps their client: `client = wrap_openai(OpenAI())`.
+2.  **Capture:** The wrapper intercepts calls (e.g., `chat.completions.create`).
+    *   **Pre-Call:** Captures arguments.
+    *   **Execution:** Calls the original method.
+    *   **Post-Call:** Captures the return value.
+3.  **Logging:** Writes a structured JSON object to `steps.jsonl`.
 
-**Why this matters:** This allows EPI to be dropped into legacy codebases. It is "invisible" infrastructure.
+**Why this matters:** Explicit capture removes "magic", ensuring that EPI never breaks your application's behavior and works in all Python environments.
 
 ### B. The Security Kernel (`epi_core/trust.py`)
 Trust is not achieved by "logs" but by **Cryptographic Signatures**.

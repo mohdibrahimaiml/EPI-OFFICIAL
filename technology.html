@@ -14,8 +14,8 @@
     <meta property="og:description" content="How we achieved offline, zero-knowledge verification for AI workflows.">
     <meta property="og:image" content="https://epilabs.org/trust_network.png">
 
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="stylesheet" href="style.css?v=2.2">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="css/style.css?v=2.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -54,7 +54,7 @@
         <div class="container nav-container">
             <div class="nav-logo">
                 <a href="index.html" title="Go to Home">
-                    <img src="logo.png" alt="EPI LABS" class="logo-img">
+                    <img src="assets/logo.png" alt="EPI LABS" class="logo-img">
                 </a>
             </div>
             <div class="nav-links">
@@ -97,59 +97,58 @@
     <section class="section" style="padding-top: 0;">
         <div class="container" style="max-width: 900px;">
 
-            <!-- 1. Recorder Engine -->
-            <div style="margin-bottom: 5rem;">
-                <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">1. The Recorder Engine
-                </h2>
-                <p>The heart of EPI is its ability to capture code execution "autonomously" without requiring the
-                    developer to rewrite their application. This is achieved through <strong>Dynamic Runtime
-                        Patching</strong>.</p>
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">1. The Recorder Engine
+            </h2>
+            <p>The heart of EPI is its ability to capture code execution **deterministically**. v2.3.0 introduces
+                <strong>Explicit Capture</strong>, prioritizing reliability and transparency over "magic".
+            </p>
 
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">A. The "Magic"
-                    Mechanism: Monkey-Patching</h3>
-                <p>Instead of asking developers to use a custom SDK, we intercept the standard libraries they already
-                    use. The <code>patcher.py</code> module uses <code>functools.wraps</code> to replace original
-                    methods (e.g., <code>openai.resources.chat.completions.Completions.create</code>) with a wrapper
-                    that captures inputs, executes the original method, and logs the result—without altering
-                    functionality.</p>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">A. Explicit API &
+                Wrappers</h3>
+            <p>Instead of implicitly monkey-patching libraries behind the scenes, EPI now uses explicit wrappers. The
+                <code>log_llm_call()</code> API and wrapper clients (e.g., <code>wrap_openai()</code>) capture inputs,
+                calls, and outputs exactly where you tell them to. This ensures 100% stability and compatibility across
+                all Python environments.
+            </p>
 
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">B. The Security
-                    Kernel</h3>
-                <p>Trust is not achieved by "logs" but by <strong>Cryptographic Signatures</strong>. Before signing, the
-                    <code>manifest.json</code> is canonicalized (sorted keys, stripped whitespace) to ensure
-                    deterministic hashing across platforms.
-                </p>
-                <div
-                    style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 1rem;">
-                    <ul style="list-style-type: none; padding: 0;">
-                        <li style="margin-bottom: 0.5rem;"><strong>Algorithm:</strong> Ed25519 (Edwards-curve Digital
-                            Signature Algorithm)</li>
-                        <li style="margin-bottom: 0.5rem;"><strong>Library:</strong>
-                            <code>cryptography.hazmat.primitives.asymmetric.ed25519</code>
-                        </li>
-                        <li><strong>Key Size:</strong> 32 bytes (High performance, low overhead)</li>
-                    </ul>
-                </div>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">B. The Security
+                Kernel</h3>
+            <p>Trust is not achieved by "logs" but by <strong>Cryptographic Signatures</strong>. Before signing, the
+                <code>manifest.json</code> is canonicalized (sorted keys, stripped whitespace) to ensure
+                deterministic hashing across platforms.
+            </p>
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 1rem;">
+                <ul style="list-style-type: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Algorithm:</strong> Ed25519 (Edwards-curve Digital
+                        Signature Algorithm)</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Library:</strong>
+                        <code>cryptography.hazmat.primitives.asymmetric.ed25519</code>
+                    </li>
+                    <li><strong>Key Size:</strong> 32 bytes (High performance, low overhead)</li>
+                </ul>
             </div>
+        </div>
 
-            <!-- 2. Cloud Verifier -->
-            <div style="margin-bottom: 5rem;">
-                <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">2. The Zero-Knowledge
-                    Verifier</h2>
-                <p>The Verifier is a Zero-Knowledge application. It proves the validity of a file without ever needing
-                    to see its contents on a server. The Python backend logic was ported entirely to JavaScript using
-                    <code>JSZip</code> and <code>@noble/ed25519</code>.
-                </p>
+        <!-- 2. Cloud Verifier -->
+        <div style="margin-bottom: 5rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">2. The Zero-Knowledge
+                Verifier</h2>
+            <p>The Verifier is a Zero-Knowledge application. It serves to prove the validity of a file without ever
+                needing
+                to see its contents on a server. The Python backend logic was ported entirely to JavaScript using
+                <code>JSZip</code> and <code>@noble/ed25519</code>.
+            </p>
 
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">The "Integrated
-                    Visualizer" Sandbox</h3>
-                <p>Rendering an embedded `viewer.html` inside the Verifier carries XSS risks. We solved this using a
-                    <strong>Sandboxed Blob Iframe</strong> architecture:
-                </p>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">The "Integrated
+                Visualizer" Sandbox</h3>
+            <p>Rendering an embedded `viewer.html` inside the Verifier carries XSS risks. We solved this using a
+                <strong>Sandboxed Blob Iframe</strong> architecture:
+            </p>
 
-                <div
-                    style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
-                    <pre><code style="background: transparent; padding: 0; color: #e6edf3;">// 1. Create a Blob from the untrusted content
+            <div
+                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">// 1. Create a Blob from the untrusted content
 const blob = new Blob([htmlContent], { type: 'text/html' });
 
 // 2. Generate a unique, isolated URL
@@ -157,42 +156,42 @@ vizFrame.src = URL.createObjectURL(blob);
 
 // 3. Enforce strict sandboxing (No 'allow-same-origin')
 // &lt;iframe sandbox="allow-scripts allow-popups allow-forms"&gt;</code></pre>
-                </div>
-                <p>This prevents the viewer from accessing the parent Verifier's cookies, local storage, or DOM. It
-                    effectively runs in a null origin.</p>
             </div>
+            <p>This prevents the viewer from accessing the parent Verifier's cookies, local storage, or DOM. It
+                effectively runs in a null origin.</p>
+        </div>
 
-            <!-- 3. CI/CD -->
-            <div style="margin-bottom: 5rem;">
-                <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">3. The Invisible CI/CD
-                    Hook</h2>
-                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 300px;">
-                        <p>To enforce this at enterprise scale, the <code>epi-action</code> GitHub Action integrates
-                            directly into the pipeline:</p>
-                        <ol style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-secondary);">
-                            <li style="margin-bottom: 0.5rem;"><strong>Trigger:</strong> Runs on pull_request or push.
-                            </li>
-                            <li style="margin-bottom: 0.5rem;"><strong>Gen:</strong> Runs tests wrapped in
-                                <code>epi run</code>.
-                            </li>
-                            <li style="margin-bottom: 0.5rem;"><strong>Verify:</strong> Immediately runs
-                                <code>epi verify</code>.
-                            </li>
-                            <li><strong>Block:</strong> Fails the build if verification fails.</li>
-                        </ol>
-                    </div>
+        <!-- 3. CI/CD -->
+        <div style="margin-bottom: 5rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">3. The Invisible CI/CD
+                Hook</h2>
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <p>To enforce this at enterprise scale, the <code>epi-action</code> GitHub Action integrates
+                        directly into the pipeline:</p>
+                    <ol style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-secondary);">
+                        <li style="margin-bottom: 0.5rem;"><strong>Trigger:</strong> Runs on pull_request or push.
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Gen:</strong> Runs tests wrapped in
+                            <code>epi run</code>.
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Verify:</strong> Immediately runs
+                            <code>epi verify</code>.
+                        </li>
+                        <li><strong>Block:</strong> Fails the build if verification fails.</li>
+                    </ol>
                 </div>
             </div>
+        </div>
 
-            <!-- Conclusion -->
-            <div
-                style="padding: 2rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg);">
-                <h3 style="color: var(--color-white); margin-bottom: 1rem;">Conclusion: Trustless Verification</h3>
-                <p style="margin-bottom: 0;">The EPI system is designed with a "Paranoid Architecture": The Recorder
-                    assumes the environment is hostile (redacts secrets), the Verifier assumes the file is hostile
-                    (sandboxes viewer), and the Crypto assumes the network is hostile (signs offline).</p>
-            </div>
+        <!-- Conclusion -->
+        <div
+            style="padding: 2rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--radius-lg);">
+            <h3 style="color: var(--color-white); margin-bottom: 1rem;">Conclusion: Trustless Verification</h3>
+            <p style="margin-bottom: 0;">The EPI system is designed with a "Paranoid Architecture": The Recorder
+                assumes the environment is hostile (redacts secrets), the Verifier assumes the file is hostile
+                (sandboxes viewer), and the Crypto assumes the network is hostile (signs offline).</p>
+        </div>
 
         </div>
     </section>
@@ -203,7 +202,7 @@ vizFrame.src = URL.createObjectURL(blob);
             <div class="footer-content">
                 <div class="footer-brand">
                     <a href="index.html" title="Go to Home">
-                        <img src="logo.png" alt="EPI LABS" class="footer-logo">
+                        <img src="assets/logo.png" alt="EPI LABS" class="footer-logo">
                     </a>
                     <p>Building the trust layer for the AI economy.</p>
                 </div>
@@ -237,7 +236,7 @@ vizFrame.src = URL.createObjectURL(blob);
         </div>
     </footer>
 
-    <script src="app.js"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 # EPI System Reference Manual
 
-**Version:** 2.1.3
-**Last Updated:** 2026-01-16
+**Version:** 2.3.0
+**Last Updated:** 2026-02-06
 **Status:** Production Ready
 
 ---
@@ -32,8 +32,8 @@ This package is responsible for the **Creation** of evidence.
     *   `schemas.py`: Pydantic definitions for the JSON Manifest.
 
 *   **`epi_recorder/`**: The runtime instrumentation.
-    *   `patcher.py`: Monkey-patches `openai` and `requests` libraries to intercept API calls transparently.
-    *   `api.py`: Provides the `@record` decorator and `with record():` context manager.
+    *   `wrappers/`: Modules for explicitly wrapping libraries (e.g., `openai`, `requests`).
+    *   `api.py`: Provides the `log_llm_call` API and `@record` decorator.
     *   `bootstrap.py`: Injection logic for the CLI `sitecustomize` trick.
 
 *   **`epi_cli/`**: The User Interface.

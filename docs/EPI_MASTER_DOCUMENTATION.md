@@ -27,7 +27,7 @@
 
 ### A. The Recorder (`epi-recorder`)
 *   **Role:** The "Black Box" installed in the application.
-*   **Mechanism:** Python monkey-patching (OpenAI/Requests).
+*   **Mechanism:** Explicit API (`log_llm_call`) & Wrappers.
 *   **Output:** Generates a `.epi` file (ZIP container) containing:
     *   `manifest.json`: Metadata & SHA-256 hashes.
     *   `steps.jsonl`: Execution log.

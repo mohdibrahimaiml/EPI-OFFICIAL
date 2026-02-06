@@ -4,170 +4,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPI Viewer | Verify Evidence</title>
-    <link rel="stylesheet" href="viewer.css?v=2">
+    <title>Evidence Viewer | EPI LABS</title>
+    <!-- Dependencies for offline capability -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-    <!-- JSZip for unzipping files in the browser -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
 
-<body>
-    <div id="app">
-        <!-- 1. INITIAL STATE: Drag & Drop -->
-        <div id="initial-state" class="state-view active">
-            <div class="initial-content">
-                <div class="epi-logo">
-                    <a href="index.html" title="Back to Home">
-                        <svg width="64" height="64" viewBox="0 0 100 100" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <rect width="100" height="100" rx="20" fill="#1F2937" />
-                            <path d="M30 30H70V38H38V46H65V54H38V70H30V30Z" fill="white" />
-                        </svg>
-                    </a>
-                </div>
-                <h1>EPI Viewer</h1>
-                <p class="subtitle">Securely inspect and verify cryptographic evidence files</p>
+<body class="h-screen flex flex-col text-slate-800">
 
-                <div id="drop-zone" class="drop-zone">
-                    <p style="font-size: 18px; margin-bottom: 8px;">Drag & Drop .epi file here</p>
-                    <p style="font-size: 14px; margin-bottom: 24px;">or</p>
-                    <input type="file" id="file-input" accept=".epi" style="display: none;">
-                    <button id="btn-open-file" class="btn-primary">Select File</button>
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 z-10">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center text-white font-bold">E
                 </div>
-
-                <div class="info-text">
-                    <p>This viewer runs <strong>entirely in your browser</strong>. Your evidence files are never
-                        uploaded to any server. Verification happens locally on your device using verified cryptographic
-                        libraries.</p>
-                </div>
+                <h1 class="font-bold text-lg tracking-tight">Evidence Viewer</h1>
+            </div>
+            <div class="h-6 w-px bg-slate-300"></div>
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-slate-500">Workflow ID:</span>
+                <span id="workflowId" class="mono font-medium text-slate-900 bg-slate-100 px-2 py-0.5 rounded">--</span>
             </div>
         </div>
 
-        <!-- 2. LOADING STATE: Verifying -->
-        <div id="loading-state" class="state-view">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <h2>Verifying Evidence...</h2>
-
-                <div id="verification-steps">
-                    <div id="step-parsing" class="step loading">
-                        <span class="step-icon">⏳</span>
-                        <span>Parsing Container Structure</span>
-                    </div>
-                    <div id="step-integrity" class="step">
-                        <span class="step-icon"></span>
-                        <span>Verifying File Integrity (Merkle Check)</span>
-                    </div>
-                    <div id="step-signature" class="step">
-                        <span class="step-icon"></span>
-                        <span>Checking Cryptographic Signature</span>
-                    </div>
-                </div>
+        <div class="flex items-center gap-4">
+            <!-- Verification Badge -->
+            <div id="verifyBadge"
+                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+                <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                Unverified (Read-Only)
             </div>
         </div>
+    </header>
 
-        <!-- 3. ERROR STATE: Failed -->
-        <div id="error-state" class="state-view">
-            <div class="error-content">
-                <div class="error-icon">!</div>
-                <h2>Verification Failed</h2>
-                <p id="error-message" class="error-message">The file structure is invalid.</p>
-
-                <div id="error-details" class="error-details"></div>
-
-                <div class="error-actions">
-                    <button id="btn-try-another-error" class="btn-secondary">Try Another File</button>
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Sidebar: Step List -->
+        <aside class="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Execution Trace</h2>
+                <div class="flex justify-between text-xs text-slate-400">
+                    <span id="totalSteps">0 steps</span>
+                    <span id="totalDuration">0s</span>
                 </div>
-
-
             </div>
-        </div>
+            <div id="stepList" class="flex-1 overflow-y-auto p-2 space-y-1">
+                <!-- Steps injected here -->
+            </div>
+        </aside>
 
-        <!-- 4. VIEWER STATE: Verified -->
-        <div id="viewer-state" class="state-view">
-            <!-- Status Banner -->
-            <div class="status-banner">
-                <div class="status-indicator">
-                    <span class="status-icon"></span>
-                    <span>ANALYZING EVIDENCE...</span>
+        <!-- Content Area -->
+        <section class="flex-1 flex flex-col bg-slate-50 overflow-hidden relative">
+
+            <!-- Step Detail Header -->
+            <div
+                class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-start shadow-sm shrink-0">
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span id="detailIndex" class="text-sm font-bold text-slate-400">#--</span>
+                        <h2 id="detailTitle" class="text-lg font-bold text-slate-900">Select a step</h2>
+                    </div>
+                    <p id="detailTimestamp" class="text-xs text-slate-500 mono">--</p>
                 </div>
-                <div class="status-details">
-                    <span id="status-algorithm">Ed25519</span>
-                    <span class="separator">|</span>
-                    <span id="status-timestamp">2024-12-19T10:00:00Z</span>
-                    <span class="separator">|</span>
-                    <span id="status-version">EPI v1.0</span>
-                </div>
-                <div class="status-actions">
-                    <button id="btn-export-report" class="btn-small">Copy Verification Report</button>
-                    <button id="btn-close-file" class="btn-small">Close</button>
+                <div class="flex gap-2">
+                    <span id="detailKind"
+                        class="hidden px-2 py-1 rounded text-xs font-bold uppercase tracking-wider border"></span>
                 </div>
             </div>
 
-            <!-- Evidence Summary -->
-            <div class="evidence-summary">
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <span class="summary-label">Workflow ID</span>
-                        <span id="summary-workflow" class="summary-value">—</span>
+            <!-- Main Scrollable Area -->
+            <div class="flex-1 overflow-y-auto p-6" id="detailContentArea">
+                <div id="emptyState" class="h-full flex flex-col items-center justify-center text-slate-400">
+                    <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <p>Select a step from the sidebar to view details</p>
+                </div>
+
+                <!-- Dynamic Content Blocks -->
+                <div id="detailBlocks" class="hidden space-y-6 max-w-4xl mx-auto">
+                    <!-- Standard Content Block -->
+                    <div id="blockContent" class="hidden">
+                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Content Payload</h3>
+                        <div
+                            class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden group relative">
+                            <button onclick="copyToClipboard(this.nextElementSibling.innerText)"
+                                class="absolute top-2 right-2 p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition opacity-0 group-hover:opacity-100"
+                                title="Copy raw JSON">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <pre class="p-4 overflow-x-auto text-sm mono text-slate-700 whitespace-pre-wrap"></pre>
+                        </div>
                     </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Created</span>
-                        <span id="summary-created" class="summary-value">—</span>
+
+                    <!-- LLM Specific Block -->
+                    <div id="blockLLM" class="hidden space-y-6">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Prompt / Input
+                            </h3>
+                            <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                                <div class="p-4 text-sm mono text-slate-800 whitespace-pre-wrap bg-slate-50/50"
+                                    id="llmPrompt"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Response / Output
+                            </h3>
+                            <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                                <div class="p-4 text-sm mono text-slate-800 whitespace-pre-wrap" id="llmResponse"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-white p-3 rounded border border-slate-100">
+                                <div class="text-xs text-slate-400 uppercase font-bold">Model</div>
+                                <div class="font-mono text-sm" id="llmModel">--</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-slate-100">
+                                <div class="text-xs text-slate-400 uppercase font-bold">Temperature</div>
+                                <div class="font-mono text-sm" id="llmTemp">--</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-slate-100">
+                                <div class="text-xs text-slate-400 uppercase font-bold">Latency</div>
+                                <div class="font-mono text-sm" id="llmLatency">--</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Signer</span>
-                        <span id="summary-signer" class="summary-value">Unsigned</span>
+
+                    <!-- File I/O Block -->
+                    <div id="blockFile" class="hidden">
+                        <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-start gap-3">
+                            <svg class="w-5 h-5 text-blue-500 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <div>
+                                <h3 class="font-bold text-blue-900 text-sm">File Modification Captured</h3>
+                                <p class="text-blue-700 text-sm mt-1">This step recorded a change to <code
+                                        class="bg-blue-100 px-1 py-0.5 rounded text-blue-900 mono text-xs"
+                                        id="fileName">filename</code>.</p>
+                                <div class="mt-3">
+                                    <span class="text-xs font-mono text-blue-600 uppercase tracking-wider">SHA-256
+                                        Hash:</span>
+                                    <p class="font-mono text-xs text-blue-800 break-all bg-white/50 p-1.5 rounded mt-1 border border-blue-100"
+                                        id="fileHash"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Files</span>
-                        <span id="summary-files" class="summary-value">0</span>
+
+                    <!-- Console Output Block -->
+                    <div id="blockConsole" class="hidden">
+                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Terminal Output</h3>
+                        <div class="bg-slate-900 rounded-lg border border-slate-800 shadow-sm overflow-hidden p-4">
+                            <pre class="text-sm mono text-green-400 whitespace-pre-wrap" id="consoleOutput"></pre>
+                        </div>
                     </div>
+
                 </div>
             </div>
+        </section>
+    </main>
 
-            <!-- Layer Tabs -->
-            <div class="layer-tabs">
-                <button class="tab-btn active" data-layer="viewer">1. Visual Evidence</button>
-                <button class="tab-btn" data-layer="facts">2. Structured Facts</button>
-                <button class="tab-btn" data-layer="crypto">3. Cryptography</button>
-            </div>
+    <script>
+        // --- DATA INJECTION POINT ---
+        // The Python builder will replace this variable with the manifest JSON
+        const MANIFEST = {
+            "workflow_id": "DEMO-MODE-LOCAL",
+            "created_at": new Date().toISOString(),
+            "file_manifest": {}
+        };
+        // The Python builder will replace this variable with the steps array
+        const STEPS = [
 
-            <!-- Layer Content -->
-            <div class="layer-content">
-                <!-- Layer 1: Visual Viewer -->
-                <div id="layer-viewer" class="layer-panel active">
-                    <div class="layer-header">
-                        <h3>Embedded Viewer</h3>
-                        <p class="layer-description">Visual representation of the evidence as captured.</p>
+        ];
+        // ----------------------------
+
+        // State
+        let activeStepIndex = -1;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initUI();
+            renderSteps();
+
+            // Auto-select first step if available
+            if (STEPS.length > 0) selectStep(0);
+        });
+
+        function initUI() {
+            document.getElementById('workflowId').textContent = MANIFEST.workflow_id;
+            document.getElementById('totalSteps').textContent = `${STEPS.length} steps`;
+
+            // Calculate duration
+            if (STEPS.length > 1) {
+                const start = new Date(STEPS[0].timestamp);
+                const end = new Date(STEPS[STEPS.length - 1].timestamp);
+                const diff = (end - start) / 1000;
+                document.getElementById('totalDuration').textContent = `${diff.toFixed(2)}s`;
+            }
+
+            // Check if we are inside the official Verifier (iframe mode)
+            // If so, we might receive a message to update verification status?
+            // For now, this is a standalone viewer.
+        }
+
+        function renderSteps() {
+            const list = document.getElementById('stepList');
+            list.innerHTML = '';
+
+            STEPS.forEach((step, idx) => {
+                const el = document.createElement('div');
+
+                const isLLM = step.kind.includes('llm');
+                const isWrite = step.kind.includes('write') || step.kind.includes('save');
+                const isError = step.kind.includes('error');
+                const isWarn = step.kind.includes('security');
+
+                let icon = '💻';
+                let colorClass = 'border-l-4 border-l-transparent hover:bg-slate-50';
+
+                if (isLLM) { icon = '⚡'; colorClass = 'border-l-4 border-l-purple-500 bg-purple-50/30 hover:bg-purple-50'; }
+                if (isWrite) { icon = '💾'; colorClass = 'border-l-4 border-l-blue-500 bg-blue-50/30 hover:bg-blue-50'; }
+                if (isWarn) { icon = '🛡️'; colorClass = 'border-l-4 border-l-red-500 bg-red-50/30 hover:bg-red-50'; }
+
+                let title = step.kind;
+                // Try to derive a better title
+                if (step.content && step.content.command) title = step.content.command;
+                if (step.content && step.content.prompt) title = "LLM Prompt";
+
+                el.className = `p-3 cursor-pointer rounded transition-all mb-1 ${colorClass}`;
+                el.dataset.index = idx;
+                el.onclick = () => selectStep(idx);
+
+                el.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-bold text-slate-500">#${step.index} ${icon}</span>
+                        <span class="text-[10px] text-slate-400 mono">${new Date(step.timestamp).toLocaleTimeString()}</span>
                     </div>
-                    <div id="embedded-viewer" class="embedded-viewer-container"></div>
-                </div>
+                    <div class="text-sm font-medium text-slate-700 truncate">${title}</div>
+                    <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold mt-1">${step.kind}</div>
+                `;
 
-                <!-- Layer 2: Structured Facts -->
-                <div id="layer-facts" class="layer-panel">
-                    <div class="layer-header">
-                        <h3>Structured Facts</h3>
-                        <p class="layer-description">Key metadata and attributes extracted from the evidence manifest.
-                        </p>
-                    </div>
-                    <div id="facts-table" class="facts-table"></div>
-                </div>
+                list.appendChild(el);
+            });
+        }
 
-                <!-- Layer 3: Cryptography -->
-                <div id="layer-crypto" class="layer-panel">
-                    <div class="layer-header">
-                        <h3>Cryptographic Verification</h3>
-                        <p class="layer-description">Technical details of the integrity checks and digital signatures.
-                        </p>
-                    </div>
-                    <div id="crypto-details" class="crypto-details"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+        function selectStep(index) {
+            if (activeStepIndex !== -1) {
+                const prev = document.querySelector(`div[data-index="${activeStepIndex}"]`);
+                if (prev) prev.classList.remove('ring-2', 'ring-purple-500', 'bg-white', 'shadow-md');
+            }
 
-    <script src="viewer.js?v=2"></script>
+            activeStepIndex = index;
+            const step = STEPS[index];
+            const curr = document.querySelector(`div[data-index="${index}"]`);
+            if (curr) curr.classList.add('ring-2', 'ring-purple-500', 'bg-white', 'shadow-md');
+
+            // Reset View
+            document.getElementById('emptyState').classList.add('hidden');
+            const blocks = document.getElementById('detailBlocks');
+            blocks.classList.remove('hidden');
+
+            // Hide specific blocks
+            ['blockContent', 'blockLLM', 'blockFile', 'blockConsole'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            // Update Header
+            document.getElementById('detailIndex').textContent = `#${step.index}`;
+            document.getElementById('detailTimestamp').textContent = new Date(step.timestamp).toLocaleString();
+
+            let title = step.kind;
+            if (step.content?.command) title = `Run: ${step.content.command}`;
+            if (step.content?.prompt) title = `LLM Call`;
+            if (step.content?.filename) title = `File: ${step.content.filename}`;
+            document.getElementById('detailTitle').textContent = title;
+
+            // Update Badge
+            const badge = document.getElementById('detailKind');
+            badge.textContent = step.kind;
+            badge.classList.remove('hidden', 'bg-purple-100', 'text-purple-700', 'border-purple-200', 'bg-slate-100', 'text-slate-700');
+
+            if (step.kind.includes('llm')) {
+                badge.classList.add('bg-purple-100', 'text-purple-700', 'border-purple-200');
+            } else {
+                badge.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+            }
+
+            // --- RENDER CONTENT LOGIC ---
+
+            // 1. LLM Calls
+            if (step.kind === 'llm_call' && step.content) {
+                const b = document.getElementById('blockLLM');
+                b.classList.remove('hidden');
+                document.getElementById('llmPrompt').textContent = step.content.prompt || "--";
+                document.getElementById('llmResponse').textContent = step.content.response || "--";
+
+                document.getElementById('llmModel').textContent = step.content.model || "Unknown";
+                document.getElementById('llmTemp').textContent = step.content.temperature !== undefined ? step.content.temperature : "N/A";
+                document.getElementById('llmLatency').textContent = step.content.latency ? `${step.content.latency}s` : "N/A";
+                return;
+            }
+
+            // 2. File Events
+            if ((step.kind === 'file_write' || step.kind.includes('save')) && step.content) {
+                const b = document.getElementById('blockFile');
+                b.classList.remove('hidden');
+                document.getElementById('fileName').textContent = step.content.filename || "unknown_file";
+                document.getElementById('fileHash').textContent = step.content.hash || "No Hash Captured";
+
+                // Also show content generic block if content is present
+                if (step.content.content) {
+                    const bGen = document.getElementById('blockContent');
+                    bGen.classList.remove('hidden');
+                    bGen.querySelector('pre').textContent = step.content.content;
+                }
+                return;
+            }
+
+            // 3. Command Execution
+            if (step.kind === 'command' && step.content) {
+                const b = document.getElementById('blockConsole');
+                b.classList.remove('hidden');
+                document.getElementById('consoleOutput').textContent = step.content.output || "(No Output)";
+                return;
+            }
+
+            // Fallback: Generic JSON Dump
+            const b = document.getElementById('blockContent');
+            b.classList.remove('hidden');
+            b.querySelector('pre').textContent = JSON.stringify(step.content, null, 2);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+        }
+
+    </script>
 </body>
 
 </html>
