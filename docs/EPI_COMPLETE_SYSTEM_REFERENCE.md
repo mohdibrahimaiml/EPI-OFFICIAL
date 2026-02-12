@@ -1,6 +1,6 @@
 # EPI System Reference Manual
 
-**Version:** 2.3.0
+**Version:** 2.4.0
 **Last Updated:** 2026-02-06
 **Status:** Production Ready
 
