@@ -57,7 +57,7 @@
           "description": "EPI Recorder captures, cryptographically signs, and packages AI workflows into verifiable evidence.",
           "applicationCategory": "DeveloperApplication",
           "operatingSystem": "Windows, macOS, Linux",
-          "softwareVersion": "2.3.0",
+          "softwareVersion": "2.4.0",
           "license": "https://opensource.org/licenses/Apache-2.0"
         }
       ]
@@ -108,7 +108,7 @@
             <div class="hero-content" style="max-width: 100%;">
                 <div class="hero-badge"
                     style="border-color: var(--color-violet-500); color: var(--color-violet-500); background: rgba(139, 92, 246, 0.1);">
-                    ✨ v2.3.0 — Simple & Explicit</div>
+                    ✨ v2.4.0 — Built for Agents</div>
                 <h1 class="hero-title text-gradient" style="font-size: 4rem;">The PDF
                     for AI Evidence</h1>
                 <p class="hero-subtitle">Stop relying on screenshots. <strong>Evidence Packaged Infrastructure
@@ -143,7 +143,7 @@
                             <span class="control-dot dot-yellow"></span>
                             <span class="control-dot dot-green"></span>
                         </div>
-                        <div class="terminal-title">epi-recorder v2.3.0</div>
+                        <div class="terminal-title">epi-recorder v2.4.0</div>
                     </div>
                     <div class="terminal-body">
                         <!-- Content injected by terminal-demo.js -->
@@ -178,8 +178,8 @@
             <!-- Stats Row -->
             <div class="hero-stats" style="margin-top: 4rem; justify-content: center;">
                 <div class="stat-item">
-                    <div class="stat-value">v2.3.0</div>
-                    <div class="stat-label">Production Ready</div>
+                    <div class="stat-value">v2.4.0</div>
+                    <div class="stat-label">Agent Development</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">$160B+</div>
@@ -212,7 +212,7 @@
     <section class="section get-started-section" id="get-started">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Get Started with epi-recorder v2.3.0</h2>
+                <h2 class="section-title">Get Started with epi-recorder v2.4.0</h2>
                 <p class="section-desc">99% installation success rate. Universal one-command installer for all
                     platforms.
                 </p>
@@ -240,7 +240,7 @@
                                 <span class="minimize"></span>
                                 <span class="maximize"></span>
                             </div>
-                            <div class="terminal-title">epi-recorder v2.3.0 -- bash -- 80x24</div>
+                            <div class="terminal-title">epi-recorder v2.4.0 -- bash -- 80x24</div>
                         </div>
                         <div class="terminal-body">
                             <!-- JS will inject lines here -->
@@ -248,38 +248,48 @@
                     </div>
                 </div>
 
-                <!-- What's New in v2.1.3 -->
+                <!-- What's New in v2.4.0 -->
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                     <div
                         style="width: 40px; height: 40px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                        ✨</div>
-                    <h3 style="font-size: 1.5rem; color: white; margin: 0;">What's New in v2.3.0</h3>
+                        🚀</div>
+                    <h3 style="font-size: 1.5rem; color: white; margin: 0;">What's New in v2.4.0</h3>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                     <div>
                         <div
                             style="color: var(--color-primary-light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: #10B981; font-size: 1.2rem;">✓</span> Explicit Evidence API
+                            <span style="color: #10B981; font-size: 1.2rem;">📊</span> Agent Analytics
                         </div>
-                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">No magic. 100% stable
-                            <code>log_llm_call()</code> API ensures you always know what's captured.
+                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Track success rates,
+                            costs, and errors across 100s of runs. Generate visual dashboards automatically.
                         </p>
                     </div>
                     <div>
                         <div
                             style="color: var(--color-primary-light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: #10B981; font-size: 1.2rem;">✓</span> Wrapper Clients
+                            <span style="color: #10B981; font-size: 1.2rem;">⚡</span> Async/Await Support
                         </div>
-                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Add evidence capture with
-                            a single line: <code>client = wrap_openai(OpenAI())</code>.</p>
+                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Native
+                            <code>async with record()</code> for LangGraph, AutoGen, and modern agent frameworks.
+                        </p>
                     </div>
                     <div>
                         <div
                             style="color: var(--color-primary-light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: #10B981; font-size: 1.2rem;">✓</span> Design Correction
+                            <span style="color: #10B981; font-size: 1.2rem;">🔗</span> LangGraph Integration
                         </div>
-                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Implicit monkey-patching
-                            removed by default for rock-solid reliability.</p>
+                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">
+                            <code>EPICheckpointSaver</code> captures all state transitions. Zero-config agent debugging.
+                        </p>
+                    </div>
+                    <div>
+                        <div
+                            style="color: var(--color-primary-light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #10B981; font-size: 1.2rem;">🦙</span> Ollama Support
+                        </div>
+                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">FREE local LLM testing
+                            with DeepSeek-R1, Llama, Mistral. $0 API costs, complete privacy.</p>
                     </div>
                 </div>
 
@@ -321,7 +331,7 @@
                 <p style="color: var(--color-gray-400);">From code execution to sealed evidence in seconds.</p>
             </div>
             <div class="cli-reference">
-                <h3>Complete CLI Reference (v2.3.0)</h3>
+                <h3>Complete CLI Reference (v2.4.0)</h3>
 
                 <!-- Core Commands -->
                 <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">📹 Core
@@ -412,7 +422,7 @@
                     </div>
                     <div class="cli-command">
                         <code class="command-name">epi version</code>
-                        <p>Show EPI version information (currently v2.3.0).</p>
+                        <p>Show EPI version information (currently v2.4.0).</p>
                         <span class="badge shipped">✅ Shipped</span>
                     </div>
                     <div class="cli-command">
@@ -436,6 +446,72 @@
                         <p>Context manager. <strong>Tip:</strong> Always provide an explicit filename when adding
                             metadata like <code>goal</code> or <code>metrics</code>.</p>
                         <span class="badge shipped">✅ Shipped</span>
+                    </div>
+                </div>
+
+                <!-- v2.4.0 Code Examples -->
+                <h4 style="color: var(--color-primary-light); margin: 3rem 0 1rem; font-size: 1.1rem;">🚀 v2.4.0 Quick
+                    Start Examples
+                </h4>
+
+                <!-- Agent Analytics Example -->
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="color: var(--color-gray-300); margin-bottom: 0.75rem; font-size: 1rem;">📊 Agent
+                        Analytics</h5>
+                    <div
+                        style="background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <pre style="margin: 0; overflow-x: auto;"><code style="color: #e6edf3; font-size: 0.85rem;">from epi_recorder.analytics import AgentAnalytics
+
+# Analyze 100+ runs automatically
+analytics = AgentAnalytics("./epi-recordings")
+report = analytics.performance_summary()
+print(f"Success Rate: {report['success_rate']}%")
+analytics.generate_report("dashboard.html")</code></pre>
+                    </div>
+                </div>
+
+                <!-- Async/Await Example -->
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="color: var(--color-gray-300); margin-bottom: 0.75rem; font-size: 1rem;">⚡ Async/Await
+                    </h5>
+                    <div
+                        style="background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <pre style="margin: 0; overflow-x: auto;"><code style="color: #e6edf3; font-size: 0.85rem;">from epi_recorder import record
+
+async with record("async_agent.epi") as epi:
+    result = await agent.process()  # Non-blocking
+    epi.log_step("completion", {"result": result})</code></pre>
+                    </div>
+                </div>
+
+                <!-- LangGraph Example -->
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="color: var(--color-gray-300); margin-bottom: 0.75rem; font-size: 1rem;">🔗 LangGraph
+                        Integration</h5>
+                    <div
+                        style="background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <pre style="margin: 0; overflow-x: auto;"><code style="color: #e6edf3; font-size: 0.85rem;">from epi_recorder.integrations.langgraph import EPICheckpointSaver
+
+checkpointer = EPICheckpointSaver("agent.epi")
+graph = create_graph().compile(checkpointer=checkpointer)
+# All state transitions automatically recorded!</code></pre>
+                    </div>
+                </div>
+
+                <!-- Ollama Example -->
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="color: var(--color-gray-300); margin-bottom: 0.75rem; font-size: 1rem;">🦙 Ollama (FREE
+                        Local LLMs)</h5>
+                    <div
+                        style="background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <pre style="margin: 0; overflow-x: auto;"><code style="color: #e6edf3; font-size: 0.85rem;">from openai import OpenAI
+from epi_recorder.wrappers import wrap_openai
+
+client = wrap_openai(OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"  # Ollama doesn't need real key
+))
+# $0 cost, complete privacy!</code></pre>
                     </div>
                 </div>
             </div>
@@ -492,7 +568,7 @@
     </footer>
 
     <script src="js/app.js"></script>
-    <script src="js/terminal-demo.js?v=2.3.0"></script>
+    <script src="js/terminal-demo.js?v=2.4.0"></script>
     <script src="js/particles.js"></script>
 </body>
 

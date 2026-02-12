@@ -128,6 +128,57 @@
                     <li><strong>Key Size:</strong> 32 bytes (High performance, low overhead)</li>
                 </ul>
             </div>
+
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; margin-top: 3rem; color: var(--color-white);">1A. New in
+                v2.4.0: Agent-First Features
+            </h2>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">📊 Agent Analytics
+                Engine</h3>
+            <p>Track performance across hundreds of agent runs. The <code>AgentAnalytics</code> class provides:
+            </p>
+            <ul style="list-style-type: disc; margin-left: 2rem; margin-top: 1rem; color: var(--text-secondary);">
+                <li style="margin-bottom: 0.5rem;"><strong>Success Rate Tracking:</strong> Automatically calculate
+                    pass/fail metrics</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Cost Analysis:</strong> Track spending by day/week/month
+                    across providers</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Error Patterns:</strong> Identify recurring failure modes
+                </li>
+                <li style="margin-bottom: 0.5rem;"><strong>Visual Reports:</strong> Generate HTML dashboards with charts
+                </li>
+            </ul>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">⚡ Async/Await Support
+            </h3>
+            <p>Modern agent frameworks like LangGraph and AutoGen use <code>async/await</code>. v2.4.0 provides native
+                async context managers:
+            </p>
+            <div
+                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">async with record("agent.epi", goal="Process documents") as epi:
+    result = await agent.run()  # Non-blocking recording
+    epi.log_step("completion", {"result": result})</code></pre>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🔗 LangGraph
+                Checkpoint Integration</h3>
+            <p>The <code>EPICheckpointSaver</code> class automatically records all state transitions in your LangGraph
+                agents:
+            </p>
+            <div
+                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">from epi_recorder.integrations.langgraph import EPICheckpointSaver
+
+# Zero-config integration
+checkpointer = EPICheckpointSaver("agent_run.epi")
+graph = create_graph().compile(checkpointer=checkpointer)</code></pre>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🦙 Ollama Local LLM
+                Support</h3>
+            <p>Test agents locally with <strong>$0 API costs</strong> using Ollama. Supports DeepSeek-R1, Llama,
+                Mistral, and all Ollama models. Complete privacy—your data never leaves your machine.
+            </p>
         </div>
 
         <!-- 2. Cloud Verifier -->
