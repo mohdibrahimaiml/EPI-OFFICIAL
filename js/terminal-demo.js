@@ -44,7 +44,7 @@ class TerminalDemo {
 
         // Initial welcome message - print FIRST before creating command line
         this.print([
-            { text: 'EPI Portable Environment v2.4.0', color: 'text-dim' },
+            { text: 'EPI Portable Environment v2.5.0', color: 'text-dim' },
             { text: 'Type "help" for a list of commands.', color: 'text-dim' },
             { text: '' }
         ]);
@@ -263,9 +263,9 @@ class TerminalDemo {
         if (args[0] === 'install' && args[1] === 'epi-recorder') {
             const lines = [
                 { text: 'Collecting epi-recorder', color: 'text-dim' },
-                { text: '  Downloading epi_recorder-2.4.0-py3-none-any.whl (18 kB)' },
+                { text: '  Downloading epi_recorder-2.5.0-py3-none-any.whl (18 kB)' },
                 { text: 'Installing collected packages: epi-recorder', color: 'text-dim' },
-                { text: 'Successfully installed epi-recorder-2.4.0', color: 'text-green' }
+                { text: 'Successfully installed epi-recorder-2.5.0', color: 'text-green' }
             ];
             for (const line of lines) {
                 this.print([line]);
