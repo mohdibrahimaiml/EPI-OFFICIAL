@@ -57,7 +57,7 @@
           "description": "EPI Recorder captures, cryptographically signs, and packages AI workflows into verifiable evidence.",
           "applicationCategory": "DeveloperApplication",
           "operatingSystem": "Windows, macOS, Linux",
-          "softwareVersion": "2.4.0",
+          "softwareVersion": "2.5.0",
           "license": "https://opensource.org/licenses/Apache-2.0"
         }
       ]
@@ -108,7 +108,7 @@
             <div class="hero-content" style="max-width: 100%;">
                 <div class="hero-badge"
                     style="border-color: var(--color-violet-500); color: var(--color-violet-500); background: rgba(139, 92, 246, 0.1);">
-                    ✨ v2.4.0 — Built for Agents</div>
+                    ✨ v2.5.0 — Built for Agents</div>
                 <h1 class="hero-title text-gradient" style="font-size: 4rem;">The PDF
                     for AI Evidence</h1>
                 <p class="hero-subtitle">Stop relying on screenshots. <strong>Evidence Packaged Infrastructure
@@ -143,7 +143,7 @@
                             <span class="control-dot dot-yellow"></span>
                             <span class="control-dot dot-green"></span>
                         </div>
-                        <div class="terminal-title">epi-recorder v2.4.0</div>
+                        <div class="terminal-title">epi-recorder v2.5.0</div>
                     </div>
                     <div class="terminal-body">
                         <!-- Content injected by terminal-demo.js -->
@@ -178,7 +178,7 @@
             <!-- Stats Row -->
             <div class="hero-stats" style="margin-top: 4rem; justify-content: center;">
                 <div class="stat-item">
-                    <div class="stat-value">v2.4.0</div>
+                    <div class="stat-value">v2.5.0</div>
                     <div class="stat-label">Agent Development</div>
                 </div>
                 <div class="stat-item">
@@ -212,7 +212,7 @@
     <section class="section get-started-section" id="get-started">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Get Started with epi-recorder v2.4.0</h2>
+                <h2 class="section-title">Get Started with epi-recorder v2.5.0</h2>
                 <p class="section-desc">99% installation success rate. Universal one-command installer for all
                     platforms.
                 </p>
@@ -240,7 +240,7 @@
                                 <span class="minimize"></span>
                                 <span class="maximize"></span>
                             </div>
-                            <div class="terminal-title">epi-recorder v2.4.0 -- bash -- 80x24</div>
+                            <div class="terminal-title">epi-recorder v2.5.0 -- bash -- 80x24</div>
                         </div>
                         <div class="terminal-body">
                             <!-- JS will inject lines here -->
@@ -253,16 +253,16 @@
                     <div
                         style="width: 40px; height: 40px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
                         🚀</div>
-                    <h3 style="font-size: 1.5rem; color: white; margin: 0;">What's New in v2.4.0</h3>
+                    <h3 style="font-size: 1.5rem; color: white; margin: 0;">What's New in v2.5.0</h3>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                     <div>
                         <div
                             style="color: var(--color-primary-light); font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="color: #10B981; font-size: 1.2rem;">📊</span> Agent Analytics
+                            <span style="color: #10B981; font-size: 1.2rem;">🎭</span> Anthropic Support
                         </div>
-                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Track success rates,
-                            costs, and errors across 100s of runs. Generate visual dashboards automatically.
+                        <p style="color: var(--color-gray-400); font-size: 0.9rem; margin: 0;">Native Claude wrapper 
+                            with <code>wrap_anthropic()</code>. High-fidelity capture for all Claude 3.x models.
                         </p>
                     </div>
                     <div>
@@ -331,7 +331,7 @@
                 <p style="color: var(--color-gray-400);">From code execution to sealed evidence in seconds.</p>
             </div>
             <div class="cli-reference">
-                <h3>Complete CLI Reference (v2.4.0)</h3>
+                <h3>Complete CLI Reference (v2.5.0)</h3>
 
                 <!-- Core Commands -->
                 <h4 style="color: var(--color-primary-light); margin: 2rem 0 1rem; font-size: 1.1rem;">📹 Core
@@ -422,7 +422,7 @@
                     </div>
                     <div class="cli-command">
                         <code class="command-name">epi version</code>
-                        <p>Show EPI version information (currently v2.4.0).</p>
+                        <p>Show EPI version information (currently v2.5.0).</p>
                         <span class="badge shipped">✅ Shipped</span>
                     </div>
                     <div class="cli-command">
@@ -450,7 +450,7 @@
                 </div>
 
                 <!-- v2.4.0 Code Examples -->
-                <h4 style="color: var(--color-primary-light); margin: 3rem 0 1rem; font-size: 1.1rem;">🚀 v2.4.0 Quick
+                <h4 style="color: var(--color-primary-light); margin: 3rem 0 1rem; font-size: 1.1rem;">🚀 v2.5.0 Quick
                     Start Examples
                 </h4>
 
@@ -495,6 +495,19 @@ async with record("async_agent.epi") as epi:
 checkpointer = EPICheckpointSaver("agent.epi")
 graph = create_graph().compile(checkpointer=checkpointer)
 # All state transitions automatically recorded!</code></pre>
+                    </div>
+                </div>
+
+                <!-- Anthropic Example -->
+                <div style="margin-bottom: 2rem;">
+                    <h5 style="color: var(--color-gray-300); margin-bottom: 0.75rem; font-size: 1rem;">🎭 Anthropic (Claude)</h5>
+                    <div
+                        style="background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <pre style="margin: 0; overflow-x: auto;"><code style="color: #e6edf3; font-size: 0.85rem;">from anthropic import Anthropic
+from epi_recorder import wrap_anthropic
+
+client = wrap_anthropic(Anthropic())
+# Transparent evidence capture for Claude 3.5 Sonnet</code></pre>
                     </div>
                 </div>
 
@@ -568,7 +581,7 @@ client = wrap_openai(OpenAI(
     </footer>
 
     <script src="js/app.js"></script>
-    <script src="js/terminal-demo.js?v=2.4.0"></script>
+    <script src="js/terminal-demo.js?v=2.5.0"></script>
     <script src="js/particles.js"></script>
 </body>
 

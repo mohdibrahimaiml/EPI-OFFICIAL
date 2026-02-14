@@ -10,7 +10,7 @@
 The heart of EPI is its ability to capture code execution **deterministically**. This is achieved through **Explicit Capture**.
 
 ### A. The Capture Mechanism: Explicit Wrappers
-Instead of implicitly monkey-patching standard libraries, EPI v2.3.0 introduced explicit wrappers to ensure reliability, and v2.4.0 extends this with native async support and agent analytics.
+Instead of implicitly monkey-patching standard libraries, EPI v2.3.0 introduced explicit wrappers to ensure reliability, and v2.5.0 extends this with native async support and agent analytics.
 
 **Code Analysis (`epi_recorder/wrappers/openai.py`):**
 1.  **Wrapping:** The developer wraps their client: `client = wrap_openai(OpenAI())`.
