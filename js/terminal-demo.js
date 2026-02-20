@@ -44,7 +44,7 @@ class TerminalDemo {
 
         // Initial welcome message - print FIRST before creating command line
         this.print([
-            { text: 'EPI Portable Environment v2.5.0', color: 'text-dim' },
+            { text: 'EPI Portable Environment v2.6.0', color: 'text-dim' },
             { text: 'Type "help" for a list of commands.', color: 'text-dim' },
             { text: '' }
         ]);
@@ -239,7 +239,7 @@ class TerminalDemo {
 
     async simulateRecording(filename) {
         const steps = [
-            { text: `→ Starting EPI Recorder v2.5.0`, delay: 200 },
+            { text: `→ Starting EPI Recorder v2.6.0`, delay: 200 },
             { text: `  Target: ${filename}`, delay: 100 },
             { text: `  Environment: Python 3.11.4 | Windows 10`, color: 'text-dim', delay: 300 },
             { text: `● Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },

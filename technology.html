@@ -100,7 +100,7 @@
             <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">1. The Recorder Engine
             </h2>
             <p>The heart of EPI is its ability to capture code execution **deterministically**. v2.3.0 introduced
-                <strong>Explicit Capture</strong>, and v2.5.0 builds on this with agent-first features.
+                <strong>Explicit Capture</strong>, and v2.6.0 extends this with deep framework integrations.
             </p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">A. Explicit API &
@@ -130,56 +130,68 @@
             </div>
 
             <h2 style="font-size: 2rem; margin-bottom: 1.5rem; margin-top: 3rem; color: var(--color-white);">1A. New in
-                v2.5.0: Agent-First Features
+                v2.6.0: Framework Integrations
             </h2>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">📊 Agent Analytics
-                Engine</h3>
-            <p>Track performance across hundreds of agent runs. The <code>AgentAnalytics</code> class provides:
-            </p>
-            <ul style="list-style-type: disc; margin-left: 2rem; margin-top: 1rem; color: var(--text-secondary);">
-                <li style="margin-bottom: 0.5rem;"><strong>Success Rate Tracking:</strong> Automatically calculate
-                    pass/fail metrics</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Cost Analysis:</strong> Track spending by day/week/month
-                    across providers</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Error Patterns:</strong> Identify recurring failure modes
-                </li>
-                <li style="margin-bottom: 0.5rem;"><strong>Visual Reports:</strong> Generate HTML dashboards with charts
-                </li>
-            </ul>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🔌 LiteLLM — 100+
+                Providers</h3>
+            <p>A single callback that captures every LLM call across <strong>100+ providers</strong>: OpenAI, Anthropic,
+                Cohere, Mistral, Azure, Bedrock, and more. One line of code:</p>
+            <div
+                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">import litellm
+from epi_recorder.integrations.litellm import EPICallback
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">⚡ Async/Await &
-                Anthropic Support
-            </h3>
-            <p>Modern agent frameworks like LangGraph, AutoGen, and Anthropic's Claude 3.5 Sonnet use
-                <code>async/await</code>. v2.5.0 provides native
-                async context managers and explicit wrappers:
+litellm.callbacks = [EPICallback()]  # That's it
+response = litellm.completion(model="gpt-4", messages=[...])
+# Every call → signed .epi evidence</code></pre>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🦜 LangChain
+                Callback Handler</h3>
+            <p>The <code>EPICallbackHandler</code> captures LLM calls, tool invocations, chain steps, retriever
+                queries, and agent decisions — all in one handler:
             </p>
             <div
                 style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
-                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">async with record("agent.epi", goal="Process documents") as epi:
-    result = await agent.run()  # Non-blocking recording
-    epi.log_step("completion", {"result": result})</code></pre>
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">from langchain_openai import ChatOpenAI
+from epi_recorder.integrations.langchain import EPICallbackHandler
+
+llm = ChatOpenAI(model="gpt-4", callbacks=[EPICallbackHandler()])
+result = llm.invoke("Analyze this contract...")
+# Captures: LLM, tools, chains, retrievers, agents</code></pre>
             </div>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🔗 LangGraph
-                Checkpoint Integration</h3>
-            <p>The <code>EPICheckpointSaver</code> class automatically records all state transitions in your LangGraph
-                agents:
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🧪 pytest Plugin
+                (<code>--epi</code> flag)</h3>
+            <p>Generate signed <code>.epi</code> evidence per test. Built-in CI/CD audit trails with
+                <code>pytest --epi</code>.
             </p>
-            <div
-                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
-                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">from epi_recorder.integrations.langgraph import EPICheckpointSaver
 
-# Zero-config integration
-checkpointer = EPICheckpointSaver("agent_run.epi")
-graph = create_graph().compile(checkpointer=checkpointer)</code></pre>
-            </div>
-
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🦙 Ollama Local LLM
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🌊 OpenAI Streaming
                 Support</h3>
-            <p>Test agents locally with <strong>$0 API costs</strong> using Ollama. Supports DeepSeek-R1, Llama,
-                Mistral, and all Ollama models. Complete privacy—your data never leaves your machine.
+            <p>Native <code>stream=True</code> capture. Real-time chunks yielded to the caller while the assembled
+                response and token usage are automatically logged into the <code>.epi</code> file.
+            </p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">📡 OpenTelemetry
+                Exporter</h3>
+            <p><code>EPISpanExporter</code> bridges OTel spans into signed <code>.epi</code> files. One-line setup
+                for any OTel-instrumented application:
+            </p>
+            <div
+                style="background: #0d1117; padding: 1.5rem; border-radius: var(--radius-md); overflow-x: auto; margin: 1.5rem 0; border: 1px solid #30363d;">
+                <pre><code style="background: transparent; padding: 0; color: #e6edf3;">from epi_recorder.integrations.opentelemetry import setup_epi_tracing
+
+setup_epi_tracing(service_name="my-agent")
+# All OTel spans → signed .epi files automatically</code></pre>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">🌐 Global Install
+            </h3>
+            <p>Auto-record all Python processes via <code>sitecustomize.py</code>. One command:
+                <code>epi install --global</code>. Idempotent with clean uninstall via
+                <code>epi uninstall --global</code>.
             </p>
         </div>
 
