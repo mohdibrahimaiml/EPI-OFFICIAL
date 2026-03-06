@@ -1,7 +1,7 @@
 # EPI Enterprise Pivot: Master Project Documentation
 
 ## 1. Executive Summary: The "Trust Layer"
-**EPI (Evidence Packaged Infrastructure)** has evolved from a developer utility ("The PDF for AI") into an **Enterprise Trust Platform**. 
+**EPI (Execution Proof Infrastructure)** has evolved from a developer utility ("The PDF for AI") into an **Enterprise Trust Platform**. 
 
 **The Core Pivot:**
 *   **Old Strategy:** Sell a "Recorder" to developers. (Low friction, Low value)

@@ -8,7 +8,7 @@
 
 ## 1. System Overview
 
-**EPI (Evidence Packaged Infrastructure)** is a dual-component system designed to create and verify immutable proofs of AI execution. It solves the "Black Box" problem by wrapping AI workflows in a cryptographically signed container (`.epi`) that is portable, self-contained, and legally verifiable.
+**EPI (Execution Proof Infrastructure)** is a dual-component system designed to create and verify immutable proofs of AI execution. It solves the "Black Box" problem by wrapping AI workflows in a cryptographically signed container (`.epi`) that is portable, self-contained, and legally verifiable.
 
 The system consists of two distinct repositories:
 1.  **`epi-recorder` (The Generator):** A Python package that instruments code to capture execution data.
