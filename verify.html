@@ -516,17 +516,19 @@
         }
 
         function canonicalJson(obj) {
+            // Replicates Python's json.dumps(obj, separators=(',', ':'), sort_keys=True)
+            if (obj === null) return 'null';
+            if (typeof obj !== 'object') return JSON.stringify(obj);
             if (Array.isArray(obj)) return '[' + obj.map(canonicalJson).join(',') + ']';
-            else if (typeof obj === 'object' && obj !== null) {
-                const keys = Object.keys(obj).sort();
-                let result = '{';
-                for (let i = 0; i < keys.length; i++) {
-                    const key = keys[i];
-                    if (i > 0) result += ',';
-                    result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
-                }
-                return result + '}';
-            } else return JSON.stringify(obj);
+            
+            const keys = Object.keys(obj).sort();
+            let result = '{';
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                if (i > 0) result += ',';
+                result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
+            }
+            return result + '}';
         }
 
         function hexToBytes(hex) {
