@@ -1,4 +1,4 @@
-const CACHE_NAME = 'epi-verifier-v3';
+const CACHE_NAME = 'epi-verifier-v4';
 const ASSETS = [
     './verify.html',
     './manifest.json',
@@ -31,10 +31,27 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // Cache First strategy
-            return cachedResponse || fetch(event.request);
-        })
-    );
+    // Network-First Strategy for HTML to ensure we always get the latest layout
+    if (event.request.headers.get('accept').includes('text/html')) {
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseClone);
+                    });
+                    return response;
+                })
+                .catch(() => {
+                    return caches.match(event.request);
+                })
+        );
+    } else {
+        // Cache-First for static assets
+        event.respondWith(
+            caches.match(event.request).then((cachedResponse) => {
+                return cachedResponse || fetch(event.request);
+            })
+        );
+    }
 });
