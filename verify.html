@@ -4,444 +4,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPI Verifier | The Truth Platform</title>
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-    <meta name="theme-color" content="#8b5cf6">
-
+    <title>Verify Evidence | EPI LABS</title>
     <!-- Dependencies (CDNs) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cbor-js@0.1.0/cbor.min.js"></script>
     <!-- Noble Ed25519 -->
     <script src="https://unpkg.com/@noble/ed25519@2.0.0/lib/index.js"></script>
-    <!-- Tailwind for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Custom System Styles -->
+    <link rel="stylesheet" href="css/style.css?v=2.6">
+    <link rel="stylesheet" href="css/terminal.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+        .page-container {
+            min-height: calc(100vh - 80px); /* Account for nav */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xl) var(--space-md);
+            position: relative;
+            z-index: 10;
+        }
+
+        .verifier-glass-card {
+            background: rgba(10, 13, 21, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .verifier-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl) var(--space-lg);
+            text-align: center;
+            cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
-        .drop-zone.dragover {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--color-primary);
+            background: rgba(10, 132, 255, 0.05);
+            box-shadow: inset var(--glow-blue);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-sm);
+            color: var(--color-primary);
+            filter: drop-shadow(0 0 15px rgba(10, 132, 255, 0.5));
+            transition: transform 0.3s ease;
+        }
+        
+        .drop-zone:hover .upload-icon {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .pubkey-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            color: var(--color-white);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: var(--space-lg);
+            transition: all 0.2s ease;
+        }
+
+        .pubkey-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
         }
 
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
+            display: inline-block;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Modal & Timeline Overrides */
+        .glass-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-
-        /* Verification Badge Animation */
-        .sc-badge {
+        .glass-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .glass-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-modal.active .glass-modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body {
+            padding: var(--space-lg);
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .timeline-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            overflow: hidden;
+        }
+        .timeline-header {
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid transparent;
+            transition: background 0.2s ease;
+        }
+        .timeline-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .timeline-body {
+            padding: var(--space-md);
+            background: #000;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--color-teal-400);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            overflow-x: auto;
             display: none;
         }
+        .timeline-body.active { display: block; }
 
-        .sc-badge.show {
-            display: block;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Dynamic Visuals for Result */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: var(--space-md);
         }
+        .status-success { color: var(--color-success); background: rgba(48, 209, 88, 0.1); border: 1px solid rgba(48, 209, 88, 0.2); box-shadow: 0 0 20px rgba(48, 209, 88, 0.2); }
+        .status-warning { color: var(--color-warning); background: rgba(255, 214, 10, 0.1); border: 1px solid rgba(255, 214, 10, 0.2); box-shadow: 0 0 20px rgba(255, 214, 10, 0.2); }
+        .status-error { color: var(--color-error); background: rgba(255, 69, 58, 0.1); border: 1px solid rgba(255, 69, 58, 0.2); box-shadow: 0 0 20px rgba(255, 69, 58, 0.2); }
 
-        @keyframes popIn {
-            from {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm) var(--space-md);
+            margin: var(--space-md) 0 var(--space-lg) 0;
+            background: rgba(0,0,0,0.2);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
         }
+        .meta-label { color: var(--color-gray-500); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .meta-value { color: var(--color-white); font-size: 0.9rem; word-break: break-all; }
+        .meta-value.mono { font-family: var(--font-mono); color: var(--color-teal-400); }
+
+        .action-row {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 
-<body
-    class="h-screen flex flex-col bg-gray-50 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100 via-slate-50 to-white">
+<body>
+    <!-- Top Anchor -->
+    <div id="top"></div>
 
-    <!-- Navbar -->
-    <nav
-        class="bg-white/70 backdrop-blur-md border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-40">
-        <div class="flex items-center gap-3">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <img src="assets/verifier-logo.png" alt="EPI LABS Verifier" class="h-8 w-auto">
-                <span class="font-bold text-xl tracking-tight text-gray-900">Verifier</span>
-            </a>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container nav-container">
+            <div class="nav-logo">
+                <a href="index.html" title="Go to Home">
+                    <img src="assets/logo.png" alt="EPI LABS" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-links">
+                <div class="mobile-back">
+                    <span>←</span> Back
+                </div>
+                <a href="how-it-works.html#top">How It Works</a>
+                <a href="technology.html">Technology</a>
+                <a href="use-cases.html#top">Use Cases</a>
+                <a href="verify.html" class="active">Verify</a>
+                <a href="vision.html#vision">Vision</a>
+                <a href="contact.html#top">Contact</a>
+            </div>
+            <div class="nav-cta">
+                <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn-secondary" target="_blank">GitHub</a>
+                <a href="contact.html" class="btn-primary">Request Deck</a>
+            </div>
+            <button class="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
-
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center gap-8">
-            <a href="how-it-works.html" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">How It
-                Works</a>
-            <a href="technology.html"
-                class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Technology</a>
-            <a href="use-cases.html" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Use
-                Cases</a>
-            <a href="vision.html" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Vision</a>
-            <a href="contact.html" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Contact</a>
-        </div>
-
-        <div class="hidden lg:block text-xs uppercase tracking-wider font-semibold text-gray-500">Zero-Knowledge
-            Verification</div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <!-- Main Verify Interface -->
+    <main class="page-container">
+        <!-- Floating Animated Background (From Index) -->
+        <canvas id="particle-canvas" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none; opacity: 0.6;"></canvas>
 
-        <!-- Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-40">
-            <div
-                class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob">
-            </div>
-            <div
-                class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000">
-            </div>
-            <div
-                class="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000">
-            </div>
-        </div>
-
-        <!-- Hero Text -->
-        <div class="text-center mb-10 max-w-2xl relative z-10">
-            <h1
-                class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 mb-6 tracking-tight">
-                Verify AI Evidence
-            </h1>
-            <p class="text-gray-600 text-lg mb-8 leading-relaxed">
-                Drag and drop your <code
-                    class="bg-white border border-gray-200 shadow-sm px-2 py-1 rounded text-sm font-mono text-purple-600">.epi</code>
-                bundle.
-                <br>
-                Instant, client-side cryptographic verification.
-            </p>
-
-            <!-- Public Key Input -->
-            <div class="flex items-center justify-center gap-2 max-w-lg mx-auto">
-                <div class="relative w-full">
-                    <input type="text" id="pubKeyInput" placeholder="Signer Public Key (Hex) - Optional"
-                        class="w-full pl-4 pr-10 py-3 bg-white border border-gray-200 rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono transition-all">
-                    <button
-                        onclick="navigator.clipboard.readText().then(t => document.getElementById('pubKeyInput').value = t)"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                        title="Paste from Clipboard">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Drop Zone -->
-        <div id="dropZone"
-            class="group w-full max-w-xl h-64 bg-white/60 backdrop-blur-sm border-2 border-dashed border-gray-300 hover:border-purple-500 hover:bg-white/80 rounded-2xl flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 relative z-10">
-
-            <div id="uploadIcon"
-                class="text-gray-400 group-hover:text-purple-500 transition-colors duration-300 mb-4 transform group-hover:scale-110">
-                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                    </path>
-                </svg>
+        <div class="verifier-glass-card" id="mainCard">
+            <div style="text-align: center; margin-bottom: var(--space-xl);">
+                <div class="hero-badge" style="border-color: var(--color-primary); color: var(--color-primary); background: rgba(10, 132, 255, 0.1); margin-bottom: var(--space-md); padding: 0.25rem 0.75rem; display:inline-block; border-radius:99px; font-weight:600; font-size:0.8rem;">ZERO-KNOWLEDGE VERIFICATION</div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;" class="text-gradient">Verify Evidence</h1>
+                <p style="font-size: 1rem;">Drag and drop your <code style="font-size: 0.85em; background: rgba(255,255,255,0.1); color: var(--color-white);">.epi</code> bundle for instant, client-side cryptographic analysis.</p>
             </div>
 
-            <div id="uploadText" class="text-center">
-                <p class="text-xl font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">Drop .epi
-                    file here</p>
-                <p class="text-sm text-gray-500 mt-2">or click to browse</p>
-            </div>
-
-            <div id="loader" class="loader hidden"></div>
-            <input type="file" id="fileInput" class="hidden" accept=".epi,.zip">
-        </div>
-
-        <!-- Result Card -->
-        <div id="resultCard"
-            class="hidden w-full max-w-xl mt-8 bg-white/90 backdrop-blur rounded-2xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all duration-500 ease-out translate-y-4 opacity-0 z-20">
-            <!-- Dynamic Status Header -->
-            <div id="statusBg" class="px-6 py-6 flex items-center gap-5 border-b border-gray-100 bg-gray-50/50">
-                <div id="statusIcon"
-                    class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 bg-white shadow-sm ring-4 ring-white">
-                </div>
-                <div>
-                    <h2 id="statusTitle" class="text-2xl font-bold text-gray-900 tracking-tight"></h2>
-                    <p id="statusDesc" class="text-sm font-medium text-gray-500 mt-1"></p>
-                </div>
-            </div>
-
-            <!-- Metadata Grid -->
-            <div class="p-8">
-                <div class="grid grid-cols-2 gap-y-6 gap-x-8 mb-8">
-                    <div class="space-y-1">
-                        <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">Signer Identity</p>
-                        <p id="metaSigner"
-                            class="font-mono text-sm text-gray-800 break-all bg-gray-50 px-2 py-1 rounded inline-block">
-                            Unknown</p>
+            <div id="inputPhase">
+                <input type="text" id="pubKeyInput" class="pubkey-input" placeholder="Optional: Enterprise Public Key (Hex) to verify identity">
+                
+                <div id="dropZone" class="drop-zone">
+                    <div id="uploadUI">
+                        <div class="upload-icon">🔒</div>
+                        <h3 style="margin-bottom: 0.25rem;">Drop .epi file here</h3>
+                        <p style="font-size: 0.9rem;">or click to browse local files</p>
                     </div>
-                    <div class="space-y-1">
-                        <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">Goal</p>
-                        <p id="metaGoal" class="text-sm text-gray-900 font-medium leading-snug">--</p>
+                    <div id="loaderUI" class="hidden" style="padding: 2rem 0;">
+                        <div class="loader"></div>
+                        <p style="margin-top: 1rem; font-weight: 500; font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-primary-light);">Verifying Cryptographic Seal...</p>
                     </div>
-                    <div class="space-y-1">
-                        <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">Created</p>
-                        <p id="metaDate" class="text-sm text-gray-600">--</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-xs uppercase tracking-wider text-gray-400 font-bold">Workflow ID</p>
-                        <p id="metaId" class="font-mono text-xs text-gray-500 break-all">--</p>
-                    </div>
-                </div>
-
-                <!-- Primary Actions -->
-                <div class="flex gap-3">
-                    <button id="viewDetailsBtn"
-                        class="flex-1 px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                            </path>
-                        </svg>
-                        Inspect Timeline
-                    </button>
-                    <button id="viewFilesBtn"
-                        class="px-4 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl text-sm font-semibold shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
-                        title="View File Manifest">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                    </button>
-                    <!-- Visualizer Toggle (Hidden by default) -->
-                    <button id="launchVizBtn"
-                        class="px-5 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 hidden group">
-                        <svg class="w-4 h-4 group-hover:animate-pulse" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                            </path>
-                        </svg>
-                        <span>View Evidence</span>
-                    </button>
-                    <!-- Download Button -->
-                    <button id="downloadBtn"
-                        class="px-4 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl text-sm font-semibold shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
-                        title="Download Unpacked Evidence">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                    </button>
-                    <button
-                        class="px-4 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl text-sm font-semibold shadow-sm hover:shadow transition-all"
-                        onclick="reset()" title="Reset">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                            </path>
-                        </svg>
-                    </button>
+                    <input type="file" id="fileInput" class="hidden" accept=".epi,.zip">
                 </div>
             </div>
-        </div>
 
-        <!-- Improved Timeline Modal -->
-        <div id="timelineModal"
-            class="fixed inset-0 bg-slate-900/80 hidden flex items-center justify-center z-50 p-4 backdrop-blur-md transition-opacity">
-            <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden border border-gray-200 transform scale-100 transition-transform">
-                <div
-                    class="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/80 backdrop-blur">
+            <!-- Result Output Phase -->
+            <div id="resultPhase" class="hidden">
+                <div style="text-align: center;">
+                    <div id="statusBadge" class="status-badge status-success">
+                        <span id="statusIcon">✓</span> <span id="statusText">Verified Authentic</span>
+                    </div>
+                    <p id="statusDesc" style="color: var(--color-gray-300); font-size: 0.95rem; margin-bottom: 0;"></p>
+                </div>
+
+                <div class="metadata-grid">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800">Evidence Timeline</h3>
-                        <p class="text-xs text-gray-500 mt-1">Granular execution trace extracted from <code
-                                class="bg-gray-100 px-1 rounded">steps.jsonl</code></p>
+                        <div class="meta-label">Signer Identity</div>
+                        <div id="metaSigner" class="meta-value mono">Unknown</div>
                     </div>
-                    <button onclick="closeTimeline()"
-                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div id="timelineContent" class="p-8 overflow-y-auto space-y-4 bg-slate-50 flex-1 font-mono text-sm">
-                </div>
-            </div>
-        </div>
-
-        <!-- File Manifest Modal -->
-        <div id="filesModal"
-            class="fixed inset-0 bg-slate-900/80 hidden flex items-center justify-center z-50 p-4 backdrop-blur-md transition-opacity">
-            <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-[70vh] flex flex-col overflow-hidden border border-gray-200 transform scale-100 transition-transform">
-                <div
-                    class="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/80 backdrop-blur">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800">File Manifest</h3>
-                        <p class="text-xs text-gray-500 mt-1">Cryptographic inventory of all files in this bundle</p>
+                        <div class="meta-label">Workflow ID</div>
+                        <div id="metaId" class="meta-value mono">--</div>
                     </div>
-                    <button onclick="closeFiles()"
-                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+                    <div>
+                        <div class="meta-label">Created At</div>
+                        <div id="metaDate" class="meta-value">--</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Goal / Objective</div>
+                        <div id="metaGoal" class="meta-value">--</div>
+                    </div>
                 </div>
-                <div id="filesContent" class="p-0 overflow-y-auto bg-white flex-1 font-mono text-sm">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 border-b border-gray-200">
-                            <tr>
-                                <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Filename
-                                </th>
-                                <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">SHA-256
-                                    Hash</th>
-                            </tr>
-                        </thead>
-                        <tbody id="filesTableBody" class="divide-y divide-gray-100">
-                            <!-- Files will be injected here -->
-                        </tbody>
-                    </table>
+
+                <div class="action-row">
+                    <button class="btn-primary" style="flex: 1; padding: 0.75rem;" onclick="openTimeline()">
+                        <span style="font-size: 1.1rem;">👁️</span> Inspect Timeline
+                    </button>
+                    <button id="launchVizBtn" class="btn-primary hidden" style="background: linear-gradient(135deg, var(--color-violet-500), #6D28D9); padding: 0.75rem;">
+                        <span>🚀</span> Read-Only View
+                    </button>
+                    <button class="btn-secondary" style="padding: 0.75rem; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="openFiles()" title="View File Manifest">
+                        📂
+                    </button>
+                    <button class="btn-secondary" style="padding: 0.75rem; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="resetUI()" title="Verify Another File">
+                        ↺
+                    </button>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <footer class="py-6 text-center text-gray-400 text-xs font-medium">
-        &copy; 2026 EPI Labs. Enterprise Trust Platform. v2.6.0
-    </footer>
-
-    <!-- Visualizer Modal (Full Screen) -->
-    <div id="visualizerModal"
-        class="fixed inset-0 bg-slate-900/90 hidden z-50 flex flex-col backdrop-blur-sm transition-opacity">
-        <!-- Toolbar -->
-        <div class="bg-slate-900 border-b border-slate-700 px-6 py-4 flex items-center justify-between shadow-lg">
-            <div class="flex items-center gap-4">
-                <span class="text-white font-bold text-lg tracking-tight">Evidence Visualizer</span>
-                <span
-                    class="px-2 py-1 bg-slate-800 text-slate-400 text-xs rounded border border-slate-700 font-mono">Read-Only
-                    Mode</span>
+    <!-- UI Modals -->
+    <div id="timelineModal" class="glass-modal">
+        <div class="glass-modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3 style="margin-bottom: 0;">Evidence Timeline</h3>
+                    <p style="font-size: 0.8rem; margin:0;">Granular execution trace from <code style="padding: 0 0.25rem; font-size: 1em;">steps.jsonl</code></p>
+                </div>
+                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeTimeline()">✕</button>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="document.getElementById('vizFrame').contentWindow.print()"
-                    class="text-slate-400 hover:text-white transition" title="Print Evidence">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
-                        </path>
-                    </svg>
-                </button>
-                <button onclick="closeVisualizer()"
-                    class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-600 transition flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                    Close
-                </button>
-            </div>
-        </div>
-        <!-- Iframe Container -->
-        <div class="flex-1 bg-white relative">
-            <iframe id="vizFrame" class="w-full h-full absolute inset-0 border-0"
-                sandbox="allow-scripts allow-popups allow-forms"></iframe>
+            <div class="modal-body" id="timelineContent"></div>
         </div>
     </div>
 
-    <!-- Logic -->
+    <div id="filesModal" class="glass-modal">
+        <div class="glass-modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div>
+                    <h3 style="margin-bottom: 0;">File Manifest</h3>
+                    <p style="font-size: 0.8rem; margin:0;">Cryptographic inventory (SHA-256)</p>
+                </div>
+                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeFiles()">✕</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead style="background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--border-subtle);">
+                        <tr>
+                            <th style="padding: 0.75rem 1rem; color: var(--color-gray-400); font-size: 0.8rem; text-transform: uppercase;">Filename</th>
+                            <th style="padding: 0.75rem 1rem; color: var(--color-gray-400); font-size: 0.8rem; text-transform: uppercase;">SHA-256 Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic -->
     <script type="module">
         import * as ed from 'https://esm.sh/@noble/ed25519@2.0.0';
 
         let currentSteps = [];
-        let currentZip = null; // Store zip for download capability
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(console.error);
-        }
-
+        
+        // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const loader = document.getElementById('loader');
-        const resultCard = document.getElementById('resultCard');
-        const timelineModal = document.getElementById('timelineModal');
-        const timelineContent = document.getElementById('timelineContent');
-        const filesModal = document.getElementById('filesModal');
-        const filesTableBody = document.getElementById('filesTableBody');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const visualizerModal = document.getElementById('visualizerModal');
-        const vizFrame = document.getElementById('vizFrame');
-        const launchVizBtn = document.getElementById('launchVizBtn'); // We need to add this to HTML
+        const uploadUI = document.getElementById('uploadUI');
+        const loaderUI = document.getElementById('loaderUI');
+        const inputPhase = document.getElementById('inputPhase');
+        const resultPhase = document.getElementById('resultPhase');
+        const launchVizBtn = document.getElementById('launchVizBtn');
 
-        // Drag & Drop
+        // Drag & Drop Handlers
         dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-purple-500', 'bg-purple-50'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-purple-500', 'bg-purple-50'));
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-purple-500', 'bg-purple-50');
+            dropZone.classList.remove('dragover');
             if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
         });
         fileInput.addEventListener('change', (e) => processFile(e.target.files[0]));
 
-        window.closeTimeline = () => timelineModal.classList.add('hidden');
-        window.closeFiles = () => filesModal.classList.add('hidden');
-        window.closeVisualizer = () => {
-            visualizerModal.classList.add('hidden');
-            vizFrame.src = 'about:blank'; // Clear memory
+        // Global UI Toggles
+        window.openTimeline = () => document.getElementById('timelineModal').classList.add('active');
+        window.closeTimeline = () => document.getElementById('timelineModal').classList.remove('active');
+        window.openFiles = () => document.getElementById('filesModal').classList.add('active');
+        window.closeFiles = () => document.getElementById('filesModal').classList.remove('active');
+        
+        window.resetUI = () => {
+            resultPhase.classList.add('hidden');
+            inputPhase.classList.remove('hidden');
+            uploadUI.classList.remove('hidden');
+            loaderUI.classList.add('hidden');
+            fileInput.value = '';
+            launchVizBtn.classList.add('hidden');
         };
 
-        // File Handler
         async function processFile(file) {
             if (!file) return;
 
-            // UI Reset
-            currentSteps = [];
-            currentZip = null;
-            document.getElementById('uploadIcon').classList.add('hidden');
-            document.getElementById('uploadText').classList.add('hidden');
-            loader.classList.remove('hidden');
-            resultCard.classList.add('hidden');
-
-            // Hide visualize button by default
-            if (launchVizBtn) launchVizBtn.classList.add('hidden');
+            // Transition UI to loading
+            uploadUI.classList.add('hidden');
+            loaderUI.classList.remove('hidden');
 
             try {
                 const zip = await JSZip.loadAsync(file);
-                currentZip = zip; // Save for download
 
+                // Read Manifest
                 const manifestFile = zip.file("manifest.json");
                 if (!manifestFile) throw new Error("Invalid .epi bundle: manifest.json missing");
-
                 const manifest = JSON.parse(await manifestFile.async("string"));
 
-                // Load Steps
+                // Read Steps Timeline
                 const stepsFile = zip.file("steps.jsonl");
+                currentSteps = [];
                 if (stepsFile) {
                     const stepsText = await stepsFile.async("string");
                     currentSteps = stepsText.trim().split('\n').map(l => {
@@ -449,56 +447,53 @@
                     }).filter(Boolean);
                 }
 
-                // CHECK FOR EMBEDDED VIEWER
+                // Setup Offline Viewer Button
                 const viewerFile = zip.file("viewer.html");
-                if (viewerFile && launchVizBtn) {
+                if (viewerFile) {
                     launchVizBtn.classList.remove('hidden');
                     launchVizBtn.onclick = async () => {
                         const htmlContent = await viewerFile.async("string");
                         const blob = new Blob([htmlContent], { type: 'text/html' });
-                        vizFrame.src = URL.createObjectURL(blob);
-                        visualizerModal.classList.remove('hidden');
+                        // Open strictly contained isolated page
+                        window.open(URL.createObjectURL(blob), '_blank', 'noopener,noreferrer');
                     };
                 }
 
-                // Verify Signature Logic
+                // Ed25519 WebCrypto Verification
                 const signatureRaw = manifest.signature;
                 if (!signatureRaw) throw new Error("UNSIGNED: Evidence bundle lacks a digital signature.");
-
                 const parts = signatureRaw.split(':');
-                if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature");
+                if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature string");
 
                 const keyName = parts[1];
                 const manualKey = document.getElementById('pubKeyInput').value.trim();
-                const embeddedKey = manifest.public_key;
+                const embeddedKey = manifest.public_key || manifest.signer;
 
-                // Determine verification strategy
                 if (manualKey || embeddedKey) {
                     const verificationKey = manualKey || embeddedKey;
-
-                    // Perform actual cryptographic verification
+                    if (typeof verificationKey !== 'string') {
+                        throw new Error("Verification key must be a hexadecimal string.");
+                    }
+                    
                     try {
                         const isValid = await verifySignature(manifest, verificationKey);
                         if (isValid) {
-                            const trustMsg = manualKey ? "Verified (Trusted Key)" : "Integrity Verified (Self-Contained Key)";
-                            showResult("green", manifest, keyName, trustMsg);
+                            const trustMsg = manualKey ? "Verified against manually provided Organization Key." : "Integrity mathematically verified via Self-Contained Key.";
+                            showResult("success", manifest, keyName, trustMsg);
                         } else {
-                            showResult("red", manifest, keyName, "Signature Verification Failed! (Tampered Evidence)");
+                            showResult("error", manifest, keyName, "Signature Verification Failed: The evidence has been tampered with.");
                         }
                     } catch (verifyErr) {
-                        console.error(verifyErr);
-                        showResult("red", manifest, keyName, "Verification Error: " + verifyErr.message);
+                        showResult("error", manifest, keyName, "Verification Error: " + verifyErr.message);
                     }
                 } else {
-                    showResult("yellow", manifest, keyName, "Identity Unverified (No Public Key Provided)");
+                    showResult("warning", manifest, keyName, "Identity Unverified. No public key provided to check against.");
                 }
-
-                // Setup Actions
-                downloadBtn.onclick = () => downloadZipContent(zip, manifest);
-                document.getElementById('viewFilesBtn').onclick = () => renderFiles(manifest.file_manifest || {});
+                
+                populateFiles(manifest.file_manifest || {});
 
             } catch (err) {
-                showResult("red", null, null, err.message);
+                showResult("error", null, null, err.message);
             }
         }
 
@@ -507,29 +502,22 @@
             const parts = signatureRaw.split(':');
             const sigHex = parts[2];
 
-            // 1. Prepare Public Key
             const pubKeyBytes = hexToBytes(pubKeyHex);
-
-            // 2. Prepare Canonical Message
             const manifestCopy = JSON.parse(JSON.stringify(manifest));
             delete manifestCopy.signature;
             const jsonString = canonicalJson(manifestCopy);
             const msgBytes = new TextEncoder().encode(jsonString);
 
-            // 3. Hash Message (SHA-256) - Backend signs the hash
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBytes);
             const hashArray = new Uint8Array(hashBuffer);
 
-            // 4. Verify
             const sigBytes = hexToBytes(sigHex);
             return await ed.verifyAsync(sigBytes, hashArray, pubKeyBytes);
         }
 
-        // Helper: Canonical JSON Stringify (Recursive)
         function canonicalJson(obj) {
-            if (Array.isArray(obj)) {
-                return '[' + obj.map(canonicalJson).join(',') + ']';
-            } else if (typeof obj === 'object' && obj !== null) {
+            if (Array.isArray(obj)) return '[' + obj.map(canonicalJson).join(',') + ']';
+            else if (typeof obj === 'object' && obj !== null) {
                 const keys = Object.keys(obj).sort();
                 let result = '{';
                 for (let i = 0; i < keys.length; i++) {
@@ -537,14 +525,12 @@
                     if (i > 0) result += ',';
                     result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
                 }
-                result += '}';
-                return result;
-            } else {
-                return JSON.stringify(obj);
-            }
+                return result + '}';
+            } else return JSON.stringify(obj);
         }
 
         function hexToBytes(hex) {
+            if (typeof hex !== 'string') throw new Error('hex string expected, got ' + typeof hex);
             const bytes = new Uint8Array(hex.length / 2);
             for (let i = 0; i < hex.length; i += 2) {
                 bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
@@ -552,128 +538,109 @@
             return bytes;
         }
 
-        async function showResult(status, manifest, signer, errorMsg) {
-            loader.classList.add('hidden');
-            resultCard.classList.remove('hidden', 'translate-y-4', 'opacity-0');
+        function showResult(state, manifest, signer, errorMsg) {
+            inputPhase.classList.add('hidden');
+            resultPhase.classList.remove('hidden');
 
+            const badge = document.getElementById('statusBadge');
             const icon = document.getElementById('statusIcon');
-            const title = document.getElementById('statusTitle');
-            const bg = document.getElementById('statusBg');
+            const text = document.getElementById('statusText');
+            
+            // Clean slate
+            badge.className = 'status-badge';
 
-            if (status === "green") {
-                icon.className = "w-14 h-14 rounded-full flex items-center justify-center bg-green-100 text-green-600 shadow-sm";
-                icon.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-                title.className = "text-2xl font-bold text-green-700";
-                title.textContent = "Verified Authentic";
-                bg.className = "px-6 py-6 flex items-center gap-5 border-b border-green-100 bg-green-50/50";
-            } else if (status === "yellow") {
-                icon.className = "w-14 h-14 rounded-full flex items-center justify-center bg-amber-100 text-amber-600 shadow-sm";
-                icon.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
-                title.className = "text-2xl font-bold text-amber-700";
-                title.textContent = "Signed (Unverified Identity)";
-                bg.className = "px-6 py-6 flex items-center gap-5 border-b border-amber-100 bg-amber-50/50";
+            if (state === "success") {
+                badge.classList.add('status-success');
+                icon.textContent = "✓";
+                text.textContent = "Verified Authentic";
+            } else if (state === "warning") {
+                badge.classList.add('status-warning');
+                icon.textContent = "⚠";
+                text.textContent = "Unverified Identity";
             } else {
-                icon.className = "w-14 h-14 rounded-full flex items-center justify-center bg-red-100 text-red-600 shadow-sm";
-                icon.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-                title.className = "text-2xl font-bold text-red-700";
-                title.textContent = "Verification Failed";
-                bg.className = "px-6 py-6 flex items-center gap-5 border-b border-red-100 bg-red-50/50";
+                badge.classList.add('status-error');
+                icon.textContent = "✕";
+                text.textContent = "Verification Failed";
             }
 
             document.getElementById('statusDesc').textContent = errorMsg;
 
             if (manifest) {
-                document.getElementById('metaSigner').textContent = signer;
+                document.getElementById('metaSigner').textContent = signer || 'Unknown';
                 document.getElementById('metaGoal').textContent = manifest.goal || "Not specified";
                 document.getElementById('metaDate').textContent = new Date(manifest.created_at).toLocaleString();
                 document.getElementById('metaId').textContent = manifest.workflow_id;
-                document.getElementById('viewDetailsBtn').onclick = renderTimeline;
+                populateTimeline();
             }
         }
 
-        function renderTimeline() {
-            timelineModal.classList.remove('hidden');
-            timelineContent.innerHTML = '';
+        function populateTimeline() {
+            const container = document.getElementById('timelineContent');
+            container.innerHTML = '';
 
             if (!currentSteps.length) {
-                timelineContent.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-400">
-                    <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <p>No recorded steps in this bundle.</p>
-                </div>`;
+                container.innerHTML = '<p style="text-align:center; color: var(--color-gray-500); padding: 2rem;">No recorded steps found in payload.</p>';
                 return;
             }
 
-            currentSteps.forEach((step, idx) => {
-                const el = document.createElement('div');
-                const isLLM = step.kind.includes('llm');
+            currentSteps.forEach(step => {
                 const isWarn = step.kind.includes('security');
+                const contentJson = JSON.stringify(step.content, null, 2);
+                let textPreview = step.content.command || step.content.prompt || "Raw JSON Object Data";
+                if(textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
 
-                el.className = `group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all overflow-hidden mb-3 ${isWarn ? 'border-l-4 border-l-red-500' : ''}`;
-
-                let icon = isLLM ? '⚡' : (isWarn ? '🛡️' : '💻');
-                let bgHead = isLLM ? 'bg-purple-50' : 'bg-gray-50';
-
-                let contentJson = JSON.stringify(step.content, null, 2);
-                let textPreview = step.content.command || step.content.prompt || "Raw Data";
-
+                // We handle native click toggle
+                const el = document.createElement('div');
+                el.className = 'timeline-item';
                 el.innerHTML = `
-                    <div class="px-4 py-3 ${bgHead} border-b border-gray-100 flex justify-between items-center cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-gray-400">#${step.index}</span>
-                            <span class="bg-white border border-gray-200 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider text-gray-600 shadow-sm">${icon} ${step.kind}</span>
-                            <span class="text-xs text-gray-500 font-medium truncate max-w-xs">${textPreview.substring(0, 50)}...</span>
+                    <div class="timeline-header" style="${isWarn ? 'border-left: 3px solid var(--color-error)' : ''}">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="color: var(--color-gray-500); font-family: var(--font-mono);">#${step.index}</span>
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase;">${step.kind}</span>
+                            <span style="color: var(--color-white);">${textPreview}</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                             <span class="text-xs text-gray-400 font-mono">${new Date(step.timestamp).toLocaleTimeString()}</span>
-                             <svg class="w-4 h-4 text-gray-400 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
+                        <span style="color: var(--color-gray-500); font-size: 0.8rem;">${new Date(step.timestamp).toLocaleTimeString()}</span>
                     </div>
-                    <div class="hidden bg-slate-800 text-slate-300 p-4 text-xs font-mono overflow-x-auto relative">
-                        <button onclick="navigator.clipboard.writeText(this.nextElementSibling.innerText); event.stopPropagation();" class="absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition">Copy</button>
-                        <pre>${contentJson}</pre>
+                    <div class="timeline-body">
+                        <pre style="margin: 0;">${contentJson}</pre>
                     </div>
                 `;
-                timelineContent.appendChild(el);
+                
+                el.querySelector('.timeline-header').addEventListener('click', function() {
+                    const body = this.nextElementSibling;
+                    const isOpen = body.classList.contains('active');
+                    // close all
+                    document.querySelectorAll('.timeline-body').forEach(b => b.classList.remove('active'));
+                    if(!isOpen) body.classList.add('active');
+                });
+                container.appendChild(el);
             });
         }
 
-        function renderFiles(fileManifest) {
-            filesModal.classList.remove('hidden');
-            filesTableBody.innerHTML = '';
-
-            const files = Object.entries(fileManifest);
-            if (!files.length) {
-                filesTableBody.innerHTML = `<tr><td colspan="2" class="px-6 py-4 text-center text-gray-400 text-xs text-mono">No files in manifest</td></tr>`;
+        function populateFiles(manifestMap) {
+            const tbody = document.getElementById('filesTableBody');
+            tbody.innerHTML = '';
+            
+            const entries = Object.entries(manifestMap);
+            if (!entries.length) {
+                tbody.innerHTML = '<tr><td colspan="2" style="padding: 1rem; text-align:center; color: var(--color-gray-500);">No files mapped.</td></tr>';
                 return;
             }
 
-            files.forEach(([filename, hash]) => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition-colors";
-                tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b border-gray-50">${filename}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 font-mono border-b border-gray-50 break-all">${hash}</td>
+            entries.forEach(([name, hash]) => {
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1rem; color: var(--color-white); font-weight: 500;">${name}</td>
+                        <td style="padding: 1rem; font-family: var(--font-mono); color: var(--color-gray-400); font-size: 0.85rem; word-break: break-all;">${hash}</td>
+                    </tr>
                 `;
-                filesTableBody.appendChild(tr);
             });
-        }
-
-        async function downloadZipContent(zip, manifest) {
-            const blob = await zip.generateAsync({ type: "blob" });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `evidence_${manifest.workflow_id.substring(0, 8)}.zip`;
-            link.click();
-        }
-
-        window.reset = () => {
-            loader.classList.add('hidden');
-            resultCard.classList.add('hidden', 'translate-y-4', 'opacity-0');
-            document.getElementById('uploadIcon').classList.remove('hidden');
-            document.getElementById('uploadText').classList.remove('hidden');
-            fileInput.value = '';
         }
     </script>
+    
+    <!-- Retain existing visual effect scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/particles.js"></script>
 </body>
 
 </html>
