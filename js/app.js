@@ -248,11 +248,11 @@ class InteractiveTerminal {
         setTimeout(() => {
             this.addOutput('✓ Archive structure valid', 'success');
             this.addOutput('✓ Manifest signature verified (Ed25519)', 'success');
-            this.addOutput('✓ All 47 step hashes match', 'success');
+            this.addOutput('✓ All 47 manifest file hashes match', 'success');
             setTimeout(() => {
-                this.addOutput('✓ Artifacts integrity confirmed', 'success');
+                this.addOutput('✓ Trust state: Signed and intact', 'success');
                 this.addOutput('', 'normal');
-                this.addOutput('Reproducibility Score: 100%', 'highlight');
+                this.addOutput('Primary fault: None detected in sample evidence', 'highlight');
             }, 600);
         }, 800);
     }
@@ -271,12 +271,12 @@ class InteractiveTerminal {
     }
 
     helpCommand() {
-        this.addOutput('Available commands (v2.0 - Production Ready):', 'normal');
+        this.addOutput('Available commands (v2.8.4):', 'normal');
         this.addOutput('  epi verify sample.epi  - Verify .epi file integrity', 'info');
         this.addOutput('  epi record script.py   - Record Python execution', 'info');
         this.addOutput('  clear                  - Clear terminal', 'info');
         this.addOutput('', 'normal');
-        this.addOutput('Note: Replay feature coming in v2.1', 'info');
+        this.addOutput('Policy, analysis, and review can now travel inside the .epi artifact.', 'info');
     }
 
     clearCommand() {
