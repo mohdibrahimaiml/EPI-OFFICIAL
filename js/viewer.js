@@ -86,8 +86,8 @@ async function handleFile(file) {
 
         if (result.success) {
             updateVerificationStep('parsing', 'complete');
-            updateVerificationStep('integrity', 'complete');
-            updateVerificationStep('signature', 'complete');
+            updateVerificationStep('integrity', result.verificationDetails.integrity.valid ? 'complete' : 'error');
+            updateVerificationStep('signature', result.verificationDetails.signature.valid ? 'complete' : 'error');
 
             currentVerificationResult = result;
             displayVerifiedEvidence(result);
@@ -147,14 +147,6 @@ async function verifyEpiFile(file) {
             filesChecked++;
         }
 
-        if (mismatches.length > 0) {
-            return {
-                success: false,
-                error: 'Integrity check failed',
-                details: { mismatches }
-            };
-        }
-
         // 5. Signature Check (Non-blocking for viewer, merely informative)
         const signatureResult = checkSignatureFormat(manifest.signature);
         // We do NOT return success:false here anymore. We allow viewing unsigned files.
@@ -172,7 +164,7 @@ async function verifyEpiFile(file) {
             manifest: manifest,
             viewerHtml: viewerHtml,
             verificationDetails: {
-                integrity: { valid: true, filesChecked },
+                integrity: { valid: mismatches.length === 0, filesChecked, mismatches },
                 signature: signatureResult
             }
         };
@@ -237,7 +229,12 @@ function displayVerifiedEvidence(result) {
     statusIndicator.className = 'status-indicator';
     banner.style.borderBottomColor = '';
 
-    if (sig.valid) {
+    if (!result.verificationDetails.integrity.valid) {
+        statusIndicator.classList.add('error');
+        statusIcon.textContent = '!';
+        statusText.textContent = 'TAMPERED EVIDENCE';
+        banner.style.borderBottomColor = 'var(--color-error)';
+    } else if (sig.valid) {
         // Signed & Format Valid
         statusIndicator.classList.add('verified');
         statusIcon.textContent = '✓';
@@ -264,7 +261,7 @@ function displayVerifiedEvidence(result) {
     document.getElementById('status-version').textContent = `EPI ${manifest.spec_version}`;
 
     // Summary
-    document.getElementById('summary-workflow').textContent = manifest.workflow_id || '—';
+    document.getElementById('summary-workflow').textContent = manifest.workflow_id || '-';
     document.getElementById('summary-created').textContent = new Date(manifest.created_at).toLocaleString();
 
     const parts = manifest.signature ? manifest.signature.split(':') : [];
@@ -359,6 +356,13 @@ function renderCryptoDetails(result) {
     txt += `Status: ${result.verificationDetails.integrity.valid ? 'PASS' : 'FAIL'}\n`;
     txt += `Files Verified: ${result.verificationDetails.integrity.filesChecked}\n`;
     txt += `Hashing Algorithm: SHA-256\n\n`;
+    if (!result.verificationDetails.integrity.valid) {
+        txt += `Mismatches: ${result.verificationDetails.integrity.mismatches.length}\n`;
+        result.verificationDetails.integrity.mismatches.forEach((mismatch) => {
+            txt += ` - ${mismatch.file}: ${mismatch.error}\n`;
+        });
+        txt += `\n`;
+    }
 
     txt += `[ SIGNATURE ]\n`;
     if (m.signature) {

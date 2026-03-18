@@ -278,7 +278,7 @@
             <div style="text-align: center; margin-bottom: var(--space-xl);">
                 <div class="hero-badge" style="border-color: var(--color-primary); color: var(--color-primary); background: rgba(10, 132, 255, 0.1); margin-bottom: var(--space-md); padding: 0.25rem 0.75rem; display:inline-block; border-radius:99px; font-weight:600; font-size:0.8rem;">ZERO-KNOWLEDGE VERIFICATION</div>
                 <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;" class="text-gradient">Verify Evidence</h1>
-                <p style="font-size: 1rem;">Drag and drop your <code style="font-size: 0.85em; background: rgba(255,255,255,0.1); color: var(--color-white);">.epi</code> bundle for instant, client-side cryptographic analysis.</p>
+                <p style="font-size: 1rem;">Drag and drop your <code style="font-size: 0.85em; background: rgba(255,255,255,0.1); color: var(--color-white);">.epi</code> bundle to check structure, integrity, and trust state entirely in your browser.</p>
             </div>
 
             <div id="inputPhase">
@@ -292,7 +292,7 @@
                     </div>
                     <div id="loaderUI" class="hidden" style="padding: 2rem 0;">
                         <div class="loader"></div>
-                        <p style="margin-top: 1rem; font-weight: 500; font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-primary-light);">Verifying Cryptographic Seal...</p>
+                        <p style="margin-top: 1rem; font-weight: 500; font-family: var(--font-mono); font-size: 0.9rem; color: var(--color-primary-light);">Checking hashes, signatures, and trust state...</p>
                     </div>
                     <input type="file" id="fileInput" class="hidden" accept=".epi,.zip">
                 </div>
@@ -437,6 +437,22 @@
                 if (!manifestFile) throw new Error("Invalid .epi bundle: manifest.json missing");
                 const manifest = JSON.parse(await manifestFile.async("string"));
 
+                const mismatches = [];
+                const fileManifest = manifest.file_manifest || {};
+                for (const [filename, expectedHash] of Object.entries(fileManifest)) {
+                    const fileInZip = zip.file(filename);
+                    if (!fileInZip) {
+                        mismatches.push(`${filename}: file missing`);
+                        continue;
+                    }
+                    const contentBuffer = await fileInZip.async("arraybuffer");
+                    const digest = await crypto.subtle.digest("SHA-256", contentBuffer);
+                    const actualHash = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+                    if (actualHash !== expectedHash) {
+                        mismatches.push(`${filename}: hash mismatch`);
+                    }
+                }
+
                 // Read Steps Timeline
                 const stepsFile = zip.file("steps.jsonl");
                 currentSteps = [];
@@ -461,11 +477,20 @@
 
                 // Ed25519 WebCrypto Verification
                 const signatureRaw = manifest.signature;
-                if (!signatureRaw) throw new Error("UNSIGNED: Evidence bundle lacks a digital signature.");
+                if (!signatureRaw) {
+                    showResult("warning", manifest, "Unsigned", "Integrity intact, but no signature is present. This artifact is unsigned.");
+                    populateFiles(manifest.file_manifest || {});
+                    return;
+                }
                 const parts = signatureRaw.split(':');
                 if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature string");
 
                 const keyName = parts[1];
+                if (mismatches.length > 0) {
+                    showResult("tampered", manifest, keyName, `Integrity failed: ${mismatches.length} manifest mismatch(es) detected. Signature may still be present, but this artifact should not be trusted.`);
+                    populateFiles(manifest.file_manifest || {});
+                    return;
+                }
                 const manualKey = document.getElementById('pubKeyInput').value.trim();
                 const embeddedKey = manifest.public_key || manifest.signer;
 
@@ -559,6 +584,10 @@
                 badge.classList.add('status-warning');
                 icon.textContent = "⚠";
                 text.textContent = "Unverified Identity";
+            } else if (state === "tampered") {
+                badge.classList.add('status-error');
+                icon.textContent = "!";
+                text.textContent = "Tampered Evidence";
             } else {
                 badge.classList.add('status-error');
                 icon.textContent = "✕";
