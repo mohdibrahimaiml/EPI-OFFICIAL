@@ -44,7 +44,7 @@ class TerminalDemo {
 
         // Initial welcome message - print FIRST before creating command line
         this.print([
-            { text: 'EPI Portable Environment v2.7.0', color: 'text-dim' },
+            { text: 'EPI Portable Environment v2.8.7', color: 'text-dim' },
             { text: 'Type "help" for a list of commands.', color: 'text-dim' },
             { text: '' }
         ]);
@@ -102,7 +102,7 @@ class TerminalDemo {
         const line = document.createElement('div');
         line.className = 'command-line';
         line.innerHTML = `
-            <span class="prompt text-green">➜</span>
+            <span class="prompt text-green">&gt;</span>
             <span class="path text-blue">~/project</span>
             <span class="prompt text-gray">$</span>
             <div class="input-area">
@@ -239,15 +239,15 @@ class TerminalDemo {
 
     async simulateRecording(filename) {
         const steps = [
-            { text: `→ Starting EPI Recorder v2.7.0`, delay: 200 },
+            { text: `-> Starting EPI Recorder v2.8.7`, delay: 200 },
             { text: `  Target: ${filename}`, delay: 100 },
             { text: `  Environment: Python 3.11.4 | Windows 10`, color: 'text-dim', delay: 300 },
-            { text: `● Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },
+            { text: `* Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },
             { text: `  > Intercepted OpenAI: chat.completions.create (gpt-4)`, color: 'text-blue', delay: 800 },
             { text: `  > Redacted API Key: sk-proj-***`, color: 'text-yellow', delay: 200 },
             { text: `  > Captured artifact: results.json`, delay: 300 },
-            { text: `✓ Workflow verified: Integrity OK`, color: 'text-green', delay: 500 },
-            { text: `✓ Signature valid: Ed25519 (Key: default)`, color: 'text-green', delay: 200 },
+            { text: `OK Workflow verified: Integrity OK`, color: 'text-green', delay: 500 },
+            { text: `OK Signature valid: Ed25519 (Key: default)`, color: 'text-green', delay: 200 },
             { text: `\nOutput saved to: ./recording_20251211.epi [240KB]`, color: 'text-blue', delay: 0 }
         ];
 
@@ -263,9 +263,9 @@ class TerminalDemo {
         if (args[0] === 'install' && args[1] === 'epi-recorder') {
             const lines = [
                 { text: 'Collecting epi-recorder', color: 'text-dim' },
-                { text: '  Downloading epi_recorder-2.5.0-py3-none-any.whl (18 kB)' },
+                { text: '  Downloading epi_recorder-2.8.7-py3-none-any.whl (18 kB)' },
                 { text: 'Installing collected packages: epi-recorder', color: 'text-dim' },
-                { text: 'Successfully installed epi-recorder-2.5.0', color: 'text-green' }
+                { text: 'Successfully installed epi-recorder-2.8.7', color: 'text-green' }
             ];
             for (const line of lines) {
                 this.print([line]);
@@ -327,7 +327,7 @@ class TerminalDemo {
         if (mode === 'preview') {
             // Preview Mode: Loop back after running
             await this.delay(3000);
-            this.print([{ text: '↺ Restarting preview...', color: 'text-dim' }]);
+            this.print([{ text: 'Restarting preview...', color: 'text-dim' }]);
             await this.delay(1000);
             this.clear();
             this.newLine(false);
@@ -419,7 +419,7 @@ function createViewerModal() {
     modal.innerHTML = `
         <div class="viewer-header">
             <h3 class="font-bold text-gray-800">EPI Viewer - recording_20251211.epi</h3>
-            <div class="viewer-close">✕</div>
+            <div class="viewer-close">X</div>
         </div>
         <div style="flex:1; background: #f3f4f6; overflow: hidden; position: relative;">
             <iframe src="demo_player.html" style="width:100%; height:100%; border:none;"></iframe>

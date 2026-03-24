@@ -203,13 +203,13 @@ function updateVerificationStep(stepId, status) {
     step.classList.add(status);
 
     const icon = step.querySelector('.step-icon');
-    if (status === 'loading') icon.textContent = '⏳';
+    if (status === 'loading') icon.textContent = '...';
     else if (status === 'complete') {
-        icon.textContent = '✓';
+        icon.textContent = 'OK';
         icon.style.color = '#10b981';
     }
     else if (status === 'error') {
-        icon.textContent = '✗';
+        icon.textContent = 'X';
         icon.style.color = '#ef4444';
     }
 }
@@ -238,20 +238,20 @@ function displayVerifiedEvidence(result) {
     } else if (sig.valid) {
         // Signed & Format Valid
         statusIndicator.classList.add('verified');
-        statusIcon.textContent = '✓';
+        statusIcon.textContent = 'OK';
         statusText.textContent = 'SIGNED EVIDENCE';
         banner.style.borderBottomColor = 'var(--color-verified)';
     } else if (sig.level === 'UNSIGNED') {
         // Unsigned
         statusIndicator.classList.add('unsigned'); // Need to ensure css has this or defaults
-        statusIcon.textContent = '⚠️';
+        statusIcon.textContent = 'WARN';
         statusText.textContent = 'UNSIGNED EVIDENCE';
         banner.style.borderBottomColor = 'var(--color-text-secondary)';
         statusIndicator.style.color = 'var(--color-text-secondary)';
     } else {
         // Invalid Signature Format
         statusIndicator.classList.add('error');
-        statusIcon.textContent = '✗';
+        statusIcon.textContent = 'X';
         statusText.textContent = 'INVALID SIGNATURE';
         banner.style.borderBottomColor = 'var(--color-error)';
         statusIndicator.style.color = 'var(--color-error)';
@@ -262,7 +262,7 @@ function displayVerifiedEvidence(result) {
     document.getElementById('status-version').textContent = `EPI ${manifest.spec_version}`;
 
     // Summary
-    document.getElementById('summary-workflow').textContent = manifest.workflow_id || '—';
+    document.getElementById('summary-workflow').textContent = manifest.workflow_id || '--';
     document.getElementById('summary-created').textContent = new Date(manifest.created_at).toLocaleString();
 
     const parts = manifest.signature ? manifest.signature.split(':') : [];
@@ -411,21 +411,21 @@ function exportVerificationReport() {
     const now = new Date().toISOString();
 
     const lines = [
-        '╔══════════════════════════════════════════════════════════════╗',
-        '║          EPI LABS — Evidence Verification Report             ║',
-        '╚══════════════════════════════════════════════════════════════╝',
+        '==============================================================',
+        '           EPI LABS - Evidence Verification Report           ',
+        '==============================================================',
         '',
         `Report Generated : ${now}`,
-        `Workflow ID      : ${m.workflow_id || '—'}`,
-        `Created At       : ${m.created_at || '—'}`,
-        `Spec Version     : ${m.spec_version || '—'}`,
+        `Workflow ID      : ${m.workflow_id || '--'}`,
+        `Created At       : ${m.created_at || '--'}`,
+        `Spec Version     : ${m.spec_version || '--'}`,
         '',
-        '── INTEGRITY CHECK ────────────────────────────────────────────',
-        `Status           : ${integrity.valid ? 'PASS ✓' : 'FAIL ✗'}`,
+        '-- INTEGRITY CHECK -------------------------------------------',
+        `Status           : ${integrity.valid ? 'PASS OK' : 'FAIL X'}`,
         `Algorithm        : SHA-256`,
         `Files Checked    : ${integrity.filesChecked}`,
         '',
-        '── FILE HASHES ────────────────────────────────────────────────',
+        '-- FILE HASHES -----------------------------------------------',
     ];
 
     for (const [file, hash] of Object.entries(m.file_manifest || {})) {
@@ -434,12 +434,12 @@ function exportVerificationReport() {
     }
 
     lines.push('');
-    lines.push('── SIGNATURE ──────────────────────────────────────────────────');
+    lines.push('-- SIGNATURE -------------------------------------------------');
     if (m.signature) {
         const parts = m.signature.split(':');
-        lines.push(`Status           : ${sig.valid ? 'FORMAT VALID ✓' : 'INVALID ✗'}`);
-        lines.push(`Algorithm        : ${parts[0] || '—'}`);
-        lines.push(`Key Name         : ${parts[1] || '—'}`);
+        lines.push(`Status           : ${sig.valid ? 'FORMAT VALID OK' : 'INVALID X'}`);
+        lines.push(`Algorithm        : ${parts[0] || '--'}`);
+        lines.push(`Key Name         : ${parts[1] || '--'}`);
         lines.push(`Raw Signature    : ${m.signature}`);
         if (m.public_key) lines.push(`Public Key (hex) : ${m.public_key}`);
     } else {
@@ -447,12 +447,12 @@ function exportVerificationReport() {
     }
 
     lines.push('');
-    lines.push('── NOTES ──────────────────────────────────────────────────────');
+    lines.push('-- NOTES -----------------------------------------------------');
     lines.push('Integrity verified client-side using Web Crypto API (SHA-256).');
     lines.push('Signature format validated. Full Ed25519 key verification');
     lines.push('requires the signer\'s public key from a trusted source.');
     lines.push('');
-    lines.push('Generated by EPI LABS Evidence Viewer — epilabs.org/viewer');
+    lines.push('Generated by EPI LABS Evidence Viewer - epilabs.org/viewer');
     lines.push('By Mohd Ibrahim Afridi');
 
     const report = lines.join('\n');
@@ -460,7 +460,7 @@ function exportVerificationReport() {
     navigator.clipboard.writeText(report).then(() => {
         const btn = document.getElementById('btn-export-report');
         const original = btn.textContent;
-        btn.textContent = '✓ Copied!';
+        btn.textContent = 'OK Copied!';
         btn.style.color = 'var(--color-success)';
         setTimeout(() => {
             btn.textContent = original;

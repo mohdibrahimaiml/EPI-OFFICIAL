@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* ── Page chrome ──────────────────────────────────────── */
+        /* Page chrome */
         body { overflow: hidden; height: 100vh; }
 
         #app {
@@ -32,10 +32,10 @@
         .state-view { display: none; flex: 1; overflow: auto; flex-direction: column; }
         .state-view.active { display: flex; }
 
-        /* ── Nav override for app mode ────────────────────────── */
+        /* Nav override for app mode */
         .nav { position: relative; z-index: 100; flex-shrink: 0; }
 
-        /* ── Initial state ────────────────────────────────────── */
+        /* Initial state */
         .initial-content {
             flex: 1;
             display: flex;
@@ -133,7 +133,7 @@
             justify-content: center;
         }
 
-        /* ── Loading state ────────────────────────────────────── */
+        /* Loading state */
         .loading-content {
             flex: 1;
             display: flex;
@@ -185,7 +185,7 @@
         .step.error    { border-color: rgba(255, 69, 58, 0.3); }
         .step-icon { font-size: 1rem; width: 20px; text-align: center; }
 
-        /* ── Error state ──────────────────────────────────────── */
+        /* Error state */
         .error-content {
             flex: 1;
             display: flex;
@@ -231,7 +231,7 @@
             word-break: break-all;
         }
 
-        /* ── Viewer state ─────────────────────────────────────── */
+        /* Viewer state */
         .status-banner {
             background: var(--bg-card);
             border-bottom: 2px solid var(--border-subtle);
@@ -437,7 +437,7 @@
 <body>
 <div id="app">
 
-    <!-- ══ Navigation ══════════════════════════════════════════════════ -->
+    <!-- Navigation -->
     <nav class="nav">
         <div class="container nav-container">
             <div class="nav-logo">
@@ -446,7 +446,7 @@
                 </a>
             </div>
             <div class="nav-links">
-                <div class="mobile-back"><span>←</span> Back</div>
+                <div class="mobile-back"><span>&lt;</span> Back</div>
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html">Technology</a>
                 <a href="use-cases.html#top">Use Cases</a>
@@ -465,17 +465,17 @@
         </div>
     </nav>
 
-    <!-- ══ INITIAL STATE ═══════════════════════════════════════════════ -->
+    <!-- Initial state -->
     <div id="initial-state" class="state-view active">
         <div class="initial-content">
             <p style="font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--color-primary);font-weight:700;margin-bottom:.75rem;">Evidence Viewer</p>
             <h1 class="viewer-hero-title">Inspect any <span class="text-gradient">.epi</span> recording</h1>
-            <p class="viewer-hero-sub">Drop a file below to inspect trust, integrity, policy, analysis, and review. Nothing leaves your browser.</p>
+            <p class="viewer-hero-sub">Drop a file below - integrity is verified with SHA-256 and signatures with Ed25519. Nothing leaves your browser.</p>
 
             <div id="drop-zone" class="drop-zone">
-                <span class="drop-icon">📂</span>
+                <span class="drop-icon">FILE</span>
                 <h3>Drag &amp; drop a .epi file</h3>
-                <p>or click to browse your computer.<br>Works offline and keeps the file on your machine.</p>
+                <p>or click to browse your computer.<br>Works offline - no data is ever uploaded.</p>
                 <button class="btn-open-file" id="btn-open-file">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                     Choose .epi file
@@ -484,35 +484,35 @@
             </div>
 
             <p class="trust-note">
-                🔒 &nbsp;100% client-side &nbsp;·&nbsp; SHA-256 integrity &nbsp;·&nbsp; Ed25519 signatures
-                &nbsp;·&nbsp; by <strong style="color:var(--text-secondary)">Mohd Ibrahim Afridi</strong>
+                LOCK &nbsp;100% client-side &nbsp;|&nbsp; SHA-256 integrity &nbsp;|&nbsp; Ed25519 signatures
+                &nbsp;|&nbsp; by <strong style="color:var(--text-secondary)">Mohd Ibrahim Afridi</strong>
             </p>
         </div>
     </div>
 
-    <!-- ══ LOADING STATE ════════════════════════════════════════════════ -->
+    <!-- Loading state -->
     <div id="loading-state" class="state-view">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <h2>Verifying evidence package…</h2>
+            <h2>Verifying evidence package...</h2>
             <div id="verification-steps">
                 <div class="step" id="step-parsing">
-                    <span class="step-icon">⏳</span>
+                    <span class="step-icon">...</span>
                     <span>Parsing .epi archive structure</span>
                 </div>
                 <div class="step" id="step-integrity">
-                    <span class="step-icon">⏳</span>
+                    <span class="step-icon">...</span>
                     <span>Verifying SHA-256 file integrity</span>
                 </div>
                 <div class="step" id="step-signature">
-                    <span class="step-icon">⏳</span>
+                    <span class="step-icon">...</span>
                     <span>Checking Ed25519 signature</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ══ VIEWER STATE ══════════════════════════════════════════════════ -->
+    <!-- Viewer state -->
     <div id="viewer-state" class="state-view">
 
         <!-- Status banner -->
@@ -523,16 +523,16 @@
                     <span>Loading</span>
                 </div>
                 <div class="status-details">
-                    <span>Algorithm: <strong id="status-algorithm" style="color:var(--text-primary)">—</strong></span>
+                    <span>Algorithm: <strong id="status-algorithm" style="color:var(--text-primary)">--</strong></span>
                     <span style="color:var(--border-default)">|</span>
-                    <span>Created: <strong id="status-timestamp" style="color:var(--text-primary)">—</strong></span>
+                    <span>Created: <strong id="status-timestamp" style="color:var(--text-primary)">--</strong></span>
                     <span style="color:var(--border-default)">|</span>
-                    <span>Spec: <strong id="status-version" style="color:var(--text-primary)">—</strong></span>
+                    <span>Spec: <strong id="status-version" style="color:var(--text-primary)">--</strong></span>
                 </div>
             </div>
             <div class="status-banner-actions">
                 <button class="btn-sm" id="btn-export-report">Export Report</button>
-                <button class="btn-sm" id="btn-close-file">✕ Close</button>
+                <button class="btn-sm" id="btn-close-file">X Close</button>
             </div>
         </div>
 
@@ -541,28 +541,28 @@
             <div class="summary-grid">
                 <div>
                     <div class="summary-label">Workflow ID</div>
-                    <div class="summary-value" id="summary-workflow">—</div>
+                    <div class="summary-value" id="summary-workflow">--</div>
                 </div>
                 <div>
                     <div class="summary-label">Created</div>
-                    <div class="summary-value" id="summary-created">—</div>
+                    <div class="summary-value" id="summary-created">--</div>
                 </div>
                 <div>
                     <div class="summary-label">Signer</div>
-                    <div class="summary-value" id="summary-signer">—</div>
+                    <div class="summary-value" id="summary-signer">--</div>
                 </div>
                 <div>
                     <div class="summary-label">Files Verified</div>
-                    <div class="summary-value" id="summary-files">—</div>
+                    <div class="summary-value" id="summary-files">--</div>
                 </div>
             </div>
         </div>
 
         <!-- Layer tabs -->
         <div class="layer-tabs">
-            <button class="tab-btn active" data-layer="viewer">📋 &nbsp;Timeline</button>
-            <button class="tab-btn" data-layer="facts">🗂 &nbsp;Manifest Facts</button>
-            <button class="tab-btn" data-layer="crypto">🔐 &nbsp;Crypto Report</button>
+            <button class="tab-btn active" data-layer="viewer">Timeline</button>
+            <button class="tab-btn" data-layer="facts">Manifest Facts</button>
+            <button class="tab-btn" data-layer="crypto">Crypto Report</button>
         </div>
 
         <!-- Layer content -->
@@ -578,7 +578,7 @@
 
             <div id="layer-facts" class="layer-panel">
                 <div class="layer-heading">Manifest Facts</div>
-                <div class="layer-desc">Extracted metadata from manifest.json — cryptographically covered by the SHA-256 integrity check.</div>
+                <div class="layer-desc">Extracted metadata from manifest.json - cryptographically covered by the SHA-256 integrity check.</div>
                 <div class="facts-table" id="facts-table"></div>
             </div>
 
@@ -591,10 +591,10 @@
         </div>
     </div>
 
-    <!-- ══ ERROR STATE ══════════════════════════════════════════════════ -->
+    <!-- Error state -->
     <div id="error-state" class="state-view">
         <div class="error-content">
-            <div class="error-icon-ring">✗</div>
+            <div class="error-icon-ring">X</div>
             <h2 style="color:var(--color-error);font-size:1.25rem;font-weight:700;">Verification Failed</h2>
             <p id="error-message"></p>
             <pre id="error-details"></pre>
@@ -604,7 +604,7 @@
 
 </div><!-- /#app -->
 
-<script src="js/viewer.js?v=2.8"></script>
-<script src="js/app.js"></script>
+<script src="js/viewer.js?v=2.8.7"></script>
+<script src="js/app.js?v=2.8.7"></script>
 </body>
 </html>

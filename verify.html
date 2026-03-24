@@ -248,7 +248,7 @@
             </div>
             <div class="nav-links">
                 <div class="mobile-back">
-                    <span>←</span> Back
+                    <span>&lt;</span> Back
                 </div>
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html">Technology</a>
@@ -286,7 +286,7 @@
                 
                 <div id="dropZone" class="drop-zone">
                     <div id="uploadUI">
-                        <div class="upload-icon">🔒</div>
+                        <div class="upload-icon">LOCK</div>
                         <h3 style="margin-bottom: 0.25rem;">Drop .epi file here</h3>
                         <p style="font-size: 0.9rem;">or click to browse local files</p>
                     </div>
@@ -302,7 +302,7 @@
             <div id="resultPhase" class="hidden">
                 <div style="text-align: center;">
                     <div id="statusBadge" class="status-badge status-success">
-                        <span id="statusIcon">✓</span> <span id="statusText">Verified Authentic</span>
+                        <span id="statusIcon">OK</span> <span id="statusText">Verified Authentic</span>
                     </div>
                     <p id="statusDesc" style="color: var(--color-gray-300); font-size: 0.95rem; margin-bottom: 0;"></p>
                 </div>
@@ -328,16 +328,16 @@
 
                 <div class="action-row">
                     <button class="btn-primary" style="flex: 1; padding: 0.75rem;" onclick="openTimeline()">
-                        <span style="font-size: 1.1rem;">👁️</span> Inspect Timeline
+                        <span style="font-size: 1.1rem;">Inspect</span> Timeline
                     </button>
                     <button id="launchVizBtn" class="btn-primary hidden" style="background: linear-gradient(135deg, var(--color-violet-500), #6D28D9); padding: 0.75rem;">
-                        <span>🚀</span> Read-Only View
+                        <span>View</span> Read-Only View
                     </button>
                     <button class="btn-secondary" style="padding: 0.75rem; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="openFiles()" title="View File Manifest">
-                        📂
+                        Files
                     </button>
                     <button class="btn-secondary" style="padding: 0.75rem; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="resetUI()" title="Verify Another File">
-                        ↺
+                        Reset
                     </button>
                 </div>
             </div>
@@ -352,7 +352,7 @@
                     <h3 style="margin-bottom: 0;">Evidence Timeline</h3>
                     <p style="font-size: 0.8rem; margin:0;">Granular execution trace from <code style="padding: 0 0.25rem; font-size: 1em;">steps.jsonl</code></p>
                 </div>
-                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeTimeline()">✕</button>
+                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeTimeline()">X</button>
             </div>
             <div class="modal-body" id="timelineContent"></div>
         </div>
@@ -365,7 +365,7 @@
                     <h3 style="margin-bottom: 0;">File Manifest</h3>
                     <p style="font-size: 0.8rem; margin:0;">Cryptographic inventory (SHA-256)</p>
                 </div>
-                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeFiles()">✕</button>
+                <button class="btn-secondary" style="padding: 0.25rem 0.5rem; border:none;" onclick="closeFiles()">X</button>
             </div>
             <div class="modal-body" style="padding: 0;">
                 <table style="width: 100%; text-align: left; border-collapse: collapse;">
@@ -577,11 +577,11 @@
 
             if (state === "success") {
                 badge.classList.add('status-success');
-                icon.textContent = "✓";
+                icon.textContent = "OK";
                 text.textContent = "Verified Authentic";
             } else if (state === "warning") {
                 badge.classList.add('status-warning');
-                icon.textContent = "⚠";
+                icon.textContent = "WARN";
                 text.textContent = "Unverified Identity";
             } else if (state === "tampered") {
                 badge.classList.add('status-error');
@@ -589,7 +589,7 @@
                 text.textContent = "Tampered Evidence";
             } else {
                 badge.classList.add('status-error');
-                icon.textContent = "✕";
+                icon.textContent = "X";
                 text.textContent = "Verification Failed";
             }
 
@@ -702,13 +702,13 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Built with 🇮🇳 for the World. &copy; 2025 EPI LABS. Apache 2.0 License.</p>
+                <p>Built in India for the world. &copy; 2026 EPI LABS. MIT License.</p>
             </div>
         </div>
     </footer>
 
-    <script src="js/app.js"></script>
-    <script src="js/particles.js"></script>
+    <script src="js/app.js?v=2.8.7"></script>
+    <script src="js/particles.js?v=2.8.7"></script>
 </body>
 
 </html>

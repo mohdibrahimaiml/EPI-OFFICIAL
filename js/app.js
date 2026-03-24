@@ -244,39 +244,39 @@ class InteractiveTerminal {
     }
 
     verifyCommand() {
-        this.addOutput('⏳ Loading sample.epi...', 'loading');
+        this.addOutput('... Loading sample.epi...', 'loading');
         setTimeout(() => {
-            this.addOutput('✓ Archive structure valid', 'success');
-            this.addOutput('✓ Manifest signature verified (Ed25519)', 'success');
-            this.addOutput('✓ All 47 manifest file hashes match', 'success');
+            this.addOutput('OK Archive structure valid', 'success');
+            this.addOutput('OK Manifest signature verified (Ed25519)', 'success');
+            this.addOutput('OK All 47 step hashes match', 'success');
             setTimeout(() => {
-                this.addOutput('✓ Trust state: Signed and intact', 'success');
+                this.addOutput('OK Artifacts integrity confirmed', 'success');
                 this.addOutput('', 'normal');
-                this.addOutput('Primary fault: None detected in sample evidence', 'highlight');
+                this.addOutput('Reproducibility Score: 100%', 'highlight');
             }, 600);
         }, 800);
     }
 
     recordCommand() {
-        this.addOutput('⏳ Recording execution...', 'loading');
+        this.addOutput('... Recording execution...', 'loading');
         setTimeout(() => {
             this.addOutput('Captured 23 steps', 'success');
             this.addOutput('Logged 5 OpenAI API calls', 'success');
             setTimeout(() => {
                 this.addOutput('Created 3 artifacts', 'success');
                 this.addOutput('', 'normal');
-                this.addOutput('✓ Saved to output.epi (signed)', 'highlight');
+                this.addOutput('OK Saved to output.epi (signed)', 'highlight');
             }, 500);
         }, 1000);
     }
 
     helpCommand() {
-        this.addOutput('Available commands (v2.8.4):', 'normal');
+        this.addOutput('Available commands (v2.0 - Production Ready):', 'normal');
         this.addOutput('  epi verify sample.epi  - Verify .epi file integrity', 'info');
         this.addOutput('  epi record script.py   - Record Python execution', 'info');
         this.addOutput('  clear                  - Clear terminal', 'info');
         this.addOutput('', 'normal');
-        this.addOutput('Policy, analysis, and review can now travel inside the .epi artifact.', 'info');
+        this.addOutput('Note: Replay feature coming in v2.1', 'info');
     }
 
     clearCommand() {
