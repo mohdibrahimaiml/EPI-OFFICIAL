@@ -300,10 +300,11 @@ code {
     margin: 0 auto;
     height: 80px;
     /* Standard Premium Height */
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
+    gap: 1.25rem;
+    padding: 0 1.5rem;
 }
 
 /* 1. Logo Section */
@@ -317,8 +318,7 @@ code {
 .nav-logo a {
     display: flex;
     align-items: center;
-    width: 180px;
-    /* User Request: 180px width */
+    width: 168px;
     height: auto;
     cursor: pointer;
 }
@@ -340,25 +340,24 @@ code {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 32px;
-    /* Breathable, standard gap */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    justify-content: center;
+    justify-self: center;
+    gap: 18px;
+    position: static;
     margin: 0;
     padding: 0;
     list-style: none;
+    min-width: 0;
 }
 
 .nav-links a {
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
-    /* 15px */
+    font-size: 0.875rem;
     font-weight: 500;
     color: #94A3B8;
     /* Slate-400 */
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.7rem;
     /* Added padding for pill */
     border-radius: 99px;
     /* Pill shape */
@@ -402,7 +401,8 @@ code {
 .nav-cta {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-self: end;
+    gap: 0.75rem;
     flex-shrink: 0;
     z-index: 20;
 }
@@ -414,8 +414,8 @@ code {
     justify-content: center;
     height: 40px;
     /* Symmetry Core */
-    padding: 0 1.25rem;
-    font-size: 0.9rem;
+    padding: 0 1rem;
+    font-size: 0.85rem;
     font-weight: 500;
     border-radius: 6px;
     /* Standardized radius */
@@ -528,7 +528,36 @@ code {
     display: none;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1500px) {
+    .nav-container {
+        gap: 1rem;
+        padding: 0 1.25rem;
+    }
+
+    .nav-logo a {
+        width: 156px;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .nav-links a {
+        font-size: 0.84rem;
+        padding: 0.4rem 0.55rem;
+    }
+
+    .nav-cta {
+        gap: 0.625rem;
+    }
+
+    .nav-cta a {
+        padding: 0 0.875rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 1380px) {
     .nav-links {
         display: none !important;
         /* Hide centers links */
@@ -547,6 +576,7 @@ code {
         display: flex !important;
         /* Show Hamburger */
         margin-left: auto;
+        justify-self: end;
         /* Push to right */
         z-index: 2000;
         /* Ensure it's on top of everything */
