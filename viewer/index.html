@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPI Decision Ops | EPI LABS</title>
+<meta name="description" content="Open, review, explain, and verify AI decision case files directly in your browser with EPI Decision Ops.">
+<link rel="canonical" href="https://epilabs.org/viewer/">
+<link rel="icon" type="image/png" href="../assets/logo.png">
+<script id="epi-view-context" type="application/json">{}</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<input type="file" id="file-input" accept=".epi" multiple hidden>
+
+<div class="page-shell">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">EPI Decision Ops</p>
+      <h1>Review, explain, and verify AI decisions</h1>
+      <p class="hero-copy">
+        Open saved cases, connect to a source system, and review what happened.
+        Everything stays on this device.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <button class="secondary-button" id="example-case-button" type="button">Open example case</button>
+      <button class="primary-button" id="add-files-button" type="button">Open saved cases</button>
+      <button class="secondary-button" id="reset-workspace-button" type="button">Start over</button>
+    </div>
+  </header>
+
+  <section class="upload-panel card">
+    <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Drop EPI files here or open the file picker">
+      <h2 id="drop-zone-title">Open saved cases</h2>
+      <p id="drop-zone-copy">Drop `.epi` files here or choose them from your computer. Nothing is uploaded.</p>
+      <span id="drop-zone-action" class="drop-zone-action">Choose files</span>
+    </div>
+    <p class="panel-note">
+      Use this when you already have saved EPI case files and want to review them here.
+    </p>
+    <div id="load-status" class="status-banner info">No saved cases are open yet.</div>
+  </section>
+
+  <section class="setup-panel card">
+    <div class="setup-header">
+      <div>
+        <p class="section-label">Quick Setup</p>
+        <h2>Tell EPI what to watch</h2>
+        <p class="panel-note">
+          Pick a system and a decision type. EPI can open a safe sample right away,
+          then you can add real connector details only when you need them.
+        </p>
+      </div>
+      <span id="setup-ready-badge" class="pill-badge tone-neutral">Needs setup</span>
+    </div>
+
+    <div class="setup-grid setup-grid-primary">
+      <label>
+        1. Where decisions come from
+        <select id="setup-system" class="text-input">
+          <option value="zendesk">Zendesk</option>
+          <option value="salesforce">Salesforce</option>
+          <option value="servicenow">ServiceNow</option>
+          <option value="internal-app">Internal app</option>
+          <option value="csv-export">CSV or exported logs</option>
+        </select>
+      </label>
+      <label>
+        2. What kind of decision this is
+        <select id="setup-workflow" class="text-input">
+          <option value="refund-approval">Refund approvals</option>
+          <option value="loan-underwriting">Loan underwriting</option>
+          <option value="claims-review">Claims review</option>
+          <option value="support-escalation">Support escalations</option>
+          <option value="access-decision">Access decisions</option>
+          <option value="custom-approval">Custom approvals</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="action-row quick-setup-actions">
+      <button id="fetch-live-record-button" class="secondary-button" type="button">Try a safe sample</button>
+      <button id="setup-workspace-button" class="primary-button" type="button">Set up EPI</button>
+      <button id="download-starter-pack-button" class="secondary-button" type="button">Use this in my system</button>
+    </div>
+
+    <details class="advanced-setup">
+      <summary>Advanced setup options</summary>
+      <div class="setup-grid">
+        <label>
+          Who reviews flagged cases
+          <input id="setup-reviewer-role" class="text-input" type="text" value="manager" placeholder="manager">
+        </label>
+        <label>
+          Where this runs
+          <select id="setup-environment" class="text-input">
+            <option value="production">Production</option>
+            <option value="staging">Staging</option>
+            <option value="testing">Testing</option>
+          </select>
+        </label>
+        <label class="setup-field-span">
+          What must happen before the final decision
+          <input id="setup-required-step" class="text-input" type="text" placeholder="verify_identity">
+        </label>
+      </div>
+
+      <div class="connector-config">
+        <div class="rules-card-header">
+          <div>
+            <p class="card-label">System Access</p>
+            <h3>Connect to your system</h3>
+          </div>
+          <div class="action-row">
+            <button id="save-setup-profile-button" class="secondary-button" type="button">Remember here</button>
+            <button id="load-setup-profile-button" class="secondary-button" type="button">Use saved setup</button>
+            <button id="clear-setup-profile-button" class="secondary-button" type="button">Forget saved setup</button>
+          </div>
+        </div>
+
+        <div id="connector-fields" class="setup-grid"></div>
+        <p id="setup-storage-note" class="helper-copy">EPI can remember this setup only in this browser on this device.</p>
+
+        <div class="setup-connection-row">
+          <span id="setup-connection-status" class="pill-badge tone-neutral">Connection not checked</span>
+        </div>
+
+        <details class="advanced-connection">
+          <summary>Connection address</summary>
+          <div class="setup-grid">
+            <label class="setup-field-span">
+              Connection address
+              <input id="setup-bridge-url" class="text-input" type="text" value="http://127.0.0.1:8765" placeholder="http://127.0.0.1:8765">
+            </label>
+          </div>
+          <div class="action-row">
+            <button id="check-bridge-button" class="secondary-button" type="button">Test connection</button>
+          </div>
+        </details>
+
+        <div id="setup-live-record" class="setup-preview" hidden></div>
+      </div>
+    </details>
+
+    <div id="setup-preview" class="setup-preview"></div>
+  </section>
+
+  <section class="summary-strip" id="summary-strip">
+    <article class="summary-card">
+      <span class="summary-label">Cases</span>
+      <strong id="summary-total">0</strong>
+    </article>
+    <article class="summary-card">
+      <span class="summary-label">Need review</span>
+      <strong id="summary-review">0</strong>
+    </article>
+    <article class="summary-card">
+      <span class="summary-label">Trusted</span>
+      <strong id="summary-trusted">0</strong>
+    </article>
+    <article class="summary-card">
+      <span class="summary-label">Workflows</span>
+      <strong id="summary-workflows">0</strong>
+    </article>
+  </section>
+
+  <section id="workspace" class="workspace" hidden>
+    <aside class="sidebar card">
+      <p class="sidebar-label">Workspace</p>
+      <nav class="nav-grid" aria-label="Main navigation">
+        <button class="nav-button active" type="button" data-view="inbox">Inbox</button>
+        <button class="nav-button" type="button" data-view="case">Case</button>
+        <button class="nav-button" type="button" data-view="rules">Rules</button>
+        <button class="nav-button" type="button" data-view="reports">Reports</button>
+      </nav>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Selected case</p>
+        <select id="case-selector" class="text-input"></select>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Local processing</p>
+        <p class="sidebar-copy">
+          Verification, review drafts, and exports all run locally in the browser. Your case files do not leave this device.
+        </p>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Team Sync</p>
+        <div class="sidebar-inline">
+          <span id="shared-workspace-status" class="pill-badge tone-neutral">Local only</span>
+          <button id="refresh-shared-button" class="secondary-button compact-button" type="button">Refresh team cases</button>
+        </div>
+        <p class="sidebar-copy">
+          If your team uses the same self-hosted bridge, EPI can share case previews and review updates across users.
+        </p>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <section class="view-panel active" data-view-panel="inbox">
+        <div class="section-header">
+          <div>
+            <p class="section-label">Inbox</p>
+            <h2>Review the cases that matter first</h2>
+          </div>
+        </div>
+
+        <div class="card filter-card">
+          <div class="filter-grid">
+            <label>
+              Search
+              <input id="search-input" class="text-input" type="search" placeholder="Search case title, workflow, file, or notes">
+            </label>
+            <label>
+              Trust
+              <select id="trust-filter" class="text-input">
+                <option value="all">All trust states</option>
+                <option value="trusted">Trusted</option>
+                <option value="verify-source">Verify source</option>
+                <option value="source-not-proven">Source not proven</option>
+                <option value="do-not-use">Do not use</option>
+              </select>
+            </label>
+            <label>
+              Review
+              <select id="review-filter" class="text-input">
+                <option value="all">All review states</option>
+                <option value="pending">Pending review</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="not-required">No review required</option>
+              </select>
+            </label>
+            <label>
+              Workflow
+              <select id="workflow-filter" class="text-input">
+                <option value="all">All workflows</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div id="empty-inbox" class="card empty-state">
+          <h3>No cases yet</h3>
+          <p>Load one or more `.epi` files to create a review inbox.</p>
+        </div>
+        <div id="case-list" class="case-list"></div>
+      </section>
+
+      <section class="view-panel" data-view-panel="case">
+        <div class="section-header">
+          <div>
+            <p class="section-label">Case</p>
+            <h2>Decision case file</h2>
+          </div>
+        </div>
+
+        <div id="no-case-selected" class="card empty-state">
+          <h3>Select a case</h3>
+          <p>Choose a case from the inbox or the selector to review the decision record.</p>
+        </div>
+
+        <div id="case-view" class="case-layout" hidden>
+          <article class="card case-hero-card">
+            <div class="case-hero">
+              <div>
+                <p id="case-subtitle" class="case-subtitle"></p>
+                <h3 id="case-title"></h3>
+                <p id="case-summary-copy" class="case-summary-copy"></p>
+              </div>
+              <div class="badge-row">
+                <span id="case-trust-badge" class="pill-badge"></span>
+                <span id="case-risk-badge" class="pill-badge"></span>
+                <span id="case-review-badge" class="pill-badge"></span>
+                <span id="case-review-signature-badge" class="pill-badge"></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card case-guidance-card">
+            <div class="rules-card-header">
+              <div>
+                <p class="card-label">What To Do Next</p>
+                <h3 id="case-guidance-title"></h3>
+                <p id="case-guidance-copy" class="helper-copy"></p>
+              </div>
+              <div class="action-row">
+                <button id="case-guidance-review-button" class="primary-button" type="button">Start review</button>
+                <button id="case-guidance-rules-button" class="secondary-button" type="button">Check rules</button>
+                <button id="case-guidance-report-button" class="secondary-button" type="button">Open report</button>
+              </div>
+            </div>
+            <div id="case-guidance-list" class="stack-list"></div>
+          </article>
+
+          <div class="case-grid">
+            <article class="card">
+              <p class="card-label">Decision summary</p>
+              <dl id="case-summary-grid" class="detail-grid"></dl>
+            </article>
+
+            <article class="card">
+              <p class="card-label">Trust and review</p>
+              <div id="case-alerts" class="stack-list"></div>
+            </article>
+
+            <article class="card">
+              <p class="card-label">Findings and rules</p>
+              <div id="case-findings" class="stack-list"></div>
+            </article>
+
+            <article class="card">
+              <p class="card-label">Review workspace</p>
+              <form id="review-form" class="review-form">
+                <label>
+                  Reviewer
+                  <input id="reviewer-name" class="text-input" type="text" placeholder="manager@example.com">
+                </label>
+                <label>
+                  Review outcome
+                  <select id="review-outcome" class="text-input">
+                    <option value="confirmed_fault">Confirmed issue</option>
+                    <option value="dismissed">Dismissed after review</option>
+                    <option value="skipped">Decide later</option>
+                  </select>
+                </label>
+                <label>
+                  Notes
+                  <textarea id="review-notes" class="text-area" rows="5" placeholder="Add the decision, context, and next step."></textarea>
+                </label>
+                <label>
+                  Optional signing key
+                  <textarea id="review-signing-key" class="text-area" rows="5" placeholder="Paste your EPI Ed25519 private key PEM to sign this review"></textarea>
+                </label>
+                <p class="helper-copy">
+                  Optional. Paste the contents of your EPI `.key` file to sign the review in the browser.
+                  If left blank, the review will stay unsigned.
+                </p>
+                <div class="action-row">
+                  <button id="apply-review-button" class="primary-button" type="submit">Apply review locally</button>
+                  <button id="download-reviewed-epi-button" class="primary-button" type="button">Download reviewed .epi</button>
+                  <button id="download-review-button" class="secondary-button" type="button">Download review record</button>
+                  <button id="download-case-report-button" class="secondary-button" type="button">Download case summary</button>
+                </div>
+                <p id="review-save-status" class="helper-copy"></p>
+              </form>
+            </article>
+
+            <article class="card case-span">
+              <p class="card-label">Case timeline</p>
+              <div id="case-timeline" class="timeline"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-panel" data-view-panel="rules">
+        <div class="section-header">
+          <div>
+            <p class="section-label">Rules</p>
+            <h2>Readable policy context</h2>
+          </div>
+        </div>
+
+        <div class="rules-layout">
+          <article class="card">
+            <div class="rules-card-header">
+              <div>
+                <p class="card-label">Policy file</p>
+                <h3>Build a real rulebook for this workflow</h3>
+              </div>
+              <div class="action-row">
+                <button id="reset-policy-button" class="secondary-button" type="button">Reset from case</button>
+                <button id="download-policy-button" class="primary-button" type="button">Download epi_policy.json</button>
+                <button id="download-policy-summary-button" class="secondary-button" type="button">Download policy summary</button>
+              </div>
+            </div>
+
+            <p id="policy-source-note" class="helper-copy"></p>
+
+            <div class="policy-meta-grid">
+              <label>
+                Policy ID
+                <input id="policy-id" class="text-input" type="text" placeholder="refund-agent-prod">
+              </label>
+              <label>
+                System name
+                <input id="policy-system-name" class="text-input" type="text" placeholder="refund-agent">
+              </label>
+              <label>
+                System version
+                <input id="policy-system-version" class="text-input" type="text" placeholder="1.0">
+              </label>
+              <label>
+                Policy version
+                <input id="policy-version" class="text-input" type="text" placeholder="2026-04-01">
+              </label>
+              <label>
+                Profile ID
+                <input id="policy-profile-id" class="text-input" type="text" placeholder="finance.refund-agent">
+              </label>
+              <label>
+                Organization
+                <input id="policy-scope-organization" class="text-input" type="text" placeholder="Acme Corp">
+              </label>
+              <label>
+                Team
+                <input id="policy-scope-team" class="text-input" type="text" placeholder="finance-ops">
+              </label>
+              <label>
+                Application
+                <input id="policy-scope-application" class="text-input" type="text" placeholder="refund-agent">
+              </label>
+              <label>
+                Workflow
+                <input id="policy-scope-workflow" class="text-input" type="text" placeholder="refund-approval">
+              </label>
+              <label>
+                Environment
+                <input id="policy-scope-environment" class="text-input" type="text" placeholder="production">
+              </label>
+            </div>
+
+            <div class="badge-row policy-meta-badges">
+              <span id="policy-rule-count-badge" class="pill-badge tone-neutral">0 rules</span>
+              <span id="policy-approval-count-badge" class="pill-badge tone-neutral">0 approval policies carried forward</span>
+            </div>
+
+            <pre id="policy-json-preview" class="code-block"></pre>
+          </article>
+
+          <article class="card">
+            <div class="rules-card-header">
+              <div>
+                <p class="card-label">Rules in this policy</p>
+                <h3>Turn business controls into enforceable EPI rules</h3>
+              </div>
+              <div class="rule-toolbar">
+                <label>
+                  New rule type
+                  <select id="add-rule-type" class="text-input">
+                    <option value="threshold_guard">Threshold guard</option>
+                    <option value="approval_guard">Approval guard</option>
+                    <option value="sequence_guard">Sequence guard</option>
+                    <option value="constraint_guard">Constraint guard</option>
+                    <option value="prohibition_guard">Prohibition guard</option>
+                    <option value="tool_permission_guard">Tool permission guard</option>
+                  </select>
+                </label>
+                <button id="add-rule-button" class="primary-button" type="button">Add rule</button>
+              </div>
+            </div>
+            <div id="policy-rule-editor" class="policy-rule-editor"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view-panel" data-view-panel="reports">
+        <div class="section-header">
+          <div>
+            <p class="section-label">Reports</p>
+            <h2>Export a business-readable record</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="filter-grid reports-grid">
+            <label>
+              Report type
+              <select id="report-type" class="text-input">
+                <option value="summary">Summary report</option>
+                <option value="review">Review report</option>
+                <option value="trust">Trust report</option>
+              </select>
+            </label>
+            <label>
+              Scope
+              <select id="report-scope" class="text-input">
+                <option value="all">All loaded cases</option>
+                <option value="filtered">Inbox filters</option>
+                <option value="selected">Selected case</option>
+              </select>
+            </label>
+          </div>
+          <div id="report-preview" class="report-preview"></div>
+          <div class="action-row">
+            <button id="download-report-text" class="primary-button" type="button">Download text report</button>
+            <button id="download-report-json" class="secondary-button" type="button">Download JSON report</button>
+            <button id="download-report-csv" class="secondary-button" type="button">Download CSV report</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <footer class="app-footer">
+    <span>EPI Viewer 2.8.10</span>
+    <span>Decision Ops surface for AI case review</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="crypto.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
