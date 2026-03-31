@@ -4,23 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How EPI Works - Refund Review Flow</title>
+    <title>How EPI Works - Portable Repro for AI Agent Runs</title>
     <meta name="description"
-        content="Start with epi demo or Colab, review a refund approval in the browser, then verify and share the same .epi case file.">
+        content="Start with epi demo or Colab, capture one clean run and one failing run, then open, verify, and share the same .epi artifact.">
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://epilabs.org/how-it-works.html">
-    <meta property="og:title" content="How EPI Works - Refund Review Flow">
+    <meta property="og:title" content="How EPI Works - Portable Repro for AI Agent Runs">
     <meta property="og:description"
-        content="Start with epi demo or Colab, review a refund approval in the browser, then verify and share the same .epi case file.">
+        content="Start with epi demo or Colab, capture one clean run and one failing run, then open, verify, and share the same .epi artifact.">
     <meta property="og:image" content="https://epilabs.org/cryptographic_visual.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://epilabs.org/how-it-works.html">
-    <meta property="twitter:title" content="How EPI Works - Refund Review Flow">
+    <meta property="twitter:title" content="How EPI Works - Portable Repro for AI Agent Runs">
     <meta property="twitter:description"
-        content="Start with epi demo or Colab, review a refund approval in the browser, then verify and share the same .epi case file.">
+        content="Start with epi demo or Colab, capture one clean run and one failing run, then open, verify, and share the same .epi artifact.">
     <meta property="twitter:image" content="https://epilabs.org/cryptographic_visual.png">
 
     <link rel="icon" type="image/png" href="assets/logo.png">
@@ -48,7 +48,7 @@
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html">Technology</a>
                 <a href="use-cases.html#top">Use Cases</a>
-                <a href="verify.html">Verify</a>
+                <a href="verify/">Verify</a>
                 <a href="viewer.html">Review</a>
                 <a href="vision.html#vision">Vision</a>
                 <a href="contact.html#top">Contact</a>
@@ -73,15 +73,15 @@
     <section class="section lifecycle-section" id="how-it-works">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">The EPI case review flow</h2>
-                <p class="section-desc">Start with <code>epi demo</code> or Colab, review a refund approval, then verify and share the same case file.
+                <h2 class="section-title">The EPI portable repro loop</h2>
+                <p class="section-desc">Start with <code>epi demo</code> or Colab, capture one clean run and one flagged run, then open, verify, and share the same artifact.
                 </p>
             </div>
             <div class="lifecycle-grid">
                 <div class="lifecycle-step install-step">
                     <div class="step-icon">PKG</div>
                     <h3>0. Start</h3>
-                    <p>Get started in seconds. Install the <strong>epi-recorder</strong> package once, then launch the refund review demo with a single command.</p>
+                    <p>Get started in seconds. Install the <strong>epi-recorder</strong> package once, then launch the sample repro demo with a single command.</p>
                     <div class="step-code"><code>$ pip install epi-recorder
 $ epi demo</code></div>
                     <p
@@ -92,25 +92,25 @@ $ epi demo</code></div>
                 <div class="lifecycle-step">
                     <div class="step-icon">REC</div>
                     <h3>1. Review <span class="status-badge shipped">Shipped</span></h3>
-                    <p>Open the case in the browser review view. The timeline, rules, and saved review notes stay together in one portable file.</p>
+                    <p>Open the run in the browser review view. The timeline, rules, and saved review notes stay together in one portable file.</p>
                     <div class="step-code"><code>$ epi view refund_case.epi</code></div>
                 </div>
                 <div class="lifecycle-step">
                     <div class="step-icon">VERIFY</div>
                     <h3>2. Verify</h3>
-                    <p>Verify the case file before you share it. Integrity details and signatures travel with the same <code>.epi</code> file.</p>
+                    <p>Verify the artifact before you share it. Integrity details and signatures travel with the same <code>.epi</code> file.</p>
                     <div class="step-code"><code>$ epi verify refund_case.epi</code></div>
                 </div>
                 <div class="lifecycle-step">
                     <div class="step-icon">SHARE</div>
                     <h3>3. Share the Case File</h3>
-                    <p>Send the same <code>.epi</code> case file to QA, compliance, or a customer-support lead. They do not need your environment to review it.</p>
+                    <p>Send the same <code>.epi</code> artifact to another engineer, QA, or a teammate. They do not need your environment to inspect it.</p>
                     <div class="step-code"><code>reviewed_refund.epi</code></div>
                 </div>
                 <div class="lifecycle-step">
                     <div class="step-icon">VIEW</div>
                     <h3>4. Extend <span class="status-badge shipped">Shipped</span></h3>
-                    <p>After the demo, connect EPI to your own workflow with <code>epi run</code> or <code>epi record</code> and keep the same review flow.</p>
+                    <p>After the demo, connect EPI to your own workflow with <code>epi run</code> or <code>epi record</code> and keep the same capture, review, and verify loop.</p>
                     <div class="step-code"><code>$ epi run my_agent.py</code></div>
                 </div>
             </div>
@@ -128,7 +128,7 @@ $ epi demo</code></div>
             <div class="tech-grid">
                 <div class="tech-feature">
                     <h4>ZIP-Based Container</h4>
-                    <p>Self-contained <code>.epi</code> files. Store the case history and browser review data in one portable archive.</p>
+                    <p>Self-contained <code>.epi</code> files. Store the run history and browser review data in one portable archive.</p>
                 </div>
                 <div class="tech-feature">
                     <h4>Ed25519 Signatures</h4>
@@ -148,7 +148,7 @@ $ epi demo</code></div>
                 </div>
                 <div class="tech-feature">
                     <h4>Browser Review View</h4>
-                    <p>Static HTML/JS review flow. No server required. Works like a portable case view.</p>
+                    <p>Static HTML/JS review flow. No server required. Works like a portable run viewer.</p>
                 </div>
             </div>
         </div>
@@ -225,7 +225,7 @@ $ epi demo</code></div>
         </div>
     </footer>
 
-    <script src="js/app.js?v=2.8.7"></script>
+    <script src="js/app.js?v=3.0.0"></script>
 </body>
 
 </html>
