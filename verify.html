@@ -253,7 +253,7 @@
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html">Technology</a>
                 <a href="use-cases.html#top">Use Cases</a>
-                <a href="verify.html" class="active">Verify</a>
+                <a href="verify/" class="active">Verify</a>
                 <a href="vision.html#vision">Vision</a>
                 <a href="contact.html#top">Contact</a>
             </div>
@@ -383,11 +383,10 @@
 
     <!-- Application Logic -->
     <script type="module">
-        import * as ed from 'https://esm.sh/@noble/ed25519@2.0.0';
+        import { analyzeArtifactBlob, openEmbeddedViewerHtml } from './js/epi-verify-core.js';
 
         let currentSteps = [];
-        
-        // DOM Elements
+
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const uploadUI = document.getElementById('uploadUI');
@@ -395,24 +394,28 @@
         const inputPhase = document.getElementById('inputPhase');
         const resultPhase = document.getElementById('resultPhase');
         const launchVizBtn = document.getElementById('launchVizBtn');
+        const pubKeyInput = document.getElementById('pubKeyInput');
 
-        // Drag & Drop Handlers
         dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('dragover');
         });
-        fileInput.addEventListener('change', (e) => processFile(e.target.files[0]));
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (event.dataTransfer.files[0]) {
+                processFile(event.dataTransfer.files[0]);
+            }
+        });
+        fileInput.addEventListener('change', (event) => processFile(event.target.files[0]));
 
-        // Global UI Toggles
         window.openTimeline = () => document.getElementById('timelineModal').classList.add('active');
         window.closeTimeline = () => document.getElementById('timelineModal').classList.remove('active');
         window.openFiles = () => document.getElementById('filesModal').classList.add('active');
         window.closeFiles = () => document.getElementById('filesModal').classList.remove('active');
-        
+
         window.resetUI = () => {
             resultPhase.classList.add('hidden');
             inputPhase.classList.remove('hidden');
@@ -423,145 +426,35 @@
         };
 
         async function processFile(file) {
-            if (!file) return;
+            if (!file) {
+                return;
+            }
 
-            // Transition UI to loading
             uploadUI.classList.add('hidden');
             loaderUI.classList.remove('hidden');
+            launchVizBtn.classList.add('hidden');
 
             try {
-                const zip = await JSZip.loadAsync(file);
-
-                // Read Manifest
-                const manifestFile = zip.file("manifest.json");
-                if (!manifestFile) throw new Error("Invalid .epi bundle: manifest.json missing");
-                const manifest = JSON.parse(await manifestFile.async("string"));
-
-                const mismatches = [];
-                for (const [filename, expectedHash] of Object.entries(manifest.file_manifest || {})) {
-                    const fileInZip = zip.file(filename);
-                    if (!fileInZip) {
-                        mismatches.push(`${filename}: file missing`);
-                        continue;
-                    }
-                    const contentBuffer = await fileInZip.async("arraybuffer");
-                    const digest = await crypto.subtle.digest("SHA-256", contentBuffer);
-                    const actualHash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
-                    if (actualHash !== expectedHash) {
-                        mismatches.push(`${filename}: hash mismatch`);
-                    }
-                }
-
-                // Read Steps Timeline
-                const stepsFile = zip.file("steps.jsonl");
-                currentSteps = [];
-                if (stepsFile) {
-                    const stepsText = await stepsFile.async("string");
-                    currentSteps = stepsText.trim().split('\n').map(l => {
-                        try { return JSON.parse(l); } catch { return null; }
-                    }).filter(Boolean);
-                }
-
-                // Setup Offline Viewer Button
-                const viewerFile = zip.file("viewer.html");
-                if (viewerFile) {
+                const artifact = await analyzeArtifactBlob(file, {
+                    manualPublicKey: pubKeyInput.value.trim(),
+                    allowEmbeddedViewer: true,
+                });
+                currentSteps = artifact.steps;
+                if (artifact.viewerHtml) {
                     launchVizBtn.classList.remove('hidden');
-                    launchVizBtn.onclick = async () => {
-                        const htmlContent = await viewerFile.async("string");
-                        const blob = new Blob([htmlContent], { type: 'text/html' });
-                        // Open strictly contained isolated page
-                        window.open(URL.createObjectURL(blob), '_blank', 'noopener,noreferrer');
-                    };
+                    launchVizBtn.onclick = () => openEmbeddedViewerHtml(artifact.viewerHtml);
                 }
-
-                // Ed25519 WebCrypto Verification
-                const signatureRaw = manifest.signature;
-                if (!signatureRaw) {
-                    showResult("warning", manifest, "Unsigned", "Integrity is intact, but no signature is present. This artifact is unsigned.");
-                    populateFiles(manifest.file_manifest || {});
-                    return;
-                }
-                const parts = signatureRaw.split(':');
-                if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature string");
-
-                const keyName = parts[1];
-                if (mismatches.length > 0) {
-                    showResult("tampered", manifest, keyName, `Integrity failed: ${mismatches.length} manifest mismatch(es) detected. Signature may still be present, but this artifact should not be trusted.`);
-                    populateFiles(manifest.file_manifest || {});
-                    return;
-                }
-                const manualKey = document.getElementById('pubKeyInput').value.trim();
-                const embeddedKey = manifest.public_key || manifest.signer;
-
-                if (manualKey || embeddedKey) {
-                    const verificationKey = manualKey || embeddedKey;
-                    if (typeof verificationKey !== 'string') {
-                        throw new Error("Verification key must be a hexadecimal string.");
-                    }
-                    
-                    try {
-                        const isValid = await verifySignature(manifest, verificationKey);
-                        if (isValid) {
-                            const trustMsg = manualKey ? "Verified against manually provided Organization Key." : "Integrity mathematically verified via Self-Contained Key.";
-                            showResult("success", manifest, keyName, trustMsg);
-                        } else {
-                            showResult("error", manifest, keyName, "Signature Verification Failed: The evidence has been tampered with.");
-                        }
-                    } catch (verifyErr) {
-                        showResult("error", manifest, keyName, "Verification Error: " + verifyErr.message);
-                    }
-                } else {
-                    showResult("warning", manifest, keyName, "Identity Unverified. No public key provided to check against.");
-                }
-                
-                populateFiles(manifest.file_manifest || {});
-
-            } catch (err) {
-                showResult("error", null, null, err.message);
+                showResult(
+                    artifact.verification.state,
+                    artifact.manifest,
+                    artifact.verification.signerLabel,
+                    artifact.verification.description,
+                );
+                populateFiles(artifact.fileManifest);
+            } catch (error) {
+                showResult('error', null, null, error.message || String(error));
+                populateFiles({});
             }
-        }
-
-        async function verifySignature(manifest, pubKeyHex) {
-            const signatureRaw = manifest.signature;
-            const parts = signatureRaw.split(':');
-            const sigHex = parts[2];
-
-            const pubKeyBytes = hexToBytes(pubKeyHex);
-            const manifestCopy = JSON.parse(JSON.stringify(manifest));
-            delete manifestCopy.signature;
-            const jsonString = canonicalJson(manifestCopy);
-            const msgBytes = new TextEncoder().encode(jsonString);
-
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBytes);
-            const hashArray = new Uint8Array(hashBuffer);
-
-            const sigBytes = hexToBytes(sigHex);
-            return await ed.verifyAsync(sigBytes, hashArray, pubKeyBytes);
-        }
-
-        function canonicalJson(obj) {
-            // Replicates Python's json.dumps(obj, separators=(',', ':'), sort_keys=True)
-            if (obj === null) return 'null';
-            if (typeof obj !== 'object') return JSON.stringify(obj);
-            if (Array.isArray(obj)) return '[' + obj.map(canonicalJson).join(',') + ']';
-            
-            const keys = Object.keys(obj).sort();
-            let result = '{';
-            for (let i = 0; i < keys.length; i++) {
-                const key = keys[i];
-                if (i > 0) result += ',';
-                result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
-            }
-            return result + '}';
-        }
-
-        function hexToBytes(hex) {
-            if (typeof hex !== 'string') throw new Error('hex string expected, got ' + typeof hex);
-            const bytes = new Uint8Array(hex.length / 2);
-            for (let i = 0; i < hex.length; i += 2) {
-                bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
-            }
-            return bytes;
         }
 
         function showResult(state, manifest, signer, errorMsg) {
@@ -707,8 +600,8 @@
         </div>
     </footer>
 
-    <script src="js/app.js?v=2.8.7"></script>
-    <script src="js/particles.js?v=2.8.7"></script>
+    <script src="js/app.js?v=3.0.0"></script>
+    <script src="js/particles.js?v=3.0.0"></script>
 </body>
 
 </html>
