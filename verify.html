@@ -5,14 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Evidence | EPI LABS</title>
-    <!-- Dependencies (CDNs) -->
+    <!-- Browser-side ZIP support for local `.epi` verification -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cbor-js@0.1.0/cbor.min.js"></script>
-    <!-- Noble Ed25519 -->
-    <script src="https://unpkg.com/@noble/ed25519@2.0.0/lib/index.js"></script>
 
     <!-- Custom System Styles -->
-    <link rel="stylesheet" href="css/style.css?v=2.6">
+    <link rel="stylesheet" href="css/style.css?v=3.0.0">
     <link rel="stylesheet" href="css/terminal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -276,13 +273,13 @@
 
         <div class="verifier-glass-card" id="mainCard">
             <div style="text-align: center; margin-bottom: var(--space-xl);">
-                <div class="hero-badge" style="border-color: var(--color-primary); color: var(--color-primary); background: rgba(10, 132, 255, 0.1); margin-bottom: var(--space-md); padding: 0.25rem 0.75rem; display:inline-block; border-radius:99px; font-weight:600; font-size:0.8rem;">ZERO-KNOWLEDGE VERIFICATION</div>
+                <div class="hero-badge" style="border-color: var(--color-primary); color: var(--color-primary); background: rgba(10, 132, 255, 0.1); margin-bottom: var(--space-md); padding: 0.25rem 0.75rem; display:inline-block; border-radius:99px; font-weight:600; font-size:0.8rem;">TRUSTED BROWSER VERIFIER</div>
                 <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;" class="text-gradient">Verify Evidence</h1>
-                <p style="font-size: 1rem;">Drag and drop your <code style="font-size: 0.85em; background: rgba(255,255,255,0.1); color: var(--color-white);">.epi</code> bundle to check structure, integrity, and trust state entirely in your browser.</p>
+                <p style="font-size: 1rem;">Drag and drop your <code style="font-size: 0.85em; background: rgba(255,255,255,0.1); color: var(--color-white);">.epi</code> bundle to check structure, integrity, signer identity, and analysis status entirely in your browser.</p>
             </div>
 
             <div id="inputPhase">
-                <input type="text" id="pubKeyInput" class="pubkey-input" placeholder="Optional: Enterprise Public Key (Hex) to verify identity">
+                <input type="text" id="pubKeyInput" class="pubkey-input" placeholder="Optional: Public key (hex or base64) to verify signer identity">
                 
                 <div id="dropZone" class="drop-zone">
                     <div id="uploadUI">
@@ -324,14 +321,15 @@
                         <div class="meta-label">Goal / Objective</div>
                         <div id="metaGoal" class="meta-value">--</div>
                     </div>
+                    <div>
+                        <div class="meta-label">Automated Check</div>
+                        <div id="metaAnalysis" class="meta-value">--</div>
+                    </div>
                 </div>
 
                 <div class="action-row">
                     <button class="btn-primary" style="flex: 1; padding: 0.75rem;" onclick="openTimeline()">
                         <span style="font-size: 1.1rem;">Inspect</span> Timeline
-                    </button>
-                    <button id="launchVizBtn" class="btn-primary hidden" style="background: linear-gradient(135deg, var(--color-violet-500), #6D28D9); padding: 0.75rem;">
-                        <span>View</span> Read-Only View
                     </button>
                     <button class="btn-secondary" style="padding: 0.75rem; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="openFiles()" title="View File Manifest">
                         Files
@@ -340,6 +338,9 @@
                         Reset
                     </button>
                 </div>
+                <p style="margin-top: 0.9rem; color: var(--color-gray-400); font-size: 0.9rem; text-align: center;">
+                    This page verifies the raw artifact directly and does not execute the artifact&apos;s embedded <code>viewer.html</code>.
+                </p>
             </div>
         </div>
     </main>
@@ -383,7 +384,7 @@
 
     <!-- Application Logic -->
     <script type="module">
-        import { analyzeArtifactBlob, openEmbeddedViewerHtml } from './js/epi-verify-core.js';
+        import { analyzeArtifactBlob } from './js/epi-verify-core.js';
 
         let currentSteps = [];
 
@@ -393,7 +394,6 @@
         const loaderUI = document.getElementById('loaderUI');
         const inputPhase = document.getElementById('inputPhase');
         const resultPhase = document.getElementById('resultPhase');
-        const launchVizBtn = document.getElementById('launchVizBtn');
         const pubKeyInput = document.getElementById('pubKeyInput');
 
         dropZone.addEventListener('click', () => fileInput.click());
@@ -422,7 +422,6 @@
             uploadUI.classList.remove('hidden');
             loaderUI.classList.add('hidden');
             fileInput.value = '';
-            launchVizBtn.classList.add('hidden');
         };
 
         async function processFile(file) {
@@ -432,18 +431,13 @@
 
             uploadUI.classList.add('hidden');
             loaderUI.classList.remove('hidden');
-            launchVizBtn.classList.add('hidden');
 
             try {
                 const artifact = await analyzeArtifactBlob(file, {
                     manualPublicKey: pubKeyInput.value.trim(),
-                    allowEmbeddedViewer: true,
+                    allowEmbeddedViewer: false,
                 });
                 currentSteps = artifact.steps;
-                if (artifact.viewerHtml) {
-                    launchVizBtn.classList.remove('hidden');
-                    launchVizBtn.onclick = () => openEmbeddedViewerHtml(artifact.viewerHtml);
-                }
                 showResult(
                     artifact.verification.state,
                     artifact.manifest,
@@ -491,9 +485,16 @@
             if (manifest) {
                 document.getElementById('metaSigner').textContent = signer || 'Unknown';
                 document.getElementById('metaGoal').textContent = manifest.goal || "Not specified";
-                document.getElementById('metaDate').textContent = new Date(manifest.created_at).toLocaleString();
-                document.getElementById('metaId').textContent = manifest.workflow_id;
+                document.getElementById('metaDate').textContent = formatDate(manifest.created_at);
+                document.getElementById('metaId').textContent = manifest.workflow_id || '--';
+                document.getElementById('metaAnalysis').textContent = formatAnalysisStatus(manifest);
                 populateTimeline();
+            } else {
+                document.getElementById('metaSigner').textContent = '--';
+                document.getElementById('metaGoal').textContent = '--';
+                document.getElementById('metaDate').textContent = '--';
+                document.getElementById('metaId').textContent = '--';
+                document.getElementById('metaAnalysis').textContent = '--';
             }
         }
 
@@ -507,9 +508,10 @@
             }
 
             currentSteps.forEach(step => {
-                const isWarn = step.kind.includes('security');
-                const contentJson = JSON.stringify(step.content, null, 2);
-                let textPreview = step.content.command || step.content.prompt || "Raw JSON Object Data";
+                const content = step.content || {};
+                const isWarn = String(step.kind || '').includes('security');
+                const contentJson = JSON.stringify(content, null, 2);
+                let textPreview = content.command || content.prompt || "Raw JSON Object Data";
                 if(textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
 
                 // We handle native click toggle
@@ -518,14 +520,14 @@
                 el.innerHTML = `
                     <div class="timeline-header" style="${isWarn ? 'border-left: 3px solid var(--color-error)' : ''}">
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span style="color: var(--color-gray-500); font-family: var(--font-mono);">#${step.index}</span>
-                            <span style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase;">${step.kind}</span>
-                            <span style="color: var(--color-white);">${textPreview}</span>
+                            <span style="color: var(--color-gray-500); font-family: var(--font-mono);">#${escapeHtml(String(step.index ?? '--'))}</span>
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase;">${escapeHtml(step.kind || 'step')}</span>
+                            <span style="color: var(--color-white);">${escapeHtml(String(textPreview))}</span>
                         </div>
-                        <span style="color: var(--color-gray-500); font-size: 0.8rem;">${new Date(step.timestamp).toLocaleTimeString()}</span>
+                        <span style="color: var(--color-gray-500); font-size: 0.8rem;">${escapeHtml(formatTime(step.timestamp))}</span>
                     </div>
                     <div class="timeline-body">
-                        <pre style="margin: 0;">${contentJson}</pre>
+                        <pre style="margin: 0;">${escapeHtml(contentJson)}</pre>
                     </div>
                 `;
                 
@@ -553,11 +555,51 @@
             entries.forEach(([name, hash]) => {
                 tbody.innerHTML += `
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td style="padding: 1rem; color: var(--color-white); font-weight: 500;">${name}</td>
-                        <td style="padding: 1rem; font-family: var(--font-mono); color: var(--color-gray-400); font-size: 0.85rem; word-break: break-all;">${hash}</td>
+                        <td style="padding: 1rem; color: var(--color-white); font-weight: 500;">${escapeHtml(name)}</td>
+                        <td style="padding: 1rem; font-family: var(--font-mono); color: var(--color-gray-400); font-size: 0.85rem; word-break: break-all;">${escapeHtml(hash)}</td>
                     </tr>
                 `;
             });
+        }
+
+        function formatDate(value) {
+            if (!value) {
+                return '--';
+            }
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleString();
+        }
+
+        function formatTime(value) {
+            if (!value) {
+                return '--';
+            }
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleTimeString();
+        }
+
+        function formatAnalysisStatus(manifest) {
+            const status = manifest?.analysis_status;
+            const error = manifest?.analysis_error;
+            if (status === 'complete') {
+                return 'Complete';
+            }
+            if (status === 'error') {
+                return error ? `Failed - ${error}` : 'Failed';
+            }
+            if (status === 'skipped') {
+                return 'Skipped';
+            }
+            return 'Not recorded';
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
     </script>
     
