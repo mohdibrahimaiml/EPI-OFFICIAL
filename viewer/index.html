@@ -13,6 +13,22 @@
 <body>
 <input type="file" id="file-input" accept=".epi" multiple hidden>
 
+<!-- Top navigation bar -->
+<nav class="topnav" aria-label="Site navigation">
+  <a class="topnav-brand" href="https://epilabs.org/" aria-label="EPI LABS home">
+    <img src="../assets/logo.png" alt="EPI LABS" class="topnav-logo">
+    <span class="topnav-name">EPI LABS</span>
+  </a>
+  <div class="topnav-links">
+    <a href="https://epilabs.org/how-it-works.html" class="topnav-link">How it works</a>
+    <a href="https://epilabs.org/verify/" class="topnav-link">Verify</a>
+    <a href="https://epilabs.org/pricing.html" class="topnav-link">Pricing</a>
+    <a href="https://github.com/mohdibrahimaiml/EPI-OFFICIAL" class="topnav-link topnav-link-icon" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    </a>
+  </div>
+</nav>
+
 <div class="page-shell">
   <header class="hero">
     <div>
@@ -22,6 +38,20 @@
         Open saved cases, connect to a source system, and review what happened.
         Everything stays on this device.
       </p>
+      <div class="hero-trust-badges">
+        <span class="trust-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          100% local — zero uploads
+        </span>
+        <span class="trust-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Ed25519 verified
+        </span>
+        <span class="trust-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Works offline
+        </span>
+      </div>
     </div>
     <div class="hero-actions">
       <button class="secondary-button" id="example-case-button" type="button">Open example case</button>
@@ -32,8 +62,15 @@
 
   <section class="upload-panel card">
     <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Drop EPI files here or open the file picker">
+      <div class="drop-zone-icon" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
       <h2 id="drop-zone-title">Open saved cases</h2>
-      <p id="drop-zone-copy">Drop `.epi` files here or choose them from your computer. Nothing is uploaded.</p>
+      <p id="drop-zone-copy">Drop <code class="inline-code">.epi</code> files here or choose them from your computer. Nothing is uploaded.</p>
       <span id="drop-zone-action" class="drop-zone-action">Choose files</span>
     </div>
     <p class="panel-note">
@@ -148,18 +185,30 @@
 
   <section class="summary-strip" id="summary-strip">
     <article class="summary-card">
+      <div class="summary-icon summary-icon-cases" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
       <span class="summary-label">Cases</span>
       <strong id="summary-total">0</strong>
     </article>
     <article class="summary-card">
+      <div class="summary-icon summary-icon-review" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
       <span class="summary-label">Need review</span>
       <strong id="summary-review">0</strong>
     </article>
     <article class="summary-card">
+      <div class="summary-icon summary-icon-trusted" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
       <span class="summary-label">Trusted</span>
       <strong id="summary-trusted">0</strong>
     </article>
     <article class="summary-card">
+      <div class="summary-icon summary-icon-workflows" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M5 9v3a1 1 0 001 1h12a1 1 0 001-1V9"/><line x1="12" y1="13" x2="12" y2="15"/></svg>
+      </div>
       <span class="summary-label">Workflows</span>
       <strong id="summary-workflows">0</strong>
     </article>
@@ -169,10 +218,30 @@
     <aside class="sidebar card">
       <p class="sidebar-label">Workspace</p>
       <nav class="nav-grid" aria-label="Main navigation">
-        <button class="nav-button active" type="button" data-view="inbox">Inbox</button>
-        <button class="nav-button" type="button" data-view="case">Case</button>
-        <button class="nav-button" type="button" data-view="rules">Rules</button>
-        <button class="nav-button" type="button" data-view="reports">Reports</button>
+        <button class="nav-button active" type="button" data-view="inbox">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+          </span>
+          Inbox
+        </button>
+        <button class="nav-button" type="button" data-view="case">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          Case
+        </button>
+        <button class="nav-button" type="button" data-view="rules">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          Rules
+        </button>
+        <button class="nav-button" type="button" data-view="reports">
+          <span class="nav-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </span>
+          Reports
+        </button>
       </nav>
 
       <div class="sidebar-section">
@@ -212,7 +281,10 @@
           <div class="filter-grid">
             <label>
               Search
-              <input id="search-input" class="text-input" type="search" placeholder="Search case title, workflow, file, or notes">
+              <div class="input-with-icon">
+                <svg class="input-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="search-input" class="text-input has-icon" type="search" placeholder="Search case title, workflow, file, or notes">
+              </div>
             </label>
             <label>
               Trust
@@ -243,8 +315,15 @@
         </div>
 
         <div id="empty-inbox" class="card empty-state">
+          <div class="empty-state-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+          </div>
           <h3>No cases yet</h3>
-          <p>Load one or more `.epi` files to create a review inbox.</p>
+          <p>Load one or more <code class="inline-code">.epi</code> files to create a review inbox.</p>
+          <div class="action-row empty-state-actions">
+            <button class="primary-button" type="button" onclick="document.getElementById('add-files-button').click()">Open saved cases</button>
+            <button class="secondary-button" type="button" onclick="document.getElementById('example-case-button').click()">Try an example</button>
+          </div>
         </div>
         <div id="case-list" class="case-list"></div>
       </section>
@@ -258,6 +337,9 @@
         </div>
 
         <div id="no-case-selected" class="card empty-state">
+          <div class="empty-state-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
           <h3>Select a case</h3>
           <p>Choose a case from the inbox or the selector to review the decision record.</p>
         </div>
@@ -335,7 +417,7 @@
                   <textarea id="review-signing-key" class="text-area" rows="5" placeholder="Paste your EPI Ed25519 private key PEM to sign this review"></textarea>
                 </label>
                 <p class="helper-copy">
-                  Optional. Paste the contents of your EPI `.key` file to sign the review in the browser.
+                  Optional. Paste the contents of your EPI <code class="inline-code">.key</code> file to sign the review in the browser.
                   If left blank, the review will stay unsigned.
                 </p>
                 <div class="action-row">
@@ -496,8 +578,17 @@
   </section>
 
   <footer class="app-footer">
-    <span>EPI Viewer 2.8.10</span>
-    <span>Decision Ops surface for AI case review</span>
+    <div class="footer-left">
+      <span class="footer-version">EPI Viewer 3.0.1</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span class="footer-desc">Decision Ops surface for AI case review</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://epilabs.org/" class="footer-link">epilabs.org</a>
+      <a href="https://epilabs.org/verify/" class="footer-link">Verifier</a>
+      <a href="https://epilabs.org/how-it-works.html" class="footer-link">Docs</a>
+      <a href="https://github.com/mohdibrahimaiml/EPI-OFFICIAL" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+    </div>
   </footer>
 </div>
 

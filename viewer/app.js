@@ -2524,7 +2524,7 @@ function buildRecorderStarterEnvExample(setup) {
 
 function buildRecorderStarterRequirements(_setup) {
   return [
-    'epi-recorder>=2.8.10',
+    'epi-recorder>=3.0.1',
     'requests>=2.32.0',
   ].join('\n') + '\n';
 }
