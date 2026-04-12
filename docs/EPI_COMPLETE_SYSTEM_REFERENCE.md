@@ -1,14 +1,14 @@
 # EPI System Reference Manual
 
-**Version:** 2.5.0
-**Last Updated:** 2026-02-06
+**Version:** 4.0.1
+**Last Updated:** 2026-04-12
 **Status:** Production Ready
 
 ---
 
 ## 1. System Overview
 
-**EPI (Execution Proof Infrastructure)** is a dual-component system designed to create and verify immutable proofs of AI execution. It solves the "Black Box" problem by wrapping AI workflows in a cryptographically signed container (`.epi`) that is portable, self-contained, and legally verifiable.
+**EPI (Evidence Packaged Infrastructure)** packages AI execution into portable, verifiable `.epi` artifacts. It helps teams preserve execution context, review decision evidence, and verify artifact integrity without treating vendor logs as the system of record.
 
 The system consists of two distinct repositories:
 1.  **`epi-recorder` (The Generator):** A Python package that instruments code to capture execution data.
@@ -20,7 +20,7 @@ The system consists of two distinct repositories:
 
 **Path:** `c:\Users\dell\epi-recorder`
 **Language:** Python 3.11+
-**License:** Apache 2.0
+**License:** MIT
 
 ### Core Architecture
 This package is responsible for the **Creation** of evidence.

@@ -10,7 +10,7 @@
 The heart of EPI is its ability to capture code execution **deterministically**. This is achieved through **Explicit Capture**.
 
 ### A. The Capture Mechanism: Explicit Wrappers
-Instead of implicitly monkey-patching standard libraries, EPI v2.3.0 introduced explicit wrappers to ensure reliability, and v2.5.0 extends this with native async support and agent analytics.
+Instead of relying only on implicit monkey-patching, EPI supports explicit wrappers to keep capture behavior predictable across Python environments.
 
 **Code Analysis (`epi_recorder/wrappers/openai.py`):**
 1.  **Wrapping:** The developer wraps their client: `client = wrap_openai(OpenAI())`.
@@ -33,7 +33,7 @@ Trust is not achieved by "logs" but by **Cryptographic Signatures**.
 2.  **Signing Algorithm:** **Ed25519** (Edwards-curve Digital Signature Algorithm).
     *   Selected for high performance (signing doesn't slow down the AI agent) and small key size (32 bytes).
     *   Library: `cryptography.hazmat.primitives.asymmetric.ed25519`.
-3.  **Key Management:** Keys are stored locally in `~/.epi/keys`. EPI acts as a "Local Certificate Authority".
+3.  **Key Management:** Keys are stored locally in `~/.epi/keys`. EPI uses this local key store for artifact signing.
 
 ### C. The Redactor (`epi_core/redactor.py`)
 To prevent PII/Secret leaks, EPI runs a regex engine *before* writing to disk.

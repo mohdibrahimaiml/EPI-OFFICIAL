@@ -499,37 +499,76 @@
 
         function populateTimeline() {
             const container = document.getElementById('timelineContent');
-            container.innerHTML = '';
+            container.replaceChildren();
 
             if (!currentSteps.length) {
-                container.innerHTML = '<p style="text-align:center; color: var(--color-gray-500); padding: 2rem;">No recorded steps found in payload.</p>';
+                const empty = document.createElement('p');
+                empty.style.textAlign = 'center';
+                empty.style.color = 'var(--color-gray-500)';
+                empty.style.padding = '2rem';
+                empty.textContent = 'No recorded steps found in payload.';
+                container.appendChild(empty);
                 return;
             }
 
             currentSteps.forEach(step => {
-                const isWarn = step.kind.includes('security');
+                const kind = String(step.kind || '');
+                const timestamp = step.timestamp ? new Date(step.timestamp).toLocaleTimeString() : '--';
+                const isWarn = kind.includes('security');
                 const contentJson = JSON.stringify(step.content, null, 2);
-                let textPreview = step.content.command || step.content.prompt || "Raw JSON Object Data";
-                if(textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
+                let textPreview = step.content?.command || step.content?.prompt || "Raw JSON Object Data";
+                textPreview = String(textPreview);
+                if (textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
 
                 // We handle native click toggle
                 const el = document.createElement('div');
                 el.className = 'timeline-item';
-                el.innerHTML = `
-                    <div class="timeline-header" style="${isWarn ? 'border-left: 3px solid var(--color-error)' : ''}">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span style="color: var(--color-gray-500); font-family: var(--font-mono);">#${step.index}</span>
-                            <span style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase;">${step.kind}</span>
-                            <span style="color: var(--color-white);">${textPreview}</span>
-                        </div>
-                        <span style="color: var(--color-gray-500); font-size: 0.8rem;">${new Date(step.timestamp).toLocaleTimeString()}</span>
-                    </div>
-                    <div class="timeline-body">
-                        <pre style="margin: 0;">${contentJson}</pre>
-                    </div>
-                `;
+
+                const header = document.createElement('div');
+                header.className = 'timeline-header';
+                if (isWarn) header.style.borderLeft = '3px solid var(--color-error)';
+
+                const headerLeft = document.createElement('div');
+                headerLeft.style.display = 'flex';
+                headerLeft.style.alignItems = 'center';
+                headerLeft.style.gap = '1rem';
+
+                const indexSpan = document.createElement('span');
+                indexSpan.style.color = 'var(--color-gray-500)';
+                indexSpan.style.fontFamily = 'var(--font-mono)';
+                indexSpan.textContent = `#${step.index ?? ''}`;
+
+                const kindSpan = document.createElement('span');
+                kindSpan.style.background = 'rgba(255,255,255,0.1)';
+                kindSpan.style.padding = '0.1rem 0.5rem';
+                kindSpan.style.borderRadius = '4px';
+                kindSpan.style.fontSize = '0.75rem';
+                kindSpan.style.textTransform = 'uppercase';
+                kindSpan.textContent = kind;
+
+                const previewSpan = document.createElement('span');
+                previewSpan.style.color = 'var(--color-white)';
+                previewSpan.textContent = textPreview;
+
+                headerLeft.append(indexSpan, kindSpan, previewSpan);
+
+                const timeSpan = document.createElement('span');
+                timeSpan.style.color = 'var(--color-gray-500)';
+                timeSpan.style.fontSize = '0.8rem';
+                timeSpan.textContent = timestamp;
+
+                header.append(headerLeft, timeSpan);
+
+                const body = document.createElement('div');
+                body.className = 'timeline-body';
+                const pre = document.createElement('pre');
+                pre.style.margin = '0';
+                pre.textContent = contentJson;
+                body.appendChild(pre);
+
+                el.append(header, body);
                 
-                el.querySelector('.timeline-header').addEventListener('click', function() {
+                header.addEventListener('click', function() {
                     const body = this.nextElementSibling;
                     const isOpen = body.classList.contains('active');
                     // close all
@@ -542,21 +581,42 @@
 
         function populateFiles(manifestMap) {
             const tbody = document.getElementById('filesTableBody');
-            tbody.innerHTML = '';
+            tbody.replaceChildren();
             
             const entries = Object.entries(manifestMap);
             if (!entries.length) {
-                tbody.innerHTML = '<tr><td colspan="2" style="padding: 1rem; text-align:center; color: var(--color-gray-500);">No files mapped.</td></tr>';
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.style.padding = '1rem';
+                cell.style.textAlign = 'center';
+                cell.style.color = 'var(--color-gray-500)';
+                cell.textContent = 'No files mapped.';
+                row.appendChild(cell);
+                tbody.appendChild(row);
                 return;
             }
 
             entries.forEach(([name, hash]) => {
-                tbody.innerHTML += `
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td style="padding: 1rem; color: var(--color-white); font-weight: 500;">${name}</td>
-                        <td style="padding: 1rem; font-family: var(--font-mono); color: var(--color-gray-400); font-size: 0.85rem; word-break: break-all;">${hash}</td>
-                    </tr>
-                `;
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+
+                const nameCell = document.createElement('td');
+                nameCell.style.padding = '1rem';
+                nameCell.style.color = 'var(--color-white)';
+                nameCell.style.fontWeight = '500';
+                nameCell.textContent = String(name);
+
+                const hashCell = document.createElement('td');
+                hashCell.style.padding = '1rem';
+                hashCell.style.fontFamily = 'var(--font-mono)';
+                hashCell.style.color = 'var(--color-gray-400)';
+                hashCell.style.fontSize = '0.85rem';
+                hashCell.style.wordBreak = 'break-all';
+                hashCell.textContent = String(hash);
+
+                row.append(nameCell, hashCell);
+                tbody.appendChild(row);
             });
         }
     </script>
@@ -600,8 +660,8 @@
         </div>
     </footer>
 
-    <script src="js/app.js?v=3.0.2"></script>
-    <script src="js/particles.js?v=3.0.2"></script>
+    <script src="js/app.js?v=4.0.1"></script>
+    <script src="js/particles.js?v=4.0.1"></script>
 </body>
 
 </html>

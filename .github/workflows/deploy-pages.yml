@@ -35,6 +35,9 @@ jobs:
             --exclude '.github/' \
             --exclude 'docs/' \
             --exclude 'epi-video/' \
+            --exclude 'node_modules/' \
+            --exclude 'dist/' \
+            --exclude 'build/' \
             --exclude '*.whl'
 
       - name: Setup Pages

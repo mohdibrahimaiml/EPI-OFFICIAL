@@ -1,0 +1,12 @@
+# Build and dependency artifacts
+node_modules/
+dist/
+build/
+*.whl
+*.tar.gz
+
+# Local scratch/caches
+.tmp/
+.cache/
+.DS_Store
+Thumbs.db

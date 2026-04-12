@@ -1,12 +1,12 @@
 # EPI Enterprise Pivot: Master Project Documentation
 
 ## 1. Executive Summary: The "Trust Layer"
-**EPI (Execution Proof Infrastructure)** has evolved from a developer utility ("The PDF for AI") into an **Enterprise Trust Platform**. 
+**EPI (Evidence Packaged Infrastructure)** has evolved from a developer utility ("The PDF for AI") into an **Enterprise Trust Platform**.
 
 **The Core Pivot:**
 *   **Old Strategy:** Sell a "Recorder" to developers. (Low friction, Low value)
 *   **New Strategy:** Sell "Audit Insurance" to Enterprises. (Mid friction, High value)
-*   **Value Proposition:** "Don't trust the AI. Trust the Record." We provide a cryptographic Chain of Custody for every AI inference, making compliance (FDA, SEC, EU AI Act) instant and verifiable.
+*   **Value Proposition:** "Don't trust the AI. Trust the Record." EPI packages AI execution evidence into portable, cryptographically verifiable artifacts that can support compliance and audit workflows.
 
 ---
 
@@ -18,8 +18,8 @@
 3.  **Cyber Insurance:** Insurers need to verify if a client followed security protocols before paying ransomware claims.
 
 ### The Competition
-*   **Observability (Datadog/LangSmith):** Great for *debugging*, terrible for *liability*. Their logs are mutable and not legally admissible.
-*   **EPI:** Immutable, signed, portable files (`.epi`) that stand up in court.
+*   **Observability (Datadog/LangSmith):** Strong for *debugging*, but not primarily designed for portable evidence packaging.
+*   **EPI:** Immutable, signed, portable files (`.epi`) that support evidence review workflows.
 
 ---
 
