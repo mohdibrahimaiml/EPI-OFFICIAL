@@ -253,7 +253,7 @@
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html">Technology</a>
                 <a href="use-cases.html#top">Use Cases</a>
-                <a href="verify/" class="active">Verify</a>
+                <a href="verify.html" class="active">Verify</a>
                 <a href="vision.html#vision">Vision</a>
                 <a href="contact.html#top">Contact</a>
             </div>
@@ -383,10 +383,11 @@
 
     <!-- Application Logic -->
     <script type="module">
-        import { analyzeArtifactBlob, openEmbeddedViewerHtml } from './js/epi-verify-core.js';
+        import * as ed from 'https://esm.sh/@noble/ed25519@2.0.0';
 
         let currentSteps = [];
-
+        
+        // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const uploadUI = document.getElementById('uploadUI');
@@ -394,28 +395,24 @@
         const inputPhase = document.getElementById('inputPhase');
         const resultPhase = document.getElementById('resultPhase');
         const launchVizBtn = document.getElementById('launchVizBtn');
-        const pubKeyInput = document.getElementById('pubKeyInput');
 
+        // Drag & Drop Handlers
         dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', (event) => {
-            event.preventDefault();
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
             dropZone.classList.remove('dragover');
-            if (event.dataTransfer.files[0]) {
-                processFile(event.dataTransfer.files[0]);
-            }
+            if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
         });
-        fileInput.addEventListener('change', (event) => processFile(event.target.files[0]));
+        fileInput.addEventListener('change', (e) => processFile(e.target.files[0]));
 
+        // Global UI Toggles
         window.openTimeline = () => document.getElementById('timelineModal').classList.add('active');
         window.closeTimeline = () => document.getElementById('timelineModal').classList.remove('active');
         window.openFiles = () => document.getElementById('filesModal').classList.add('active');
         window.closeFiles = () => document.getElementById('filesModal').classList.remove('active');
-
+        
         window.resetUI = () => {
             resultPhase.classList.add('hidden');
             inputPhase.classList.remove('hidden');
@@ -426,35 +423,145 @@
         };
 
         async function processFile(file) {
-            if (!file) {
-                return;
-            }
+            if (!file) return;
 
+            // Transition UI to loading
             uploadUI.classList.add('hidden');
             loaderUI.classList.remove('hidden');
-            launchVizBtn.classList.add('hidden');
 
             try {
-                const artifact = await analyzeArtifactBlob(file, {
-                    manualPublicKey: pubKeyInput.value.trim(),
-                    allowEmbeddedViewer: true,
-                });
-                currentSteps = artifact.steps;
-                if (artifact.viewerHtml) {
-                    launchVizBtn.classList.remove('hidden');
-                    launchVizBtn.onclick = () => openEmbeddedViewerHtml(artifact.viewerHtml);
+                const zip = await JSZip.loadAsync(file);
+
+                // Read Manifest
+                const manifestFile = zip.file("manifest.json");
+                if (!manifestFile) throw new Error("Invalid .epi bundle: manifest.json missing");
+                const manifest = JSON.parse(await manifestFile.async("string"));
+
+                const mismatches = [];
+                for (const [filename, expectedHash] of Object.entries(manifest.file_manifest || {})) {
+                    const fileInZip = zip.file(filename);
+                    if (!fileInZip) {
+                        mismatches.push(`${filename}: file missing`);
+                        continue;
+                    }
+                    const contentBuffer = await fileInZip.async("arraybuffer");
+                    const digest = await crypto.subtle.digest("SHA-256", contentBuffer);
+                    const actualHash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+                    if (actualHash !== expectedHash) {
+                        mismatches.push(`${filename}: hash mismatch`);
+                    }
                 }
-                showResult(
-                    artifact.verification.state,
-                    artifact.manifest,
-                    artifact.verification.signerLabel,
-                    artifact.verification.description,
-                );
-                populateFiles(artifact.fileManifest);
-            } catch (error) {
-                showResult('error', null, null, error.message || String(error));
-                populateFiles({});
+
+                // Read Steps Timeline
+                const stepsFile = zip.file("steps.jsonl");
+                currentSteps = [];
+                if (stepsFile) {
+                    const stepsText = await stepsFile.async("string");
+                    currentSteps = stepsText.trim().split('\n').map(l => {
+                        try { return JSON.parse(l); } catch { return null; }
+                    }).filter(Boolean);
+                }
+
+                // Setup Offline Viewer Button
+                const viewerFile = zip.file("viewer.html");
+                if (viewerFile) {
+                    launchVizBtn.classList.remove('hidden');
+                    launchVizBtn.onclick = async () => {
+                        const htmlContent = await viewerFile.async("string");
+                        const blob = new Blob([htmlContent], { type: 'text/html' });
+                        // Open strictly contained isolated page
+                        window.open(URL.createObjectURL(blob), '_blank', 'noopener,noreferrer');
+                    };
+                }
+
+                // Ed25519 WebCrypto Verification
+                const signatureRaw = manifest.signature;
+                if (!signatureRaw) {
+                    showResult("warning", manifest, "Unsigned", "Integrity is intact, but no signature is present. This artifact is unsigned.");
+                    populateFiles(manifest.file_manifest || {});
+                    return;
+                }
+                const parts = signatureRaw.split(':');
+                if (parts.length !== 3 || parts[0] !== 'ed25519') throw new Error("Malformatted Signature string");
+
+                const keyName = parts[1];
+                if (mismatches.length > 0) {
+                    showResult("tampered", manifest, keyName, `Integrity failed: ${mismatches.length} manifest mismatch(es) detected. Signature may still be present, but this artifact should not be trusted.`);
+                    populateFiles(manifest.file_manifest || {});
+                    return;
+                }
+                const manualKey = document.getElementById('pubKeyInput').value.trim();
+                const embeddedKey = manifest.public_key || manifest.signer;
+
+                if (manualKey || embeddedKey) {
+                    const verificationKey = manualKey || embeddedKey;
+                    if (typeof verificationKey !== 'string') {
+                        throw new Error("Verification key must be a hexadecimal string.");
+                    }
+                    
+                    try {
+                        const isValid = await verifySignature(manifest, verificationKey);
+                        if (isValid) {
+                            const trustMsg = manualKey ? "Verified against manually provided Organization Key." : "Integrity mathematically verified via Self-Contained Key.";
+                            showResult("success", manifest, keyName, trustMsg);
+                        } else {
+                            showResult("error", manifest, keyName, "Signature Verification Failed: The evidence has been tampered with.");
+                        }
+                    } catch (verifyErr) {
+                        showResult("error", manifest, keyName, "Verification Error: " + verifyErr.message);
+                    }
+                } else {
+                    showResult("warning", manifest, keyName, "Identity Unverified. No public key provided to check against.");
+                }
+                
+                populateFiles(manifest.file_manifest || {});
+
+            } catch (err) {
+                showResult("error", null, null, err.message);
             }
+        }
+
+        async function verifySignature(manifest, pubKeyHex) {
+            const signatureRaw = manifest.signature;
+            const parts = signatureRaw.split(':');
+            const sigHex = parts[2];
+
+            const pubKeyBytes = hexToBytes(pubKeyHex);
+            const manifestCopy = JSON.parse(JSON.stringify(manifest));
+            delete manifestCopy.signature;
+            const jsonString = canonicalJson(manifestCopy);
+            const msgBytes = new TextEncoder().encode(jsonString);
+
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBytes);
+            const hashArray = new Uint8Array(hashBuffer);
+
+            const sigBytes = hexToBytes(sigHex);
+            return await ed.verifyAsync(sigBytes, hashArray, pubKeyBytes);
+        }
+
+        function canonicalJson(obj) {
+            // Replicates Python's json.dumps(obj, separators=(',', ':'), sort_keys=True)
+            if (obj === null) return 'null';
+            if (typeof obj !== 'object') return JSON.stringify(obj);
+            if (Array.isArray(obj)) return '[' + obj.map(canonicalJson).join(',') + ']';
+            
+            const keys = Object.keys(obj).sort();
+            let result = '{';
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                if (i > 0) result += ',';
+                result += JSON.stringify(key) + ':' + canonicalJson(obj[key]);
+            }
+            return result + '}';
+        }
+
+        function hexToBytes(hex) {
+            if (typeof hex !== 'string') throw new Error('hex string expected, got ' + typeof hex);
+            const bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) {
+                bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+            }
+            return bytes;
         }
 
         function showResult(state, manifest, signer, errorMsg) {
@@ -499,76 +606,37 @@
 
         function populateTimeline() {
             const container = document.getElementById('timelineContent');
-            container.replaceChildren();
+            container.innerHTML = '';
 
             if (!currentSteps.length) {
-                const empty = document.createElement('p');
-                empty.style.textAlign = 'center';
-                empty.style.color = 'var(--color-gray-500)';
-                empty.style.padding = '2rem';
-                empty.textContent = 'No recorded steps found in payload.';
-                container.appendChild(empty);
+                container.innerHTML = '<p style="text-align:center; color: var(--color-gray-500); padding: 2rem;">No recorded steps found in payload.</p>';
                 return;
             }
 
             currentSteps.forEach(step => {
-                const kind = String(step.kind || '');
-                const timestamp = step.timestamp ? new Date(step.timestamp).toLocaleTimeString() : '--';
-                const isWarn = kind.includes('security');
+                const isWarn = step.kind.includes('security');
                 const contentJson = JSON.stringify(step.content, null, 2);
-                let textPreview = step.content?.command || step.content?.prompt || "Raw JSON Object Data";
-                textPreview = String(textPreview);
-                if (textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
+                let textPreview = step.content.command || step.content.prompt || "Raw JSON Object Data";
+                if(textPreview.length > 60) textPreview = textPreview.substring(0, 60) + '...';
 
                 // We handle native click toggle
                 const el = document.createElement('div');
                 el.className = 'timeline-item';
-
-                const header = document.createElement('div');
-                header.className = 'timeline-header';
-                if (isWarn) header.style.borderLeft = '3px solid var(--color-error)';
-
-                const headerLeft = document.createElement('div');
-                headerLeft.style.display = 'flex';
-                headerLeft.style.alignItems = 'center';
-                headerLeft.style.gap = '1rem';
-
-                const indexSpan = document.createElement('span');
-                indexSpan.style.color = 'var(--color-gray-500)';
-                indexSpan.style.fontFamily = 'var(--font-mono)';
-                indexSpan.textContent = `#${step.index ?? ''}`;
-
-                const kindSpan = document.createElement('span');
-                kindSpan.style.background = 'rgba(255,255,255,0.1)';
-                kindSpan.style.padding = '0.1rem 0.5rem';
-                kindSpan.style.borderRadius = '4px';
-                kindSpan.style.fontSize = '0.75rem';
-                kindSpan.style.textTransform = 'uppercase';
-                kindSpan.textContent = kind;
-
-                const previewSpan = document.createElement('span');
-                previewSpan.style.color = 'var(--color-white)';
-                previewSpan.textContent = textPreview;
-
-                headerLeft.append(indexSpan, kindSpan, previewSpan);
-
-                const timeSpan = document.createElement('span');
-                timeSpan.style.color = 'var(--color-gray-500)';
-                timeSpan.style.fontSize = '0.8rem';
-                timeSpan.textContent = timestamp;
-
-                header.append(headerLeft, timeSpan);
-
-                const body = document.createElement('div');
-                body.className = 'timeline-body';
-                const pre = document.createElement('pre');
-                pre.style.margin = '0';
-                pre.textContent = contentJson;
-                body.appendChild(pre);
-
-                el.append(header, body);
+                el.innerHTML = `
+                    <div class="timeline-header" style="${isWarn ? 'border-left: 3px solid var(--color-error)' : ''}">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="color: var(--color-gray-500); font-family: var(--font-mono);">#${step.index}</span>
+                            <span style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase;">${step.kind}</span>
+                            <span style="color: var(--color-white);">${textPreview}</span>
+                        </div>
+                        <span style="color: var(--color-gray-500); font-size: 0.8rem;">${new Date(step.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div class="timeline-body">
+                        <pre style="margin: 0;">${contentJson}</pre>
+                    </div>
+                `;
                 
-                header.addEventListener('click', function() {
+                el.querySelector('.timeline-header').addEventListener('click', function() {
                     const body = this.nextElementSibling;
                     const isOpen = body.classList.contains('active');
                     // close all
@@ -581,42 +649,21 @@
 
         function populateFiles(manifestMap) {
             const tbody = document.getElementById('filesTableBody');
-            tbody.replaceChildren();
+            tbody.innerHTML = '';
             
             const entries = Object.entries(manifestMap);
             if (!entries.length) {
-                const row = document.createElement('tr');
-                const cell = document.createElement('td');
-                cell.colSpan = 2;
-                cell.style.padding = '1rem';
-                cell.style.textAlign = 'center';
-                cell.style.color = 'var(--color-gray-500)';
-                cell.textContent = 'No files mapped.';
-                row.appendChild(cell);
-                tbody.appendChild(row);
+                tbody.innerHTML = '<tr><td colspan="2" style="padding: 1rem; text-align:center; color: var(--color-gray-500);">No files mapped.</td></tr>';
                 return;
             }
 
             entries.forEach(([name, hash]) => {
-                const row = document.createElement('tr');
-                row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-
-                const nameCell = document.createElement('td');
-                nameCell.style.padding = '1rem';
-                nameCell.style.color = 'var(--color-white)';
-                nameCell.style.fontWeight = '500';
-                nameCell.textContent = String(name);
-
-                const hashCell = document.createElement('td');
-                hashCell.style.padding = '1rem';
-                hashCell.style.fontFamily = 'var(--font-mono)';
-                hashCell.style.color = 'var(--color-gray-400)';
-                hashCell.style.fontSize = '0.85rem';
-                hashCell.style.wordBreak = 'break-all';
-                hashCell.textContent = String(hash);
-
-                row.append(nameCell, hashCell);
-                tbody.appendChild(row);
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1rem; color: var(--color-white); font-weight: 500;">${name}</td>
+                        <td style="padding: 1rem; font-family: var(--font-mono); color: var(--color-gray-400); font-size: 0.85rem; word-break: break-all;">${hash}</td>
+                    </tr>
+                `;
             });
         }
     </script>
@@ -660,8 +707,8 @@
         </div>
     </footer>
 
-    <script src="js/app.js?v=4.0.1"></script>
-    <script src="js/particles.js?v=4.0.1"></script>
+    <script src="js/app.js?v=4.1.0"></script>
+    <script src="js/particles.js?v=4.1.0"></script>
 </body>
 
 </html>

@@ -59,7 +59,7 @@
                 <a href="how-it-works.html#top">How It Works</a>
                 <a href="technology.html" class="active">Technology</a>
                 <a href="use-cases.html#top">Use Cases</a>
-                <a href="verify/">Verify</a>
+                <a href="verify.html">Verify</a>
                 <a href="viewer/">Decision Ops</a>
                 <a href="vision.html#vision">Vision</a>
                 <a href="contact.html#top">Contact</a>
@@ -93,12 +93,10 @@
     <section class="section" style="padding-top: 0;">
         <div class="container" style="max-width: 900px;">
 
-            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">1. The Recorder Engine
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--color-white);">1. The SQLite & CBOR Recorder Engine
             </h2>
-            <p>The heart of EPI is its ability to capture workflow execution into a portable artifact that can be
-                inspected later. Earlier releases introduced <strong>explicit capture</strong>, and v4.0.1 extends
-                that foundation with stronger agent-first review flows, native OS opening, and deeper framework
-                integrations.</p>
+            <p>The heart of EPI is its ability to capture workflow execution into a portable relational database that can be
+                inspected and queried. The modern v4.1.0 engine moves beyond flat directories and ZIP packaging to implement a unified <strong>SQLite-based Envelope Container</strong> format, zero-cost <strong>did:web</strong> cryptographic identity bindings, <strong>SCITT</strong> audit-log receipts, and integrated Agent Governance Toolkit (AGT) compliance converters.</p>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">A. Explicit API and
                 Wrappers</h3>
@@ -107,25 +105,20 @@
                 inputs, tool activity, outputs, and decisions where you choose to record them. That keeps the product
                 predictable and makes the resulting evidence easier to review.</p>
 
-            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">B. The Security
-                Kernel</h3>
-            <p>Trust is not achieved by logs alone. EPI computes hashes for the sealed files in the artifact and then
-                signs the manifest with <strong>Ed25519</strong>. The manifest is canonicalized before signing so the
-                same artifact data produces the same verification result across platforms.</p>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">B. The Cryptographic Identity Kernel</h3>
+            <p>EPI leverages <strong>Ed25519</strong> signatures to seal its SQLite/CBOR containers. In v4.1.0, this is bound to decentralized identities via the <strong>did:web</strong> standard. Furthermore, every sealed execution outputs signed verification receipts fully compliant with the <strong>SCITT (Supply Chain Integrity, Transparency, and Trust)</strong> ledger standard, ensuring independent and immutable mathematical auditing.</p>
             <div
                 style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 1rem;">
                 <ul style="list-style-type: none; padding: 0;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Algorithm:</strong> Ed25519 (Edwards-curve Digital
-                        Signature Algorithm)</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Library:</strong>
-                        <code>cryptography.hazmat.primitives.asymmetric.ed25519</code>
-                    </li>
-                    <li><strong>Key Size:</strong> 32 bytes (high performance, low overhead)</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Signing Scheme:</strong> Ed25519 (Edwards-curve Digital Signature)</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Identity Standard:</strong> <code>did:web</code> Zero-Trust Binding</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Transparency Standard:</strong> SCITT-compliant Ledger Receipts</li>
+                    <li><strong>Compliance Target:</strong> Agent Governance Toolkit (AGT) mapping maps</li>
                 </ul>
             </div>
 
-            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; margin-top: 3rem; color: var(--color-white);">1A. Current
-                release: Framework Integrations and OS Associations</h2>
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; margin-top: 3rem; color: var(--color-white);">1A. New in
+                v4.1.0: Advanced Forensics & AI Agent Mistake Detection</h2>
 
             <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary-light);">LiteLLM - 100+
                 Providers</h3>
@@ -283,7 +276,7 @@ vizFrame.src = URL.createObjectURL(blob);
         </div>
     </footer>
 
-    <script src="js/app.js?v=4.0.1"></script>
+    <script src="js/app.js?v=4.1.0"></script>
 </body>
 
 </html>

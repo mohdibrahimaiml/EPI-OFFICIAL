@@ -44,7 +44,7 @@ class TerminalDemo {
 
         // Initial welcome message - print FIRST before creating command line
         this.print([
-            { text: 'EPI Portable Environment v4.0.1', color: 'text-dim' },
+            { text: 'EPI Portable Environment v4.1.0', color: 'text-dim' },
             { text: 'Type "help" for a list of commands.', color: 'text-dim' },
             { text: '' }
         ]);
@@ -239,16 +239,16 @@ class TerminalDemo {
 
     async simulateRecording(filename) {
         const steps = [
-            { text: `-> Starting EPI Recorder v4.0.1`, delay: 200 },
+            { text: `-> Starting EPI Recorder v4.1.0`, delay: 200 },
             { text: `  Target: ${filename}`, delay: 100 },
-            { text: `  Environment: Python 3.11.4 | Windows 10`, color: 'text-dim', delay: 300 },
+            { text: `  Environment: Python 3.11.9 | Windows 11`, color: 'text-dim', delay: 300 },
             { text: `* Recording active... (PID: 1420)`, color: 'text-green', delay: 400 },
             { text: `  > Intercepted OpenAI: chat.completions.create (gpt-4)`, color: 'text-blue', delay: 800 },
             { text: `  > Redacted API Key: sk-proj-***`, color: 'text-yellow', delay: 200 },
-            { text: `  > Captured artifact: results.json`, delay: 300 },
+            { text: `  > Captured SQLite Envelope: steps.db`, delay: 300 },
             { text: `OK Workflow verified: Integrity OK`, color: 'text-green', delay: 500 },
-            { text: `OK Signature valid: Ed25519 (Key: default)`, color: 'text-green', delay: 200 },
-            { text: `\nOutput saved to: ./recording_20251211.epi [240KB]`, color: 'text-blue', delay: 0 }
+            { text: `OK Signature valid: Ed25519 did:web:epilabs.org`, color: 'text-green', delay: 200 },
+            { text: `\nOutput saved to: ./recording_20260517.epi [319KB]`, color: 'text-blue', delay: 0 }
         ];
 
         for (const step of steps) {
@@ -263,9 +263,9 @@ class TerminalDemo {
         if (args[0] === 'install' && args[1] === 'epi-recorder') {
             const lines = [
                 { text: 'Collecting epi-recorder', color: 'text-dim' },
-                { text: '  Downloading epi_recorder-4.0.1-py3-none-any.whl (18 kB)' },
+                { text: '  Downloading epi_recorder-4.1.0-py3-none-any.whl (28 kB)' },
                 { text: 'Installing collected packages: epi-recorder', color: 'text-dim' },
-                { text: 'Successfully installed epi-recorder-4.0.1', color: 'text-green' }
+                { text: 'Successfully installed epi-recorder-4.1.0', color: 'text-green' }
             ];
             for (const line of lines) {
                 this.print([line]);
