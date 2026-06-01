@@ -17,38 +17,36 @@
 <style>
 /* ═══════════════ DESIGN TOKENS ═══════════════ */
 :root {
-  --bg:         #0A0A0B;
-  --bg-alt:     #0F0F12;
-  --bg-card:    #131316;
-  --bg-code:   #0D0D10;
+  --bg:         #F8F8FA;
+  --bg-alt:     #F1F1F4;
+  --bg-card:    #FFFFFF;
+  --bg-code:    #1A1A1E;
 
-  --t-primary:  #FFFFFF;
-  --t-secondary:#A1A1AA;
-  --t-tertiary: #52525B;
+  --t-primary:  #141416;
+  --t-secondary:#65636D;
+  --t-tertiary: #9E9CA6;
 
-  --accent:     #2E90FA;
-  --accent-dim: #1D5FA0;
+  --border:     #E4E4E8;
+  --border-card:#E8E8EC;
 
-  --green:      #17B26A;
-  --green-bg:   rgba(23, 178, 106, 0.08);
-  --green-line: rgba(23, 178, 106, 0.18);
+  --accent:     #2563EB;
+  --accent-dim: #1D4ED8;
 
-  --gold:       #D4A72C;
-  --gold-bg:    rgba(212, 167, 44, 0.08);
+  --green:      #16A34A;
+  --green-bg:   rgba(22, 163, 74, 0.06);
 
-  --red:        #F04438;
-  --red-bg:     rgba(240, 68, 56, 0.08);
+  --gold:       #B8860B;
 
-  --border:     rgba(255,255,255,0.06);
-  --border-subtle: rgba(255,255,255,0.04);
+  --red:        #DC2626;
+  --red-bg:     rgba(220, 38, 38, 0.06);
 
   --radius:     12px;
   --radius-sm:  8px;
 
   --font:       'Inter', system-ui, sans-serif;
   --mono:       'JetBrains Mono', monospace;
-  --max-w:      1080px;
-  --gap:        clamp(80px, 12vw, 150px);
+  --max-w:      1060px;
+  --gap:        clamp(80px, 12vw, 140px);
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -72,25 +70,22 @@ a { color:inherit; text-decoration:none; }
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
   padding: 0 clamp(20px, 4vw, 48px);
-  transition: background 0.3s, border-color 0.3s;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 .nav.scrolled {
-  background: rgba(10,10,11,0.88);
+  background: rgba(248,248,250,0.88);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 .nav-inner {
   max-width: var(--max-w); margin:0 auto;
   display:flex; align-items:center; justify-content:space-between;
   height:68px;
 }
-.nav-logo {
-  display:flex; align-items:center; gap:8px;
-}
-.nav-logo img { height:28px; width:auto; }
-.nav-links {
-  display:flex; align-items:center; gap:32px; list-style:none;
-}
+.nav-logo { display:flex; align-items:center; }
+.nav-logo img { height:26px; width:auto; }
+.nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
 .nav-links a {
   font-size:0.875rem; color:var(--t-secondary);
   transition: color 0.2s;
@@ -99,10 +94,10 @@ a { color:inherit; text-decoration:none; }
 .nav-cta {
   padding:7px 18px; border-radius:8px;
   background: var(--t-primary);
-  color: var(--bg) !important;
+  color: #FFFFFF !important;
   font-weight:500 !important; font-size:0.85rem !important;
 }
-.nav-cta:hover { background: #E4E4E7 !important; color:var(--bg) !important; }
+.nav-cta:hover { background: #2D2D34 !important; }
 
 .nav-mobile-btn {
   display:none; flex-direction:column; gap:4px;
@@ -119,12 +114,12 @@ a { color:inherit; text-decoration:none; }
   justify-content:center; padding:120px 24px 80px;
   text-align:center;
 }
-.hero-content { max-width:760px; margin:0 auto; }
+.hero-content { max-width:740px; margin:0 auto; }
 
 .hero-badge {
   display:inline-flex; align-items:center; gap:8px;
   padding:4px 14px; border-radius:20px;
-  background: var(--green-bg); border:1px solid var(--green-line);
+  background: var(--green-bg);
   font-family:var(--mono); font-size:0.68rem;
   font-weight:500; color:var(--green);
   margin-bottom:40px;
@@ -168,53 +163,50 @@ a { color:inherit; text-decoration:none; }
   transition:all 0.2s; border:none; font-family:var(--font);
 }
 .btn-primary {
-  background: var(--t-primary); color:var(--bg);
+  background: var(--t-primary); color: #FFF;
 }
-.btn-primary:hover { background: #E4E4E7; }
+.btn-primary:hover { background: #2D2D34; }
 .btn-secondary {
-  background: transparent; color: var(--t-secondary);
-  border:1px solid var(--border);
+  background: var(--bg-card); color: var(--t-primary);
+  border:1px solid var(--border-card);
 }
-.btn-secondary:hover {
-  border-color: var(--t-tertiary);
-  color: var(--t-primary);
-}
+.btn-secondary:hover { border-color: #C4C4CC; }
 .btn-outline {
   background:transparent; color:var(--t-tertiary);
-  border:1px solid var(--border-subtle);
+  border:1px solid var(--border);
   font-family:var(--mono); font-size:0.78rem;
 }
-.btn-outline:hover { border-color:var(--border); color:var(--t-secondary); }
-.btn-arrow { transition:transform 0.2s; }
-.btn:hover .btn-arrow { transform:translateX(2px); }
+.btn-outline:hover { border-color:var(--t-primary); color:var(--t-secondary); }
 
+/* ═══════════════ TERMINAL ═══════════════ */
 .terminal-block {
-  margin-top:48px; max-width:580px; width:100%;
-  background: var(--bg-code); border:1px solid var(--border);
-  border-radius: var(--radius); overflow:hidden; text-align:left;
+  margin-top:48px; max-width:560px; width:100%;
+  background: var(--bg-code); border-radius: var(--radius);
+  overflow:hidden; text-align:left;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
 }
 .terminal-bar {
   display:flex; align-items:center; gap:8px;
-  padding:10px 16px; background:rgba(255,255,255,0.015);
-  border-bottom:1px solid var(--border);
+  padding:10px 16px; background:rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.06);
 }
 .terminal-bar span {
   margin-left:8px; font-family:var(--mono);
-  font-size:0.66rem; color:var(--t-tertiary);
+  font-size:0.66rem; color:rgba(255,255,255,0.35);
 }
 .t-dot { width:9px; height:9px; border-radius:50%; }
 .t-dot.r { background:#F04438; }
 .t-dot.y { background:#D4A72C; }
 .t-dot.g { background:#17B26A; }
-
 .terminal-body {
   padding:20px 22px;
   font-family:var(--mono); font-size:0.76rem; line-height:2;
+  color:#E4E4EC;
 }
-.t-dim  { color:var(--t-tertiary); }
-.t-cyan { color:var(--accent); }
-.t-green{ color:var(--green); }
-.t-gold { color:var(--gold); }
+.t-dim  { color:rgba(255,255,255,0.35); }
+.t-cyan { color:#60A5FA; }
+.t-green{ color:#34D399; }
+.t-gold { color:#FBBF24; }
 
 /* ═══════════════ SECTIONS ═══════════════ */
 section { padding: var(--gap) 0; }
@@ -244,11 +236,14 @@ section { padding: var(--gap) 0; }
   gap:16px; margin-top:60px;
 }
 .pillar {
-  background:var(--bg-card); border:1px solid var(--border);
+  background:var(--bg-card); border:1px solid var(--border-card);
   border-radius:var(--radius); padding:32px 26px;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-.pillar:hover { border-color: var(--accent-dim); }
+.pillar:hover {
+  border-color: #C4C4CC;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
 .pillar-icon {
   font-family:var(--mono); font-size:1.8rem; margin-bottom:14px;
 }
@@ -265,7 +260,7 @@ section { padding: var(--gap) 0; }
   gap:12px; margin-top:56px; counter-reset:vs;
 }
 .v-card {
-  background:var(--bg-card); border:1px solid var(--border);
+  background:var(--bg-card); border:1px solid var(--border-card);
   border-radius:var(--radius-sm); padding:22px 16px;
   text-align:center; transition:border-color 0.2s;
 }
@@ -274,59 +269,59 @@ section { padding: var(--gap) 0; }
   display:block; font-family:var(--mono); font-size:0.68rem;
   font-weight:600; color:var(--accent); margin-bottom:8px;
 }
-.v-card:hover { border-color: var(--accent-dim); }
+.v-card:hover { border-color: #C4C4CC; }
 .v-card h4 { font-size:0.85rem; font-weight:600; margin-bottom:4px; }
 .v-card p { font-size:0.78rem; color:var(--t-secondary); line-height:1.5; }
 
 /* ═══════════════ TRUST TABLE ═══════════════ */
 .trust-wrap {
   margin-top:56px; border-radius:var(--radius);
-  border:1px solid var(--border); overflow:hidden;
+  border:1px solid var(--border-card); overflow:hidden;
 }
 .trust-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
 .trust-table th {
   font-family:var(--mono); font-size:0.64rem; text-transform:uppercase;
   letter-spacing:0.08em; color:var(--t-tertiary);
-  background:var(--bg-card); text-align:left;
+  background:var(--bg-alt); text-align:left;
   padding:12px 16px; border-bottom:1px solid var(--border);
 }
 .trust-table td {
   padding:13px 16px; border-bottom:1px solid var(--border);
-  color:var(--t-secondary); background:var(--bg);
+  color:var(--t-secondary); background:var(--bg-card);
 }
 .trust-table tr:last-child td { border-bottom:none; }
-.trust-table tr:hover td { background:var(--bg-card); }
+.trust-table tr:hover td { background:var(--bg-alt); }
 
 .tag {
   display:inline-flex; font-family:var(--mono); font-size:0.68rem;
   font-weight:600; padding:3px 10px; border-radius:20px;
 }
-.tag-high { background:var(--green-bg); color:var(--green); border:1px solid var(--green-line); }
-.tag-med  { background:var(--gold-bg); color:var(--gold); }
-.tag-low  { background:transparent; color:var(--t-secondary); border:1px solid var(--border); }
+.tag-high { background:var(--green-bg); color:var(--green); }
+.tag-med  { background:rgba(184,134,11,0.08); color:var(--gold); }
+.tag-low  { background:transparent; border:1px solid var(--border); color:var(--t-tertiary); }
 .tag-tampered { background:var(--red-bg); color:var(--red); }
 
 /* ═══════════════ CODE ═══════════════ */
 .code-block {
   margin-top:56px; background:var(--bg-code);
-  border:1px solid var(--border); border-radius:var(--radius);
-  overflow:hidden;
+  border-radius: var(--radius); overflow:hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
 }
 .code-bar {
   display:flex; align-items:center; gap:8px;
-  padding:10px 16px; background:rgba(255,255,255,0.015);
-  border-bottom:1px solid var(--border);
+  padding:10px 16px; background:rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.06);
 }
 .code-body {
   padding:28px 28px;
   font-family:var(--mono); font-size:0.8rem; line-height:2;
-  color:var(--t-primary);
+  color:#E4E4EC;
 }
 .c-kw { color:#FF7B72; }
 .c-fn { color:#D2A8FF; }
 .c-s  { color:#A5D6FF; }
-.c-c  { color:var(--t-tertiary); }
-.c-g  { color:var(--green); }
+.c-c  { color:rgba(255,255,255,0.30); }
+.c-g  { color:#34D399; }
 
 /* ═══════════════ COMPLIANCE ═══════════════ */
 .comp-grid {
@@ -334,11 +329,14 @@ section { padding: var(--gap) 0; }
   gap:14px; margin-top:56px;
 }
 .comp-card {
-  background:var(--bg-card); border:1px solid var(--border);
+  background:var(--bg-card); border:1px solid var(--border-card);
   border-radius:var(--radius); padding:28px 24px;
-  transition:border-color 0.2s;
+  transition:border-color 0.2s, box-shadow 0.2s;
 }
-.comp-card:hover { border-color:var(--accent-dim); }
+.comp-card:hover {
+  border-color: #C4C4CC;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
 .comp-card-label {
   font-family:var(--mono); font-size:0.68rem;
   color:var(--accent); text-transform:uppercase;
@@ -350,8 +348,9 @@ section { padding: var(--gap) 0; }
 /* ═══════════════ SPEC BANNER ═══════════════ */
 .spec-banner {
   margin-top:48px; background:var(--bg-card);
-  border:1px solid var(--border); border-radius:var(--radius);
-  padding:24px 28px; display:flex; align-items:center; gap:20px;
+  border:1px solid var(--border-card);
+  border-radius:var(--radius); padding:24px 28px;
+  display:flex; align-items:center; gap:20px;
 }
 .spec-icon { font-family:var(--mono); font-size:2rem; flex-shrink:0; }
 .spec-text h4 { font-size:0.95rem; font-weight:600; margin-bottom:2px; }
@@ -365,13 +364,14 @@ section { padding: var(--gap) 0; }
 /* ═══════════════ FOOTER ═══════════════ */
 .footer {
   border-top:1px solid var(--border); padding:44px 0;
+  background: var(--bg-alt);
 }
 .footer-inner {
   display:flex; justify-content:space-between;
   align-items:flex-start; gap:32px;
 }
-.footer-brand { display:flex; flex-direction:column; gap:6px; }
-.footer-brand img { height:24px; width:auto; margin-bottom:4px; }
+.footer-brand { display:flex; flex-direction:column; gap:4px; }
+.footer-brand img { height:22px; width:auto; margin-bottom:4px; }
 .footer-hash {
   font-family:var(--mono); font-size:0.56rem; color:var(--t-tertiary);
 }
@@ -393,8 +393,8 @@ section { padding: var(--gap) 0; }
 
 /* ═══════════════ SCROLL REVEAL ═══════════════ */
 .reveal {
-  opacity:0; transform:translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  opacity:0; transform:translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .reveal.visible { opacity:1; transform:translateY(0); }
 .r1 { transition-delay:0.1s; }
@@ -405,7 +405,6 @@ section { padding: var(--gap) 0; }
 @media (max-width:1024px) {
   .verify-grid { grid-template-columns:repeat(3,1fr); }
 }
-
 @media (max-width:768px) {
   .nav-links { display:none; }
   .nav-mobile-btn { display:flex; }
@@ -413,7 +412,7 @@ section { padding: var(--gap) 0; }
     display:flex; flex-direction:column;
     position:absolute; top:68px; left:0; right:0;
     background:var(--bg); border-bottom:1px solid var(--border);
-    padding:20px; gap:16px;
+    padding:20px; gap:16px; box-shadow:0 4px 12px rgba(0,0,0,0.06);
   }
   .nav-links.open a { color:var(--t-primary); font-size:0.95rem; }
   .pillars,.comp-grid { grid-template-columns:1fr; }
@@ -428,7 +427,6 @@ section { padding: var(--gap) 0; }
   .footer-links { gap:24px; }
   .spec-banner { flex-direction:column; text-align:center; }
 }
-
 @media (max-width:480px) {
   .hero { padding:100px 16px 50px; }
   .hero h1 { font-size:1.4rem; }
@@ -478,10 +476,10 @@ section { padding: var(--gap) 0; }
     </p>
     <div class="hero-actions">
       <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">
-        pip install epi-recorder <span class="btn-arrow">&rarr;</span>
+        pip install epi-recorder <span style="transition:transform 0.2s">→</span>
       </a>
       <a href="viewer/" class="btn btn-secondary">
-        Open Decision Ops <span class="btn-arrow">&rarr;</span>
+        Open Decision Ops →
       </a>
       <a href="how-it-works.html" class="btn btn-outline">
         See the Evidence Package
@@ -495,11 +493,11 @@ section { padding: var(--gap) 0; }
       <div class="terminal-body">
         <span class="t-dim">$</span> <span class="t-cyan">pip install epi-recorder</span><br>
         <span class="t-dim">$</span> <span class="t-cyan">epi run agent.py</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-green">Recording 42 steps...</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-green">Sealed agent.epi &#x2713; Ed25519 signed</span><br>
+        <span class="t-dim">→</span> <span class="t-green">Recording 42 steps...</span><br>
+        <span class="t-dim">→</span> <span class="t-green">Sealed agent.epi ✓ Ed25519 signed</span><br>
         <span class="t-dim">$</span> <span class="t-cyan">epi verify agent.epi</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-green">VERIFIED &#x2713; Trust Level: HIGH</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-gold">Ed25519 &middot; 42 steps &middot; SHA-256 &middot; SCITT anchored</span>
+        <span class="t-dim">→</span> <span class="t-green">VERIFIED ✓ Trust Level: HIGH</span><br>
+        <span class="t-dim">→</span> <span class="t-gold">Ed25519 · 42 steps · SHA-256 · SCITT anchored</span>
       </div>
     </div>
   </div>
@@ -507,9 +505,9 @@ section { padding: var(--gap) 0; }
 
 <!-- ═══════════════ THESIS ═══════════════ -->
 <section class="section-alt">
-  <div class="container" style="text-align:center; max-width:700px;">
+  <div class="container" style="text-align:center; max-width:680px;">
     <div class="reveal">
-      <p style="font-size:clamp(1.2rem,2.5vw,1.8rem); font-weight:600; line-height:1.5; letter-spacing:-0.02em;">
+      <p style="font-size:clamp(1.2rem,2.5vw,1.7rem); font-weight:600; line-height:1.5; letter-spacing:-0.02em;">
         "AI evidence shouldn't live in<br>someone else's dashboard.<br>It should be a <span style="color:var(--accent)">file</span> you can open."
       </p>
       <p style="font-family:var(--mono); font-size:0.7rem; color:var(--t-tertiary); margin-top:16px; text-transform:uppercase; letter-spacing:0.1em;">The EPI Thesis</p>
@@ -527,22 +525,22 @@ section { padding: var(--gap) 0; }
     </div>
     <div class="pillars reveal r3">
       <div class="pillar">
-        <div class="pillar-icon">&#x1F512;</div>
+        <div class="pillar-icon">🔒</div>
         <h3>Cryptographic Signing</h3>
         <p>Ed25519 signed manifest. SHA-256 file integrity. Any byte change invalidates the signature.</p>
-        <div class="pillar-meta">manifest.json &larr; Ed25519 signature</div>
+        <div class="pillar-meta">manifest.json ← Ed25519 signature</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">&#x1F517;</div>
+        <div class="pillar-icon">🔗</div>
         <h3>Hash-Chained Timeline</h3>
         <p>Every step linked to its predecessor via prev_hash. Insert, delete, or reorder — the chain breaks.</p>
-        <div class="pillar-meta">steps.jsonl &larr; prev_hash chain</div>
+        <div class="pillar-meta">steps.jsonl ← prev_hash chain</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">&#x1F4E6;</div>
+        <div class="pillar-icon">📦</div>
         <h3>Polyglot Container</h3>
         <p>Valid HTML AND binary archive. Double-click opens in any browser. Zero install. Fully offline.</p>
-        <div class="pillar-meta">.epi &larr; HTML + ZIP + signature</div>
+        <div class="pillar-meta">.epi ← HTML + ZIP + signature</div>
       </div>
     </div>
   </div>
@@ -587,7 +585,7 @@ section { padding: var(--gap) 0; }
           </tr>
           <tr>
             <td><span class="tag tag-med">MEDIUM</span></td>
-            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&#x2713;</td>
+            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>✓</td>
             <td>Valid signature, SCITT ledger-anchored</td>
           </tr>
           <tr>
@@ -633,8 +631,8 @@ section { padding: var(--gap) 0; }
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=<span class="c-s">"gpt-4"</span>,<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this"</span>}]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;)<br><br>
-        <span class="c-c"># Every call &rarr; signed .epi evidence</span><br>
-        <span class="c-c"># epi verify agent.epi &rarr;</span> <span class="c-g">VERIFIED &#x2713;</span>
+        <span class="c-c"># Every call → signed .epi evidence</span><br>
+        <span class="c-c"># epi verify agent.epi →</span> <span class="c-g">VERIFIED ✓</span>
       </div>
     </div>
   </div>
@@ -666,7 +664,7 @@ section { padding: var(--gap) 0; }
       </div>
     </div>
     <div class="spec-banner reveal r3">
-      <div class="spec-icon">&#x1F4DC;</div>
+      <div class="spec-icon">📜</div>
       <div class="spec-text">
         <h4>EPI File Format Specification v4.2.0</h4>
         <p>Every byte defined. Envelope structure, manifest schema, cryptographic protocol, verification procedure. Open standard.</p>
@@ -683,8 +681,8 @@ section { padding: var(--gap) 0; }
     <h2 class="section-title reveal r1">Evidence starts with one command</h2>
     <p class="section-sub reveal r2">Install. Wrap your client. Record. Verify. An auditor-proof trail in under a minute.</p>
     <div class="cta-btns reveal r3">
-      <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">pip install epi-recorder &rarr;</a>
-      <a href="viewer/" class="btn btn-secondary">Decision Ops &rarr;</a>
+      <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">pip install epi-recorder →</a>
+      <a href="viewer/" class="btn btn-secondary">Decision Ops →</a>
       <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn btn-outline" target="_blank">GitHub</a>
     </div>
   </div>
