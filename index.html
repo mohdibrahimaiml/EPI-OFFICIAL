@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>EPI — Don't trust the AI. Trust the Record.</title>
+<title>EPI LABS — Don't trust the AI. Trust the Record.</title>
 <meta name="description" content="The PDF for AI Evidence. Self-contained, cryptographically signed, tamper-evident .epi files. pip install epi-recorder.">
-<meta property="og:title" content="EPI — Don't trust the AI. Trust the Record.">
+<meta property="og:title" content="EPI LABS — Don't trust the AI. Trust the Record.">
 <meta property="og:description" content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible.">
 <meta property="og:image" content="https://epilabs.org/assets/logo.png">
 <meta property="og:type" content="website">
@@ -13,216 +13,320 @@
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════════════════════
-   EPI FORENSIC INTERFACE v7 — Pramaana Craft Edition
-   ══════════════════════════════════════════════════════════ */
+/* =====================================================
+   EPI FORENSIC INTERFACE v8
+   Identity: Dark terminal. Cryptographic. Trust.
+   Craft: Pramaana-grade depth, precision, interaction.
+   ===================================================== */
+
 :root {
-  --bg:#06080D;--bg2:#0B0E15;--bg3:#111520;--bg4:#181D2A;
-  --code-bg:#0D1117;--ink:#E6EDF3;--ink2:#B0B8C4;
-  --ink3:#6E7681;--ink4:#444C56;
-  --line:rgba(255,255,255,0.06);--line2:rgba(255,255,255,0.10);
-  --line3:rgba(255,255,255,0.16);--pass:#3FB950;--fail:#F85149;
-  --warn:#D29922;--info:#58A6FF;--purple:#A371F7;
-  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
-  --max-w:1120px;--gap:clamp(80px,12vw,140px);
+  --bg:       #06080D;
+  --bg2:      #0A0D14;
+  --bg3:      #0F131C;
+  --bg4:      #151A26;
+  --code-bg:  #0C0F17;
+  --ink:      #E6EDF3;
+  --ink2:     #B0B8C4;
+  --ink3:     #6E7681;
+  --ink4:     #444C56;
+  --line:     rgba(255,255,255,.055);
+  --line2:    rgba(255,255,255,.09);
+  --line3:    rgba(255,255,255,.14);
+  --pass:     #3FB950;
+  --fail:     #F85149;
+  --warn:     #D29922;
+  --info:     #58A6FF;
+  --purple:   #A371F7;
+  --font:     'Inter', system-ui, -apple-system, sans-serif;
+  --mono:     'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
 }
-*,::before,::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#1A1F2E #06080D}
-body{background:var(--bg);color:var(--ink3);font-family:var(--font);font-size:.88rem;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-/* ORBS */
-.orb-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.orb{position:absolute;border-radius:50%;opacity:.04;filter:blur(140px);animation:orbDrift 20s ease-in-out infinite alternate}
-.orb--info{width:620px;height:620px;background:var(--info);top:-15%;left:-10%;animation-delay:0s}
-.orb--purple{width:500px;height:500px;background:var(--purple);top:45%;right:-12%;animation-delay:-7s;animation-duration:24s}
-.orb--pass{width:440px;height:440px;background:var(--pass);bottom:-20%;left:30%;animation-delay:-12s;animation-duration:22s}
-@keyframes orbDrift{0%{transform:translate(0,0) scale(1)}25%{transform:translate(50px,-40px) scale(1.08)}50%{transform:translate(-30px,35px) scale(.93)}75%{transform:translate(-45px,-20px) scale(1.06)}100%{transform:translate(20px,45px) scale(1)}}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-/* GRID */
-.grid-tx{position:fixed;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 60% 60% at 50% 30%,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 60% 60% at 50% 30%,black 30%,transparent 70%)}
-
-.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(24px,5vw,56px);position:relative;z-index:2}
-section{padding:var(--gap) 0}
-.section-alt{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-
-/* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,8,13,.84);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--line);padding:0 clamp(24px,5vw,56px)}
-.nav-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
-.nav-logo{display:flex;align-items:center;text-decoration:none}
-.nav-logo img{height:30px;width:auto;display:block}
-.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
-.nav-links a{font-family:var(--mono);font-weight:600;font-size:.72rem;letter-spacing:.03em;color:var(--ink3);text-decoration:none;text-transform:uppercase;transition:color .2s}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{font-family:var(--mono);font-weight:600;font-size:.72rem;letter-spacing:.03em;color:var(--bg)!important;background:var(--ink);padding:.45rem .95rem;border-radius:4px;text-decoration:none;text-transform:uppercase;transition:transform .2s,box-shadow .2s}
-.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,255,255,.12)!important}
-
-.nav-mob{display:none;flex-direction:column;gap:5px;background:0;border:0;cursor:pointer;padding:6px}
-.nav-mob span{display:block;width:22px;height:2px;background:var(--ink);border-radius:1px;transition:transform .25s,opacity .25s}
-.nav-mob.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
-.nav-mob.open span:nth-child(2){opacity:0}
-.nav-mob.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
-
-/* TYPOGRAPHY */
-h1,h2,h3,h4{font-family:var(--mono);font-weight:800;text-transform:uppercase;color:var(--ink);line-height:1.1}
-h1{font-size:clamp(2.4rem,5.5vw,3.8rem);letter-spacing:-.03em}
-h2{font-size:clamp(1.6rem,3.2vw,2.4rem);letter-spacing:-.02em;margin-bottom:.5rem}
-h3{font-size:1rem;letter-spacing:.01em}
-strong{color:var(--ink2);font-weight:600}
-.epi-sup{font-family:var(--mono);font-size:.58rem;font-weight:700;color:var(--purple);vertical-align:super;letter-spacing:.06em}
-
-.section-label{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.65rem;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.75rem}
-.section-label::before{content:'//';color:var(--info)}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-weight:600;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border-radius:5px;padding:.75rem 1.5rem;cursor:pointer;border:0;transition:transform .2s,box-shadow .2s,background .2s}
-.btn:hover{transform:translateY(-2px)}
-.btn--primary{background:var(--ink);color:var(--bg)}
-.btn--primary:hover{box-shadow:0 8px 28px rgba(255,255,255,.13)}
-.btn--secondary{background:0;color:var(--ink);border:1px solid var(--line3)}
-.btn--secondary:hover{background:var(--line);box-shadow:0 8px 28px rgba(0,0,0,.3)}
-.btn--ghost{background:0;color:var(--ink3);padding:.5rem .8rem}
-.btn--ghost:hover{color:var(--ink)}
-
-/* CARDS + TILT */
-.card{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:2rem 1.8rem;position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
-.card:hover{border-color:var(--line2);box-shadow:0 1px 0 rgba(255,255,255,.03),0 8px 32px rgba(0,0,0,.4),0 20px 60px rgba(0,0,0,.5)}
-.card-accent{position:absolute;bottom:0;left:0;right:0;height:3px}
-.card-accent--pass{background:var(--pass)}
-.card-accent--warn{background:var(--warn)}
-.card-accent--info{background:var(--info)}
-.card-accent--purple{background:var(--purple)}
-.card-accent--fail{background:var(--fail)}
-
-.card h3{margin-bottom:.6rem}
-.card p{font-size:.85rem;color:var(--ink3);line-height:1.65}
-
-/* STATUS BOX */
-.status{font-family:var(--mono);font-size:.74rem;font-weight:600;letter-spacing:.04em;padding:.75rem 1rem;border-radius:6px;border-left:3px solid;margin-top:1rem}
-.status--pass{border-color:var(--pass);background:linear-gradient(90deg,rgba(63,185,80,.07),transparent);color:var(--pass)}
-.status--warn{border-color:var(--warn);background:linear-gradient(90deg,rgba(210,153,34,.07),transparent);color:var(--warn)}
-.status--fail{border-color:var(--fail);background:linear-gradient(90deg,rgba(248,81,73,.07),transparent);color:var(--fail)}
-
-/* DIAGNOSTIC DOT */
-.diag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;font-weight:600;color:var(--pass);letter-spacing:.05em;margin-top:.75rem}
-.diag::before{content:'';width:6px;height:6px;background:var(--pass);border-radius:0;animation:diagP 2s ease-in-out infinite}
-@keyframes diagP{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* TERMINAL */
-.terminal{background:var(--code-bg);border:1px solid var(--line2);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.03),0 8px 32px rgba(0,0,0,.5),0 20px 60px rgba(0,0,0,.6)}
-.terminal-bar{display:flex;align-items:center;gap:.5rem;padding:.75rem 1.1rem;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line)}
-.tdot{width:10px;height:10px;border-radius:50%}
-.tdot--r{background:#F85149}.tdot--y{background:#D29922}.tdot--g{background:#3FB950}
-.terminal-title{font-family:var(--mono);font-size:.66rem;color:var(--ink4);margin-left:.5rem;letter-spacing:.04em}
-.terminal-body{padding:1.3rem 1.5rem;font-family:var(--mono);font-size:.78rem;line-height:1.75;color:var(--ink2);min-height:150px}
-.t-prompt{color:var(--pass)}.t-cmd{color:var(--ink)}.t-out{color:var(--ink3)}.t-hash{color:var(--info);word-break:break-all}
-.t-cursor{display:inline-block;width:8px;height:1.1em;background:var(--ink);vertical-align:text-bottom;animation:blink .8s step-end infinite}
-@keyframes blink{50%{opacity:0}}
-
-/* DROP ZONE */
-.drop-zone{border:2px dashed var(--line3);border-radius:12px;padding:3.5rem 2rem;text-align:center;transition:border-color .25s,background .25s;background:var(--bg3);cursor:pointer}
-.drop-zone.dragover{border-color:var(--info);background:rgba(88,166,255,.04)}
-.drop-icon{font-size:2.8rem;margin-bottom:.75rem;display:block;opacity:.7}
-.drop-text{font-family:var(--mono);font-size:.84rem;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase}
-.drop-hint{font-size:.76rem;color:var(--ink4);margin-top:.5rem}
-.drop-result{display:none;margin-top:1.2rem;padding:.9rem 1.1rem;border-radius:7px;font-family:var(--mono);font-size:.76rem;letter-spacing:.03em}
-.drop-result.show{display:block}
-.drop-result--pass{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.25);color:var(--pass)}
-.drop-result--fail{background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.25);color:var(--fail)}
-
-/* TRUST TABLE */
-.trust-wrap{border-radius:10px;border:1px solid var(--line);overflow:hidden;background:var(--bg3)}
-.trust-table{width:100%;border-collapse:collapse;font-size:.84rem}
-.trust-table th{font-family:var(--mono);font-weight:600;font-size:.68rem;letter-spacing:.06em;color:var(--ink4);text-transform:uppercase;text-align:left;padding:.75rem 1rem;border-bottom:1px solid var(--line2);background:var(--bg2)}
-.trust-table td{padding:.85rem 1rem;border-bottom:1px solid var(--line);color:var(--ink3)}
-.trust-table tr:last-child td{border-bottom:0}
-.trust-table tr:hover td{background:rgba(255,255,255,.015)}
-.tag{display:inline-block;font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .55rem;border-radius:3px}
-.tag--pass{background:rgba(63,185,80,.12);color:var(--pass)}
-.tag--warn{background:rgba(210,153,34,.12);color:var(--warn)}
-.tag--fail{background:rgba(248,81,73,.12);color:var(--fail)}
-
-/* CODE BLOCK */
-.code-block{background:var(--code-bg);border:1px solid var(--line2);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.03),0 8px 32px rgba(0,0,0,.4),0 20px 60px rgba(0,0,0,.5)}
-.code-body{padding:1.6rem 1.8rem;font-family:var(--mono);font-size:.78rem;line-height:1.85;color:var(--ink2)}
-.c-kw{color:#F87171}.c-fn{color:#C4B5FD}.c-s{color:#93C5FD}.c-c{color:var(--ink4)}.c-g{color:#4ADE80}
-
-/* SPEC BANNER */
-.spec{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.1);border-radius:10px;padding:1.8rem 2rem;display:flex;align-items:center;gap:1.5rem;margin-top:3rem}
-.spec-icon{font-size:2.5rem;flex-shrink:0;opacity:.8}
-.spec-text{flex:1}
-.spec h4{font-size:.95rem;margin-bottom:.25rem}
-.spec p{font-size:.82rem;color:var(--ink3)}
-
-/* THESIS */
-.thesis{text-align:center;max-width:720px;margin:0 auto;padding:3rem 0}
-.thesis q{display:block;font-family:var(--mono);font-weight:600;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--ink);line-height:1.45;letter-spacing:-.01em}
-.thesis q::before{content:'// ';color:var(--info)}
-.thesis .attr{font-family:var(--mono);font-size:.68rem;color:var(--ink4);margin-top:1rem;text-transform:uppercase;letter-spacing:.08em}
-
-/* GRIDS */
-.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
-.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem}
-
-/* HERO */
-.hero{padding:10rem 0 5rem;text-align:center;min-height:92vh;display:flex;flex-direction:column;justify-content:center}
-.hero-tag{font-family:var(--mono);font-size:.76rem;color:var(--purple);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.2rem}
-.hero h1{margin-bottom:1.5rem}
-.hero-sub{font-size:1.06rem;color:var(--ink3);max-width:620px;margin:0 auto 2.5rem;line-height:1.75}
-.hero-sub strong{color:var(--ink)}
-.hero-terminal{max-width:660px;margin:0 auto 2.5rem;text-align:left}
-.hero-cta{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap}
-.hero-diag{justify-content:center;margin-top:1.5rem;font-size:.74rem}
-
-/* CTA section */
-.cta-sec{text-align:center}
-.cta-sec .hero-sub{margin:0 auto 2.5rem}
-.cta-btns{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap}
-
-/* FOOTER */
-.footer{padding:3rem 0 2.5rem;text-align:center;border-top:1px solid var(--line);background:var(--bg2)}
-.footer-hash{font-family:var(--mono);font-size:.64rem;color:var(--ink4);word-break:break-all;letter-spacing:.04em;margin-bottom:1.2rem;opacity:.6}
-.footer-links{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap;list-style:none;margin-bottom:1.2rem}
-.footer-links a{font-family:var(--mono);font-size:.72rem;color:var(--ink4);text-decoration:none;text-transform:uppercase;letter-spacing:.05em;transition:color .2s}
-.footer-links a:hover{color:var(--ink3)}
-.footer-copy{font-size:.74rem;color:var(--ink4)}
-
-/* SCROLL REVEAL */
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  .nav-links{display:none}.nav-mob{display:flex}
-  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--line);padding:1.5rem;gap:1.2rem;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-  .nav-links.open a{color:var(--ink);font-size:.8rem}
-  .hero{padding:7rem 0 3rem;min-height:auto}
-  .hero h1{font-size:1.8rem}
-  .hero-sub{font-size:.92rem}
-  .terminal-body{font-size:.7rem;padding:1rem}
-  .code-body{font-size:.7rem;padding:1rem;line-height:1.6}
-  .g2,.g3{grid-template-columns:1fr}
-  .spec{flex-direction:column;text-align:center}
-  .footer-links{gap:1rem}
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #1A1F2E var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-@media(max-width:480px){
-  .hero h1{font-size:1.5rem}
-  .hero-cta,.cta-btns{flex-direction:column;align-items:stretch}
-  .hero-cta .btn,.cta-btns .btn{justify-content:center}
+
+body {
+  background: var(--bg);
+  color: var(--ink3);
+  font-family: var(--font);
+  font-size: .88rem;
+  line-height: 1.72;
+  overflow-x: hidden;
+}
+
+.orb-layer {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  opacity: .035; filter: blur(150px);
+  will-change: transform;
+}
+.orb--info   { width: 640px; height: 640px; background: var(--info);   top: -25%; left: -15%;  animation: orb1 22s ease-in-out infinite alternate; }
+.orb--purple { width: 520px; height: 520px; background: var(--purple); top: 35%;  right: -16%; animation: orb2 26s ease-in-out infinite alternate; }
+.orb--pass   { width: 440px; height: 440px; background: var(--pass);   bottom: -30%; left: 25%;  animation: orb3 24s ease-in-out infinite alternate; }
+
+@keyframes orb1 { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(60px,-50px) scale(1.1); } 66% { transform: translate(-35px,45px) scale(.92); } 100% { transform: translate(20px,55px) scale(1.05); } }
+@keyframes orb2 { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(-55px,-35px) scale(1.08); } 66% { transform: translate(40px,50px) scale(.93); } 100% { transform: translate(-25px,-45px) scale(1.04); } }
+@keyframes orb3 { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(35px,60px) scale(1.09); } 66% { transform: translate(-50px,-30px) scale(.91); } 100% { transform: translate(25px,-35px) scale(1.06); } }
+
+.grid-tex {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 30%, #000 30%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 30%, #000 30%, transparent 72%);
+}
+
+.container { max-width: 1120px; margin: 0 auto; padding: 0 clamp(24px,5vw,56px); position: relative; z-index: 2; }
+section { padding: clamp(90px,12vw,150px) 0; }
+.section-alt { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(6,8,13,.86);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 clamp(24px,5vw,56px);
+  transition: background .3s, border-color .3s, box-shadow .3s;
+}
+.nav.scrolled { box-shadow: 0 1px 0 rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.4); }
+
+.nav-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 62px; }
+.nav-logo { display: flex; align-items: center; text-decoration: none; }
+.nav-logo img { height: 30px; width: auto; display: block; }
+
+.nav-links { display: flex; align-items: center; gap: 2.2rem; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-weight: 600; font-size: .7rem;
+  letter-spacing: .04em; color: var(--ink4); text-decoration: none;
+  text-transform: uppercase; transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--ink); }
+
+.nav-cta {
+  font-family: var(--mono); font-weight: 600; font-size: .7rem;
+  letter-spacing: .04em; color: var(--bg) !important;
+  background: var(--ink) !important; padding: .5rem 1rem;
+  border-radius: 4px; text-decoration: none; text-transform: uppercase;
+  transition: transform .2s, box-shadow .2s, background .2s;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(255,255,255,.1); background: #D1D5DB !important; }
+
+.nav-mob { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 6px; }
+.nav-mob span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 1px; transition: transform .3s, opacity .3s; }
+.nav-mob.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.nav-mob.open span:nth-child(2) { opacity: 0; }
+.nav-mob.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+.mob-menu {
+  display: none; position: fixed; top: 62px; left: 0; right: 0; bottom: 0;
+  background: var(--bg); z-index: 99; flex-direction: column; padding: 2rem; gap: 1.4rem; overflow-y: auto;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-family: var(--mono); font-weight: 600; font-size: .9rem; color: var(--ink);
+  text-decoration: none; text-transform: uppercase; letter-spacing: .04em;
+  padding: .6rem 0; border-bottom: 1px solid var(--line);
+}
+.mob-menu a:hover { color: var(--info); }
+
+h1,h2,h3,h4 { font-family: var(--mono); font-weight: 800; text-transform: uppercase; color: var(--ink); line-height: 1.08; }
+h1 { font-size: clamp(2.6rem,6vw,4.4rem); letter-spacing: -.04em; }
+h2 { font-size: clamp(1.7rem,3.4vw,2.6rem); letter-spacing: -.03em; margin-bottom: .5rem; }
+h3 { font-size: 1.02rem; letter-spacing: .01em; }
+strong { color: var(--ink2); font-weight: 600; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-size: .64rem; font-weight: 600;
+  color: var(--ink4); text-transform: uppercase; letter-spacing: .13em; margin-bottom: .8rem;
+}
+.section-label::before { content: '//'; color: var(--info); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-weight: 600; font-size: .76rem;
+  letter-spacing: .05em; text-transform: uppercase; text-decoration: none;
+  border-radius: 5px; padding: .8rem 1.6rem; cursor: pointer; border: 0;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn--primary { background: var(--ink); color: var(--bg); }
+.btn--primary:hover { box-shadow: 0 6px 24px rgba(255,255,255,.12); }
+.btn--secondary { background: transparent; color: var(--ink); border: 1px solid var(--line3); }
+.btn--secondary:hover { border-color: rgba(255,255,255,.25); box-shadow: 0 6px 24px rgba(0,0,0,.35); background: var(--line); }
+.btn--ghost { background: transparent; color: var(--ink3); padding: .5rem .9rem; border: 1px solid transparent; }
+.btn--ghost:hover { color: var(--ink); border-color: var(--line2); }
+.btn-arrow { transition: transform .25s ease; }
+.btn:hover .btn-arrow { transform: translateX(3px); }
+
+.card {
+  background: var(--bg3); border: 1px solid var(--line);
+  border-radius: 10px; padding: 2rem 1.8rem; position: relative; overflow: hidden;
+  transform-style: preserve-3d;
+  transition: border-color .3s, box-shadow .35s, transform .35s cubic-bezier(.23,1,.32,1);
+}
+.card:hover {
+  border-color: var(--line2);
+  box-shadow: 0 1px 0 rgba(255,255,255,.02), 0 8px 32px rgba(0,0,0,.35), 0 20px 64px rgba(0,0,0,.45);
+}
+.card-accent { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; opacity: 0; transition: opacity .35s; }
+.card:hover .card-accent { opacity: 1; }
+.card-accent--pass { background: var(--pass); } .card-accent--warn { background: var(--warn); }
+.card-accent--info { background: var(--info); } .card-accent--purple { background: var(--purple); } .card-accent--fail { background: var(--fail); }
+.card h3 { margin-bottom: .6rem; }
+.card p { font-size: .84rem; color: var(--ink3); line-height: 1.65; }
+
+.status-badge {
+  font-family: var(--mono); font-size: .72rem; font-weight: 600; letter-spacing: .04em;
+  padding: .75rem 1rem; border-radius: 6px; border-left: 3px solid; margin-top: .9rem;
+}
+.status-badge--pass { border-color: var(--pass); background: linear-gradient(90deg, rgba(63,185,80,.08), transparent); color: var(--pass); }
+.status-badge--warn { border-color: var(--warn); background: linear-gradient(90deg, rgba(210,153,34,.08), transparent); color: var(--warn); }
+.status-badge--fail { border-color: var(--fail); background: linear-gradient(90deg, rgba(248,81,73,.08), transparent); color: var(--fail); }
+
+.diag-dot {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-size: .66rem; font-weight: 600;
+  color: var(--pass); letter-spacing: .06em; margin-top: .8rem;
+}
+.diag-dot::before { content: ''; width: 6px; height: 6px; background: var(--pass); border-radius: 0; animation: diagPulse 2s ease-in-out infinite; }
+@keyframes diagPulse { 0%,100% { opacity: 1; } 50% { opacity: .18; } }
+
+.terminal {
+  background: var(--code-bg); border: 1px solid var(--line2); border-radius: 11px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,.02), 0 8px 32px rgba(0,0,0,.45), 0 24px 72px rgba(0,0,0,.55);
+}
+.terminal-bar { display: flex; align-items: center; gap: .55rem; padding: .75rem 1.1rem; background: rgba(255,255,255,.015); border-bottom: 1px solid var(--line); }
+.t-dot { width: 10px; height: 10px; border-radius: 50%; }
+.t-dot--r { background: #F85149; } .t-dot--y { background: #D29922; } .t-dot--g { background: #3FB950; }
+.terminal-title { font-family: var(--mono); font-size: .64rem; color: var(--ink4); margin-left: .5rem; letter-spacing: .05em; }
+.terminal-body { padding: 1.4rem; font-family: var(--mono); font-size: .78rem; line-height: 1.8; color: var(--ink2); min-height: 180px; }
+.t-dim { color: var(--ink4); } .t-cmd { color: #93C5FD; } .t-out { color: var(--ink3); }
+.t-pass { color: #4ADE80; } .t-warn { color: #FBBF24; } .t-hash { color: var(--info); word-break: break-all; }
+.t-cursor { display: inline-block; width: 8px; height: 1.15em; background: var(--ink); vertical-align: text-bottom; animation: blink .85s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.drop-zone {
+  border: 2px dashed var(--line3); border-radius: 14px; padding: 3.5rem 2rem;
+  text-align: center; background: var(--bg3); transition: border-color .25s, background .25s, transform .25s; cursor: pointer;
+}
+.drop-zone:hover { border-color: var(--line2); }
+.drop-zone.dragover { border-color: var(--info); background: rgba(88,166,255,.04); transform: scale(1.01); }
+.drop-icon { font-size: 2.8rem; margin-bottom: .75rem; display: block; opacity: .65; }
+.drop-title { font-family: var(--mono); font-size: .86rem; color: var(--ink3); letter-spacing: .05em; text-transform: uppercase; }
+.drop-hint { font-size: .76rem; color: var(--ink4); margin-top: .5rem; }
+.drop-result { display: none; margin-top: 1.2rem; padding: .9rem 1.1rem; border-radius: 8px; font-family: var(--mono); font-size: .74rem; letter-spacing: .03em; text-align: left; line-height: 1.6; }
+.drop-result.show { display: block; }
+.drop-result--pass { background: rgba(63,185,80,.07); border: 1px solid rgba(63,185,80,.2); color: var(--pass); }
+.drop-result--fail { background: rgba(248,81,73,.07); border: 1px solid rgba(248,81,73,.2); color: var(--fail); }
+.drop-result--warn { background: rgba(210,153,34,.07); border: 1px solid rgba(210,153,34,.2); color: var(--warn); }
+
+.trust-wrap { border-radius: 10px; border: 1px solid var(--line); overflow: hidden; background: var(--bg3); }
+.trust-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.trust-table th { font-family: var(--mono); font-weight: 600; font-size: .66rem; letter-spacing: .07em; color: var(--ink4); text-transform: uppercase; text-align: left; padding: .8rem 1rem; border-bottom: 1px solid var(--line2); background: var(--bg2); }
+.trust-table td { padding: .88rem 1rem; border-bottom: 1px solid var(--line); color: var(--ink3); }
+.trust-table tr:last-child td { border-bottom: 0; }
+.trust-table tr:hover td { background: rgba(255,255,255,.008); }
+
+.tag { display: inline-block; font-family: var(--mono); font-weight: 600; font-size: .64rem; letter-spacing: .05em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 3px; }
+.tag--high { background: rgba(63,185,80,.12); color: var(--pass); }
+.tag--med { background: rgba(210,153,34,.12); color: var(--warn); }
+.tag--low { background: transparent; border: 1px solid var(--line2); color: var(--ink4); }
+.tag--none { color: var(--ink4); }
+.tag--tampered { background: rgba(248,81,73,.12); color: var(--fail); }
+
+.code-block {
+  background: var(--code-bg); border: 1px solid var(--line2); border-radius: 11px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,.02), 0 8px 32px rgba(0,0,0,.45), 0 24px 72px rgba(0,0,0,.55);
+}
+.code-body { padding: 1.8rem 2rem; font-family: var(--mono); font-size: .78rem; line-height: 1.9; color: var(--ink2); white-space: pre; }
+.c-kw { color: #F87171; } .c-fn { color: #C4B5FD; } .c-s { color: #93C5FD; } .c-c { color: var(--ink4); } .c-g { color: #4ADE80; }
+
+.spec-banner {
+  background: rgba(88,166,255,.04); border: 1px solid rgba(88,166,255,.08);
+  border-radius: 12px; padding: 1.8rem 2rem; display: flex; align-items: center;
+  gap: 1.5rem; margin-top: 3rem; transition: border-color .25s, background .25s;
+}
+.spec-banner:hover { border-color: rgba(88,166,255,.16); background: rgba(88,166,255,.06); }
+.spec-icon { font-size: 2.6rem; flex-shrink: 0; opacity: .7; }
+.spec-text { flex: 1; } .spec-text h4 { font-size: .96rem; margin-bottom: .25rem; } .spec-text p { font-size: .82rem; color: var(--ink3); }
+
+.thesis-block { text-align: center; max-width: 720px; margin: 0 auto; padding: 2.5rem 0; }
+.thesis-block q { display: block; font-family: var(--mono); font-weight: 600; font-size: clamp(1.1rem,2.6vw,1.6rem); color: var(--ink); line-height: 1.5; letter-spacing: -.02em; }
+.thesis-block q::before { content: '// '; color: var(--info); }
+.thesis-attr { font-family: var(--mono); font-size: .66rem; color: var(--ink4); margin-top: 1rem; text-transform: uppercase; letter-spacing: .1em; }
+
+.hero { min-height: 96vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 7rem 0 5rem; position: relative; }
+.hero-tagline { font-family: var(--mono); font-size: .74rem; color: var(--purple); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.2rem; }
+.hero h1 { margin-bottom: 1.6rem; }
+.hero-sub { font-size: 1.06rem; color: var(--ink3); max-width: 630px; margin: 0 auto 2.8rem; line-height: 1.78; }
+.hero-sub strong { color: var(--ink); font-weight: 600; }
+.hero-terminal { max-width: 660px; width: 100%; margin: 0 auto 2.8rem; text-align: left; }
+.hero-actions { display: flex; gap: .85rem; justify-content: center; flex-wrap: wrap; }
+.hero-diag { display: inline-flex; justify-content: center; margin-top: 1.2rem; font-size: .76rem; }
+
+.cta { text-align: center; } .cta .hero-sub { margin: 0 auto 2.5rem; }
+.cta-actions { display: flex; gap: .85rem; justify-content: center; flex-wrap: wrap; }
+
+.footer { padding: 3.5rem 0 2.5rem; text-align: center; border-top: 1px solid var(--line); background: var(--bg2); }
+.footer-logo { height: 26px; margin-bottom: 1.2rem; }
+.footer-hash { font-family: var(--mono); font-size: .6rem; color: var(--ink4); letter-spacing: .05em; margin-bottom: 1.2rem; opacity: .5; word-break: break-all; }
+.footer-links { display: flex; gap: 1.8rem; justify-content: center; flex-wrap: wrap; list-style: none; margin-bottom: 1.2rem; }
+.footer-links a { font-family: var(--mono); font-size: .72rem; color: var(--ink4); text-decoration: none; text-transform: uppercase; letter-spacing: .06em; transition: color .2s; }
+.footer-links a:hover { color: var(--ink3); }
+.footer-copy { font-size: .74rem; color: var(--ink4); }
+
+.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+.g3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+.center { text-align: center; }
+
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity .75s ease, transform .75s cubic-bezier(.16,1,.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: .06s; } .d2 { transition-delay: .12s; } .d3 { transition-delay: .18s; }
+
+@media (max-width: 960px) {
+  .nav-links, .nav-cta { display: none; }
+  .nav-mob { display: flex; }
+  .hero h1 { font-size: 2rem; }
+  .hero-sub { font-size: .94rem; }
+  .hero { min-height: auto; padding: 8rem 0 4rem; }
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .spec-banner { flex-direction: column; text-align: center; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.5rem; }
+  .hero-actions, .cta-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn, .cta-actions .btn { justify-content: center; }
+  .terminal-body { font-size: .68rem; padding: 1rem; }
+  .code-body { font-size: .68rem; padding: 1rem; }
+  .nav-inner { height: 54px; }
+  .mob-menu { top: 54px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ORBS -->
-<div class="orb-wrap"><div class="orb orb--info"></div><div class="orb orb--purple"></div><div class="orb orb--pass"></div></div>
-<div class="grid-tx"></div>
+<div class="orb-layer"><div class="orb orb--info"></div><div class="orb orb--purple"></div><div class="orb orb--pass"></div></div>
+<div class="grid-tex"></div>
 
-<!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo"><img src="assets/logo.png" alt="EPI" loading="eager"></a>
+    <a href="#" class="nav-logo" aria-label="EPI Labs home"><img src="assets/logo.png" alt="EPI" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#pillars">Pillars</a></li>
       <li><a href="#verify">Verify</a></li>
@@ -232,132 +336,142 @@ strong{color:var(--ink2);font-weight:600}
       <li><a href="pricing.html">Pricing</a></li>
     </ul>
     <a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank" class="nav-cta" rel="noopener">GitHub</a>
-    <button class="nav-mob" id="mobBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="nav-mob" id="mobBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#pillars">Pillars</a>
+  <a href="#verify">Verify</a>
+  <a href="#trust">Trust</a>
+  <a href="#integrate">Integrate</a>
+  <a href="#compliance">Compliance</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank" rel="noopener">GitHub &nearr;</a>
+</div>
 
-<!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
   <div class="container">
     <div class="reveal">
-      <p class="hero-tag">// AI EVIDENCE PROTOCOL v4.2.0</p>
+      <p class="hero-tagline">// AI EVIDENCE PROTOCOL v4.2.0</p>
       <h1>Don't trust the AI.<br>Trust the Record.</h1>
       <p class="hero-sub">
-        <strong>The PDF for AI Evidence</strong>&ensp;—&ensp;self-contained, cryptographically signed, tamper-evident <strong>.epi</strong> files. No dashboard. No vendor lock-in. Just a file you can open, verify, and own.
+        <strong>The PDF for AI Evidence</strong>&ensp;&mdash;&ensp;self-contained, cryptographically signed, tamper-evident <strong>.epi</strong> files. No dashboard. No vendor lock-in. Just a file you can open, verify offline, and own forever.
       </p>
     </div>
 
-    <div class="hero-terminal reveal">
+    <div class="hero-terminal reveal d1">
       <div class="terminal" id="heroTerminal">
         <div class="terminal-bar">
-          <span class="tdot tdot--r"></span><span class="tdot tdot--y"></span><span class="tdot tdot--g"></span>
+          <span class="t-dot t-dot--r"></span><span class="t-dot t-dot--y"></span><span class="t-dot t-dot--g"></span>
           <span class="terminal-title">epi-recorder v4.2.0</span>
         </div>
         <div class="terminal-body" id="terminalBody"></div>
       </div>
     </div>
 
-    <div class="hero-cta reveal">
-      <a href="https://pypi.org/project/epi-recorder/" target="_blank" class="btn btn--primary" rel="noopener">pip install epi-recorder &rarr;</a>
-      <a href="viewer/" class="btn btn--secondary">Open Decision Ops</a>
-      <a href="how-it-works.html" class="btn btn--ghost">See Package</a>
+    <div class="hero-actions reveal d2">
+      <a href="https://pypi.org/project/epi-recorder/" target="_blank" class="btn btn--primary" rel="noopener">
+        pip install epi-recorder <span class="btn-arrow">&rarr;</span>
+      </a>
+      <a href="#dropZone" class="btn btn--secondary">
+        Verify a .epi file <span class="btn-arrow">&darr;</span>
+      </a>
+      <a href="how-it-works.html" class="btn btn--ghost">See the Package</a>
     </div>
-    <div class="diag hero-diag reveal">SYSTEM STATUS: OPERATIONAL</div>
+    <div class="diag-dot hero-diag reveal d3">SYSTEM: OPERATIONAL</div>
   </div>
 </section>
 
-<!-- THESIS -->
 <section class="section-alt">
-  <div class="container thesis reveal">
+  <div class="container thesis-block reveal">
     <q>AI evidence shouldn't live in someone else's dashboard. It should be a file you can open.</q>
-    <p class="attr">// EPI DESIGN PRINCIPLE 001</p>
+    <p class="thesis-attr">// EPI Design Principle 001</p>
   </div>
 </section>
 
-<!-- THREE PILLARS -->
 <section id="pillars">
   <div class="container">
-    <div style="text-align:center">
+    <div class="center">
       <div class="section-label reveal">Container</div>
-      <h2 class="reveal">One file.<br>Complete proof.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">Every consequential AI decision sealed into a portable, cryptographically signed artifact.</p>
+      <h2 class="reveal d1">One file.<br>Complete proof.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">Every consequential AI decision sealed into a single, portable, cryptographically signed artifact.</p>
     </div>
-    <div class="g3 reveal" style="margin-top:3rem">
+    <div class="g3 reveal d3" style="margin-top:3.5rem">
       <div class="card" data-tilt>
         <div class="card-accent card-accent--info"></div>
         <h3>&#x1F512; Cryptographic Signing</h3>
-        <p>Ed25519 signed manifest. SHA-256 file integrity. Any byte change invalidates the signature. The signature lives <em>inside</em> the file — one artifact, one truth.</p>
-        <div class="diag" style="color:var(--info)">SIGNATURE: ED25519</div>
+        <p>Ed25519 signed manifest. SHA-256 file integrity. Any byte change invalidates the signature. The signature is <em>inside</em> the file&ensp;&mdash;&ensp;one artifact, one truth.</p>
+        <div class="diag-dot" style="color:var(--info)">ED25519 &middot; SHA-256</div>
       </div>
       <div class="card" data-tilt>
         <div class="card-accent card-accent--pass"></div>
         <h3>&#x1F517; Hash-Chained Timeline</h3>
-        <p>Every step linked via <code style="font-family:var(--mono);font-size:.78rem;color:var(--info)">prev_hash</code>. Insert, delete, or reorder — the chain breaks. Tamper-evident by construction.</p>
-        <div class="diag">CHAIN: INTACT</div>
+        <p>Every step linked via <code style="font-family:var(--mono);font-size:.76rem;color:var(--info);background:rgba(88,166,255,.06);padding:1px 5px;border-radius:3px">prev_hash</code>. Insert, delete, or reorder&ensp;&mdash;&ensp;the chain breaks. Tamper-evident by construction.</p>
+        <div class="diag-dot">CHAIN: INTACT</div>
       </div>
       <div class="card" data-tilt>
         <div class="card-accent card-accent--purple"></div>
         <h3>&#x1F4E6; Polyglot Container</h3>
         <p>Valid HTML <em>and</em> binary archive. Double-click opens in any browser. Zero install. Fully offline. Air-gapped verification out of the box.</p>
-        <div class="diag" style="color:var(--purple)">CONTAINER: POLYGLOT</div>
+        <div class="diag-dot" style="color:var(--purple)">HTML + ZIP + SIGNATURE</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VERIFICATION -->
 <section class="section-alt" id="verify">
   <div class="container">
-    <div style="text-align:center">
+    <div class="center">
       <div class="section-label reveal">Verification</div>
-      <h2 class="reveal">Five independent checks.<br>Zero blind trust.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">No server. No upload. No installation. Just a browser and a .epi file.</p>
+      <h2 class="reveal d1">Five independent checks.<br>Zero blind trust.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">No server. No upload. No installation. Just a browser and a <strong>.epi</strong> file.</p>
     </div>
-    <div class="g2 reveal" style="margin-top:3rem">
-      <div class="card" data-tilt><div class="card-accent card-accent--pass"></div><h3>01 Structure</h3><p>Valid envelope, extractable ZIP, required files present. Every byte in its place.</p><div class="status status--pass">&#x2713; STRUCTURE_VALID</div></div>
-      <div class="card" data-tilt><div class="card-accent card-accent--pass"></div><h3>02 Integrity</h3><p>Every file hash in <code style="font-family:var(--mono);font-size:.78rem;color:var(--info)">file_manifest</code> matches computed SHA-256. One mismatch = fail.</p><div class="status status--pass">&#x2713; HASHES_MATCH</div></div>
-      <div class="card" data-tilt><div class="card-accent card-accent--pass"></div><h3>03 Signature</h3><p>Ed25519 signature valid against canonical manifest hash. Verifiable with public key only.</p><div class="status status--pass">&#x2713; SIGNATURE_VALID</div></div>
-      <div class="card" data-tilt><div class="card-accent card-accent--pass"></div><h3>04 Chain</h3><p>prev_hash links intact. Monotonic indices. Timestamps never decrease. The timeline tells one story.</p><div class="status status--pass">&#x2713; CHAIN_INTACT</div></div>
-      <div class="card" data-tilt><div class="card-accent card-accent--info"></div><h3>05 SCITT</h3><p>COSE_Sign1 statement + receipt verified against transparency ledger. Ledger-anchored, publicly auditable.</p><div class="status status--pass">&#x2713; SCITT_ANCHORED</div></div>
+    <div class="g2 reveal d3" style="margin-top:3.5rem">
+      <div class="card" data-tilt>
+        <div class="card-accent card-accent--pass"></div>
+        <h3>01 Structure Validation</h3>
+        <p>Valid envelope, extractable ZIP, all required files present. Every byte in its designated place.</p>
+        <div class="status-badge status-badge--pass">&check; STRUCTURE_VALID</div>
+      </div>
+      <div class="card" data-tilt>
+        <div class="card-accent card-accent--pass"></div>
+        <h3>02 Hash Integrity</h3>
+        <p>Every file hash in <code style="font-family:var(--mono);font-size:.76rem;color:var(--info);background:rgba(88,166,255,.06);padding:1px 5px;border-radius:3px">file_manifest</code> matched against computed SHA-256. One mismatch triggers failure.</p>
+        <div class="status-badge status-badge--pass">&check; HASHES_MATCH</div>
+      </div>
+      <div class="card" data-tilt>
+        <div class="card-accent card-accent--pass"></div>
+        <h3>03 Signature Verification</h3>
+        <p>Ed25519 signature validated against canonical manifest hash. Verifiable with only the public key.</p>
+        <div class="status-badge status-badge--pass">&check; SIGNATURE_VALID</div>
+      </div>
+      <div class="card" data-tilt>
+        <div class="card-accent card-accent--pass"></div>
+        <h3>04 Chain Continuity</h3>
+        <p><code style="font-family:var(--mono);font-size:.76rem;color:var(--info);background:rgba(88,166,255,.06);padding:1px 5px;border-radius:3px">prev_hash</code> links intact. Monotonic indices preserved. Timestamps never decrease. One timeline.</p>
+        <div class="status-badge status-badge--pass">&check; CHAIN_INTACT</div>
+      </div>
+      <div class="card" data-tilt>
+        <div class="card-accent card-accent--info"></div>
+        <h3>05 SCITT Anchoring</h3>
+        <p>COSE_Sign1 statement and transparency receipt verified against the ledger. Publicly auditable, independently verifiable.</p>
+        <div class="status-badge status-badge--pass">&check; SCITT_ANCHORED</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- TRUST MODEL -->
-<section id="trust">
+<section id="dropZone">
   <div class="container">
-    <div style="text-align:center">
-      <div class="section-label reveal">Trust Model</div>
-      <h2 class="reveal">Who signed it.<br>What it proves.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">Every .epi artifact carries a trust level &mdash; computed from integrity, signature, identity, and transparency.</p>
-    </div>
-    <div class="trust-wrap reveal" style="margin-top:3rem;overflow-x:auto;">
-      <table class="trust-table">
-        <thead><tr><th>Level</th><th>Integrity</th><th>Signature</th><th>Identity</th><th>SCITT</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td><span class="tag tag--pass">HIGH</span></td><td>PASS</td><td>VALID</td><td>KNOWN</td><td>&mdash;</td><td>Trust registry verified signer identity</td></tr>
-          <tr><td><span class="tag tag--warn">MEDIUM</span></td><td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&#x2713;</td><td>Valid signature, SCITT ledger-anchored</td></tr>
-          <tr><td style="color:var(--ink4)">LOW</td><td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&mdash;</td><td>Valid but unverified identity</td></tr>
-          <tr><td style="color:var(--ink4)">NONE</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>No signature present</td></tr>
-          <tr><td><span class="tag tag--fail">TAMPERED</span></td><td>FAIL</td><td>INVALID</td><td>&mdash;</td><td>&mdash;</td><td>Integrity failure or signature mismatch</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- DROP ZONE -->
-<section class="section-alt" id="dropZone">
-  <div class="container">
-    <div style="text-align:center">
+    <div class="center">
       <div class="section-label reveal">Try It</div>
-      <h2 class="reveal">Drop a .epi file.<br>See the verdict.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">Drag any .epi evidence package here. Verification happens entirely in your browser. Nothing leaves your machine.</p>
+      <h2 class="reveal d1">Drop a .epi file.<br>See the verdict.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">Drag any <strong>.epi</strong> evidence package here. Verification runs entirely in your browser. Nothing leaves your machine.</p>
     </div>
-    <div class="reveal" style="margin-top:3rem">
+    <div class="reveal d3" style="margin-top:3rem;">
       <div class="drop-zone" id="dropZoneEl">
         <span class="drop-icon">&#x1F4C1;</span>
-        <p class="drop-text">DROP .EPI FILE HERE</p>
+        <p class="drop-title">DROP .EPI FILE HERE</p>
         <p class="drop-hint">or click to browse &middot; zero upload &middot; offline verification</p>
         <input type="file" id="fileInput" accept=".epi,.zip" style="display:none">
         <div class="drop-result" id="dropResult"></div>
@@ -366,95 +480,115 @@ strong{color:var(--ink2);font-weight:600}
   </div>
 </section>
 
-<!-- INTEGRATION -->
+<section class="section-alt" id="trust">
+  <div class="container">
+    <div class="center">
+      <div class="section-label reveal">Trust Model</div>
+      <h2 class="reveal d1">Who signed it.<br>What it proves.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">Every .epi artifact carries a trust level&ensp;&mdash;&ensp;computed from integrity, signature, identity, and transparency.</p>
+    </div>
+    <div class="trust-wrap reveal d3" style="margin-top:3rem;overflow-x:auto">
+      <table class="trust-table">
+        <thead><tr><th>Level</th><th>Integrity</th><th>Signature</th><th>Identity</th><th>SCITT</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag--high">HIGH</span></td><td>PASS</td><td>VALID</td><td>KNOWN</td><td>&mdash;</td><td>Trust registry verified signer identity</td></tr>
+          <tr><td><span class="tag tag--med">MEDIUM</span></td><td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&check;</td><td>Valid signature, SCITT ledger-anchored</td></tr>
+          <tr><td><span class="tag tag--low">LOW</span></td><td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&mdash;</td><td>Valid but unverified identity</td></tr>
+          <tr><td><span class="tag tag--none">NONE</span></td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>No signature present</td></tr>
+          <tr><td><span class="tag tag--tampered">TAMPERED</span></td><td>FAIL</td><td>INVALID</td><td>&mdash;</td><td>&mdash;</td><td>Integrity failure or signature mismatch</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <section id="integrate">
   <div class="container">
-    <div style="text-align:center">
+    <div class="center">
       <div class="section-label reveal">Integration</div>
-      <h2 class="reveal">Three lines of Python.<br>Signed. Sealed. Shipped.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">No monkey patching. Streaming and non-streaming. Works with any LLM SDK.</p>
+      <h2 class="reveal d1">Three lines of Python.<br>Signed. Sealed. Shipped.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">No monkey patching. Works with streaming and non-streaming. Compatible with any LLM SDK.</p>
     </div>
-    <div class="reveal" style="margin-top:3rem">
+    <div class="reveal d3" style="margin-top:3rem">
       <div class="code-block">
         <div class="terminal-bar">
-          <span class="tdot tdot--r"></span><span class="tdot tdot--y"></span><span class="tdot tdot--g"></span>
+          <span class="t-dot t-dot--r"></span><span class="t-dot t-dot--y"></span><span class="t-dot t-dot--g"></span>
           <span class="terminal-title">agent.py</span>
         </div>
-        <div class="code-body">
-          <span class="c-kw">from</span> openai <span class="c-kw">import</span> OpenAI<br>
-          <span class="c-kw">from</span> epi_recorder <span class="c-kw">import</span> record, wrap_openai<br><br>
-          client = <span class="c-fn">wrap_openai</span>(<span class="c-fn">OpenAI</span>())<br><br>
-          <span class="c-kw">with</span> <span class="c-fn">record</span>(<span class="c-s">"agent.epi"</span>, goal=<span class="c-s">"Assess loan application"</span>):<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;response = client.chat.completions.<span class="c-fn">create</span>(<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=<span class="c-s">"gpt-4"</span>,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this"</span>}]<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;)<br><br>
-          <span class="c-c"># Every call &rarr; signed .epi evidence</span><br>
-          <span class="c-c"># epi verify agent.epi &rarr;</span> <span class="c-g">VERIFIED &#x2713;</span>
-        </div>
+        <div class="code-body"><span class="c-kw">from</span> openai <span class="c-kw">import</span> OpenAI
+<span class="c-kw">from</span> epi_recorder <span class="c-kw">import</span> record, wrap_openai
+
+client = <span class="c-fn">wrap_openai</span>(<span class="c-fn">OpenAI</span>())
+
+<span class="c-kw">with</span> <span class="c-fn">record</span>(<span class="c-s">"agent.epi"</span>, goal=<span class="c-s">"Assess loan application"</span>):
+    response = client.chat.completions.<span class="c-fn">create</span>(
+        model=<span class="c-s">"gpt-4"</span>,
+        messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this"</span>}]
+    )
+
+<span class="c-c"># Every call &rarr; signed .epi evidence</span>
+<span class="c-c"># $ epi verify agent.epi &rarr;</span> <span class="c-g">VERIFIED &#x2713;</span>
+</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COMPLIANCE -->
 <section id="compliance">
   <div class="container">
-    <div style="text-align:center">
+    <div class="center">
       <div class="section-label reveal">Compliance</div>
-      <h2 class="reveal">Built for the EU AI Act.<br>Ready for everything else.</h2>
-      <p class="hero-sub reveal" style="margin-top:.5rem">Articles 12, 14, and 19 &mdash; all addressable from a single .epi artifact.</p>
+      <h2 class="reveal d1">Built for the EU AI Act.<br>Ready for everything else.</h2>
+      <p class="hero-sub reveal d2" style="margin-top:.5rem">Articles 12, 14, and 19&ensp;&mdash;&ensp;all addressable from a single .epi artifact.</p>
     </div>
-    <div class="g3 reveal" style="margin-top:3rem">
+    <div class="g3 reveal d3" style="margin-top:3.5rem">
       <div class="card" data-tilt>
         <div class="card-accent card-accent--info"></div>
-        <div class="section-label" style="margin-bottom:.5rem">Article 12</div>
+        <div class="section-label" style="font-size:.6rem;margin-bottom:.5rem">Article 12</div>
         <h3>Record-Keeping</h3>
-        <p>Seals the complete execution trail &mdash; every LLM call, tool invocation, decision, and environment snapshot &mdash; into one signed artifact.</p>
+        <p>Seals the complete execution trail&ensp;&mdash;&ensp;every LLM call, tool invocation, decision, and environment snapshot&ensp;&mdash;&ensp;into one signed, portable artifact.</p>
       </div>
       <div class="card" data-tilt>
         <div class="card-accent card-accent--pass"></div>
-        <div class="section-label" style="margin-bottom:.5rem">Article 14</div>
+        <div class="section-label" style="font-size:.6rem;margin-bottom:.5rem">Article 14</div>
         <h3>Human Oversight</h3>
-        <p>review.json appended post-sealing without breaking the signature. Who reviewed, when, what they decided &mdash; same file.</p>
+        <p><code style="font-family:var(--mono);font-size:.76rem;color:var(--info);background:rgba(88,166,255,.06);padding:1px 5px;border-radius:3px">review.json</code> appended post-sealing without breaking the signature. Who reviewed, when, what they decided&ensp;&mdash;&ensp;same file.</p>
       </div>
       <div class="card" data-tilt>
         <div class="card-accent card-accent--warn"></div>
-        <div class="section-label" style="margin-bottom:.5rem">Article 19</div>
+        <div class="section-label" style="font-size:.6rem;margin-bottom:.5rem">Article 19</div>
         <h3>Transparency</h3>
-        <p>policy.json and policy_evaluation.json travel with the container. Every rule, every threshold, every outcome logged.</p>
+        <p>Policy definitions and evaluation results travel with the container. Every rule. Every threshold. Every outcome. Logged.</p>
       </div>
     </div>
-    <div class="spec reveal">
+    <div class="spec-banner reveal d3">
       <div class="spec-icon">&#x1F4DC;</div>
       <div class="spec-text">
         <h4>EPI File Format Specification v4.2.0</h4>
         <p>Every byte defined. Envelope structure, manifest schema, cryptographic protocol, verification procedure. Open standard. MIT licensed.</p>
       </div>
-      <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank" class="btn btn--secondary" style="flex-shrink:0" rel="noopener">Read the Spec &rarr;</a>
+      <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank" class="btn btn--secondary" style="flex-shrink:0" rel="noopener">Read the Spec <span class="btn-arrow">&rarr;</span></a>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-sec section-alt" id="cta">
+<section class="cta section-alt" id="cta">
   <div class="container">
     <div class="section-label reveal" style="justify-content:center">Get Started</div>
-    <h2 class="reveal">Evidence starts with<br>one command.</h2>
-    <p class="hero-sub reveal">Install. Wrap your client. Record. Verify. An auditor-proof trail in under a minute.</p>
-    <div class="cta-btns reveal">
-      <a href="https://pypi.org/project/epi-recorder/" target="_blank" class="btn btn--primary" rel="noopener">pip install epi-recorder &rarr;</a>
-      <a href="viewer/" class="btn btn--secondary">Decision Ops &rarr;</a>
+    <h2 class="reveal d1">Evidence starts with<br>one command.</h2>
+    <p class="hero-sub reveal d2">Install. Wrap your client. Record. Verify. An auditor-proof trail in under a minute. Zero configuration required.</p>
+    <div class="cta-actions reveal d3">
+      <a href="https://pypi.org/project/epi-recorder/" target="_blank" class="btn btn--primary" rel="noopener">pip install epi-recorder <span class="btn-arrow">&rarr;</span></a>
+      <a href="viewer/" class="btn btn--secondary">Decision Ops <span class="btn-arrow">&nearr;</span></a>
       <a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank" class="btn btn--ghost" rel="noopener">GitHub</a>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <img src="assets/logo.png" alt="EPI" style="height:26px;margin-bottom:1.2rem" loading="lazy">
-    <div class="footer-hash">SHA256: a3f7b2c9d1e8f4a6b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2</div>
+    <img src="assets/logo.png" alt="EPI" class="footer-logo" loading="lazy">
+    <div class="footer-hash">SHA256&ensp;a3f7b2c9d1e8f4a6b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2</div>
     <ul class="footer-links">
       <li><a href="how-it-works.html">How It Works</a></li>
       <li><a href="technology.html">Technology</a></li>
@@ -464,117 +598,281 @@ strong{color:var(--ink2);font-weight:600}
       <li><a href="https://pypi.org/project/epi-recorder/" target="_blank" rel="noopener">PyPI</a></li>
       <li><a href="mailto:mohdibrahim@epilabs.org">Email</a></li>
     </ul>
-    <p class="footer-copy">Building the trust layer for the AI economy. &copy; 2026 EPI LABS. MIT License.</p>
+    <p class="footer-copy">Building the trust layer for the AI economy.<br>&copy; 2026 EPI LABS. MIT License.</p>
   </div>
 </footer>
 
 <script>
-// ═══════════ TERMINAL AUTO-TYPE ═══════════
-(function(){
-  const lines=[
-    {text:'pip install epi-recorder',cls:'t-cmd',delay:600},
-    {text:'\u2192 Successfully installed epi-recorder v4.2.0',cls:'t-out',delay:400},
-    {text:'',cls:'',delay:200},
-    {text:'epi run agent.py',cls:'t-cmd',delay:500},
-    {text:'\u2192 Recording 42 execution steps...',cls:'t-out',delay:300},
-    {text:'\u2192 Sealed agent.epi \u2713 Ed25519 signed',cls:'t-out',delay:200},
-    {text:'',cls:'',delay:150},
-    {text:'epi verify agent.epi',cls:'t-cmd',delay:400},
-    {text:'\u2192 VERIFIED \u2713 Trust Level: HIGH',cls:'t-out',style:'color:#4ADE80',delay:200},
-    {text:'\u2192 Ed25519 \u00b7 42 steps \u00b7 SHA-256 \u00b7 SCITT anchored',cls:'t-hash',delay:100},
-  ];
-  const body=document.getElementById('terminalBody');
-  let i=0;
-  async function type(){
-    if(i>=lines.length)return;
-    const l=lines[i];
-    if(i>0)body.innerHTML+='\n';
-    const span=document.createElement('span');
-    span.className=l.cls;if(l.style)span.style.cssText=l.style;
-    body.appendChild(span);
-    const cursor=document.createElement('span');cursor.className='t-cursor';
-    body.appendChild(cursor);
-    for(let j=0;j<l.text.length;j++){
-      span.textContent+=l.text[j];await new Promise(r=>setTimeout(r,25+Math.random()*40));
-    }
-    cursor.remove();i++;
-    await new Promise(r=>setTimeout(r,l.delay));type();
-  }
-  setTimeout(type,800);
-})();
+(function() {
+  'use strict';
 
-// ═══════════ 3D CARD TILT ═══════════
-document.querySelectorAll('[data-tilt]').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const r=card.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width-.5;
-    const y=(e.clientY-r.top)/r.height-.5;
-    card.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-2px)`;
-  });
-  card.addEventListener('mouseleave',()=>{card.style.transform='';});
-});
+  /* ═══════ TERMINAL AUTO-TYPE ═══════ */
+  var terminalBody = document.getElementById('terminalBody');
+  if (terminalBody) {
+    var lines = [
+      { cls: 't-dim', text: '$ ' },
+      { cls: 't-cmd', text: 'pip install epi-recorder', pause: 400 },
+      { cls: 't-out', text: 'Successfully installed epi-recorder v4.2.0', pause: 500 },
+      { cls: 't-dim', text: '' },
+      { cls: 't-dim', text: '$ ' },
+      { cls: 't-cmd', text: 'epi run agent.py', pause: 350 },
+      { cls: 't-out', text: 'Recording 42 execution steps...', pause: 250 },
+      { cls: 't-pass', text: 'Sealed agent.epi \u2713 Ed25519 signed', pause: 400 },
+      { cls: 't-dim', text: '' },
+      { cls: 't-dim', text: '$ ' },
+      { cls: 't-cmd', text: 'epi verify agent.epi', pause: 400 },
+      { cls: 't-pass', text: 'VERIFIED \u2713 Trust Level: HIGH', pause: 300 },
+      { cls: 't-hash', text: 'Ed25519 \u00b7 42 steps \u00b7 SHA-256 \u00b7 SCITT anchored' }
+    ];
 
-// ═══════════ DROP ZONE ═══════════
-const dz=document.getElementById('dropZoneEl');
-const fi=document.getElementById('fileInput');
-const dr=document.getElementById('dropResult');
+    var lineEls = [];
+    var currentLine = 0;
+    var currentChar = 0;
+    var cursor = null;
+    var typing = false;
 
-dz.addEventListener('click',()=>fi.click());
-
-['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('dragover');}));
-['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('dragover');}));
-
-dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)handleFile(f);});
-fi.addEventListener('change',()=>{if(fi.files[0])handleFile(fi.files[0]);});
-
-function handleFile(f){
-  const nm=f.name.toLowerCase();
-  if(!nm.endsWith('.epi')&&!nm.endsWith('.zip')){showResult('fail','INVALID: Expected .epi or .zip file');return;}
-  const r=new FileReader();
-  r.onload=async()=>{
-    try{
-      const zip=await JSZip.loadAsync(r.result);
-      const mf=zip.file('manifest.json');
-      if(!mf){showResult('fail','INVALID: No manifest.json found');return;}
-      const content=await mf.async('string');
-      const m=JSON.parse(content);
-      const sig=m.signature?'\u2713 Present':'\u2717 Missing';
-      const files=m.file_manifest?Object.keys(m.file_manifest).length:0;
-      const steps=m.steps_count||0;
-      if(m.signature){
-        showResult('pass',
-          '\u2713 VERIFIED &mdash; Trust Level: '+(m.trust_level||'HIGH')+'<br>'+
-          'Signature: '+sig+' &middot; '+files+' files &middot; '+steps+' steps<br>'+
-          'Ed25519 &middot; SHA-256 &middot; Polyglot container valid'
-        );
-      }else{
-        showResult('warn','WARNING: Valid structure but no signature present');
+    function buildLines() {
+      terminalBody.innerHTML = '';
+      lineEls = [];
+      for (var i = 0; i < lines.length; i++) {
+        var div = document.createElement('div');
+        div.style.minHeight = '1.8em';
+        var span = document.createElement('span');
+        span.className = lines[i].cls;
+        div.appendChild(span);
+        terminalBody.appendChild(div);
+        lineEls.push({ div: div, span: span });
       }
-    }catch(err){
-      showResult('fail','FAILED: '+err.message);
     }
-  };
-  r.readAsArrayBuffer(f);
-}
-function showResult(type,msg){
-  dr.className='drop-result drop-result--'+(type==='pass'?'pass':type==='warn'?'fail':'fail')+' show';
-  dr.innerHTML=msg;
-}
 
-// ═══════════ NAV MOBILE ═══════════
-document.getElementById('mobBtn').addEventListener('click',function(){
-  this.classList.toggle('open');
-  document.getElementById('navLinks').classList.toggle('open');
-});
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>{
-  document.getElementById('navLinks').classList.remove('open');
-  document.getElementById('mobBtn').classList.remove('open');
-}));
+    function addCursor(el) {
+      cursor = document.createElement('span');
+      cursor.className = 't-cursor';
+      el.appendChild(cursor);
+    }
 
-// ═══════════ SCROLL REVEAL ═══════════
-const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}})},{threshold:.06,rootMargin:'0px 0px -25px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    function removeCursor() {
+      if (cursor && cursor.parentNode) {
+        cursor.parentNode.removeChild(cursor);
+        cursor = null;
+      }
+    }
+
+    function typeNext() {
+      if (currentLine >= lines.length) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+
+      var line = lines[currentLine];
+      var el = lineEls[currentLine];
+
+      if (currentChar === 0) {
+        addCursor(el.div);
+      }
+
+      if (currentChar < line.text.length) {
+        el.span.textContent += line.text[currentChar];
+        currentChar++;
+        setTimeout(typeNext, 15 + Math.random() * 40);
+      } else {
+        removeCursor();
+        currentLine++;
+        currentChar = 0;
+        var pause = line.pause || 250;
+        setTimeout(typeNext, pause);
+      }
+    }
+
+    buildLines();
+    setTimeout(typeNext, 800);
+  }
+
+  /* ═══════ 3D CARD TILT ═══════ */
+  var cards = document.querySelectorAll('[data-tilt]');
+  for (var i = 0; i < cards.length; i++) {
+    (function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'perspective(800px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 5) + 'deg) translateY(-2px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = '';
+      });
+    })(cards[i]);
+  }
+
+  /* ═══════ DROP ZONE ═══════ */
+  var dz = document.getElementById('dropZoneEl');
+  var fi = document.getElementById('fileInput');
+  var dr = document.getElementById('dropResult');
+
+  if (dz && fi && dr) {
+    dz.addEventListener('click', function() { fi.click(); });
+
+    function prevent(e) { e.preventDefault(); e.stopPropagation(); }
+    ['dragenter','dragover','dragleave','drop'].forEach(function(ev) {
+      dz.addEventListener(ev, prevent);
+      document.body.addEventListener(ev, prevent);
+    });
+
+    ['dragenter','dragover'].forEach(function(ev) {
+      dz.addEventListener(ev, function() { dz.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(function(ev) {
+      dz.addEventListener(ev, function() { dz.classList.remove('dragover'); });
+    });
+
+    dz.addEventListener('drop', function(e) {
+      var f = e.dataTransfer.files[0];
+      if (f) processFile(f);
+    });
+    fi.addEventListener('change', function() {
+      if (fi.files[0]) processFile(fi.files[0]);
+    });
+
+    function showResult(type, msg) {
+      dr.className = 'drop-result drop-result--' + type + ' show';
+      dr.innerHTML = msg;
+    }
+
+    function processFile(file) {
+      var name = file.name.toLowerCase();
+      dr.innerHTML = '';
+      dr.className = 'drop-result';
+
+      if (!name.endsWith('.epi') && !name.endsWith('.zip')) {
+        showResult('fail', 'INVALID FILE TYPE<br>Expected .epi or .zip evidence package.');
+        return;
+      }
+
+      showResult('warn', 'Reading ' + file.name + '...');
+
+      var reader = new FileReader();
+      reader.onload = function() {
+        if (typeof JSZip === 'undefined') {
+          showResult('warn', 'JSZip not loaded. CDN may be blocked.<br><br>Try: <code style="font-family:var(--mono);font-size:.72rem;color:var(--info)">pip install epi-recorder && epi verify ' + file.name + '</code>');
+          return;
+        }
+        JSZip.loadAsync(reader.result).then(function(zip) {
+          var mf = zip.file('manifest.json');
+          if (!mf) {
+            showResult('fail', 'INVALID .EPI<br>No manifest.json found. Not a valid EPI evidence package.');
+            return;
+          }
+          mf.async('string').then(function(content) {
+            try {
+              var m = JSON.parse(content);
+              var files = Object.keys(zip.files).length;
+              var steps = m.steps_count || (m.execution_log ? 'present' : '0');
+              var trust = m.trust_level || (m.signature ? 'MEDIUM' : 'NONE');
+              var sig = m.signature ? 'Ed25519 signature present' : 'No signature';
+              var scitt = m.scitt_receipt ? ' &middot; SCITT anchored' : '';
+
+              if (m.signature) {
+                showResult('pass',
+                  'VERIFIED &mdash; Trust Level: ' + trust + '<br>' +
+                  'Files: ' + files + ' &middot; Steps: ' + steps + '<br>' +
+                  sig + scitt + '<br>' +
+                  '<span style="font-size:.68rem;opacity:.5">SHA-256 &middot; Ed25519 &middot; Polyglot</span>'
+                );
+              } else {
+                showResult('warn', 'VALID STRUCTURE &mdash; No signature<br>Files: ' + files + ' &middot; Steps: ' + steps);
+              }
+            } catch(e) { showResult('fail', 'PARSE ERROR: ' + e.message); }
+          }).catch(function(e) { showResult('fail', 'READ ERROR: ' + e.message); });
+        }).catch(function(e) { showResult('fail', 'NOT A VALID ARCHIVE<br>' + e.message); });
+      };
+      reader.onerror = function() { showResult('fail', 'FILE READ ERROR'); };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+
+  /* ═══════ NAVIGATION ═══════ */
+  var nav = document.getElementById('nav');
+  var mobBtn = document.getElementById('mobBtn');
+  var mobMenu = document.getElementById('mobMenu');
+  var navLinks = document.getElementById('navLinks');
+
+  window.addEventListener('scroll', function() {
+    if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  if (mobBtn && mobMenu) {
+    mobBtn.addEventListener('click', function() {
+      var isOpen = mobMenu.classList.contains('open');
+      mobBtn.classList.toggle('open');
+      mobMenu.classList.toggle('open');
+      mobBtn.setAttribute('aria-expanded', String(!isOpen));
+      document.body.style.overflow = !isOpen ? 'hidden' : '';
+    });
+
+    var menuLinks = mobMenu.querySelectorAll('a');
+    for (var i = 0; i < menuLinks.length; i++) {
+      menuLinks[i].addEventListener('click', function() {
+        mobMenu.classList.remove('open');
+        mobBtn.classList.remove('open');
+        mobBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    }
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      if (mobMenu) mobMenu.classList.remove('open');
+      if (mobBtn) mobBtn.classList.remove('open');
+      if (mobBtn) mobBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  /* ═══════ ACTIVE SECTION HIGHLIGHT ═══════ */
+  if (navLinks) {
+    var sections = document.querySelectorAll('section[id]');
+    var navAs = navLinks.querySelectorAll('a');
+    window.addEventListener('scroll', function() {
+      var current = '';
+      for (var i = 0; i < sections.length; i++) {
+        if (window.scrollY >= sections[i].offsetTop - 120) current = sections[i].getAttribute('id');
+      }
+      for (var j = 0; j < navAs.length; j++) {
+        navAs[j].classList.remove('active');
+        if (navAs[j].getAttribute('href') === '#' + current) navAs[j].classList.add('active');
+      }
+    });
+  }
+
+  /* ═══════ SCROLL REVEAL ═══════ */
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          entries[i].target.classList.add('visible');
+          observer.unobserve(entries[i].target);
+        }
+      }
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+  } else {
+    // Fallback: show everything immediately
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }
+})();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
