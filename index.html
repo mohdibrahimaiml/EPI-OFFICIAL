@@ -4,92 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EPI LABS — Evidence Packaged Infrastructure (.epi)</title>
-<meta name="description" content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible. Three lines of Python. Signed. Sealed. Shipped.">
+<meta name="description" content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible. Three lines of Python.">
 <meta property="og:title" content="EPI LABS — Evidence Packaged Infrastructure (.epi)">
-<meta property="og:description" content="Portable, cryptographically signed, tamper-evident evidence packages for AI. Verify in any browser, offline, no trust required.">
+<meta property="og:description" content="Portable, cryptographically signed evidence for AI. Verify offline, browser-based, no trust required.">
 <meta property="og:image" content="https://epilabs.org/assets/logo.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════ */
-/* EPI LABS — FORENSIC EVIDENCE DESIGN SYSTEM v3.0            */
-/* ═══════════════════════════════════════════════════════════ */
-
+/* ═══════════════ DESIGN TOKENS ═══════════════ */
 :root {
-  --bg-deep:     #06080C;
-  --bg-surface:  #0D1117;
-  --bg-card:     #111820;
-  --bg-elevated: #161D28;
-  --bg-code:     #0B1018;
+  --bg:         #0A0A0B;
+  --bg-alt:     #0F0F12;
+  --bg-card:    #131316;
+  --bg-code:   #0D0D10;
 
-  --text:        #E6EDF3;
-  --text-soft:   #B0B8C4;
-  --text-dim:    #6B7280;
-  --text-muted:  #3D4450;
+  --t-primary:  #FFFFFF;
+  --t-secondary:#A1A1AA;
+  --t-tertiary: #52525B;
 
-  --cyan:         #00E5FF;
-  --cyan-glow:    rgba(0, 229, 255, 0.10);
-  --cyan-border:  rgba(0, 229, 255, 0.20);
-  --cyan-text:    #00C8E0;
+  --accent:     #2E90FA;
+  --accent-dim: #1D5FA0;
 
-  --gold:         #FFD866;
-  --gold-glow:    rgba(255, 216, 102, 0.10);
-  --gold-border:  rgba(255, 216, 102, 0.20);
-  --gold-text:    #E8C040;
+  --green:      #17B26A;
+  --green-bg:   rgba(23, 178, 106, 0.08);
+  --green-line: rgba(23, 178, 106, 0.18);
 
-  --mint:         #00F5A0;
-  --mint-glow:    rgba(0, 245, 160, 0.10);
-  --mint-border:  rgba(0, 245, 160, 0.20);
-  --mint-text:    #00D488;
+  --gold:       #D4A72C;
+  --gold-bg:    rgba(212, 167, 44, 0.08);
 
-  --red:          #FF4D6A;
-  --red-glow:     rgba(255, 77, 106, 0.10);
+  --red:        #F04438;
+  --red-bg:     rgba(240, 68, 56, 0.08);
 
-  --border:       rgba(255, 255, 255, 0.06);
-  --border-light: rgba(255, 255, 255, 0.10);
-  --border-hover: rgba(0, 229, 255, 0.25);
+  --border:     rgba(255,255,255,0.06);
+  --border-subtle: rgba(255,255,255,0.04);
 
-  --radius:       14px;
-  --radius-sm:    8px;
-  --radius-xl:    20px;
+  --radius:     12px;
+  --radius-sm:  8px;
 
-  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
-  --font-mono:    'JetBrains Mono', 'Cascadia Code', monospace;
-
-  --max-w:        1100px;
-  --section-gap:  clamp(100px, 14vw, 180px);
-  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --font:       'Inter', system-ui, sans-serif;
+  --mono:       'JetBrains Mono', monospace;
+  --max-w:      1080px;
+  --gap:        clamp(80px, 12vw, 150px);
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-html {
-  scroll-behavior:smooth;
-  -webkit-font-smoothing:antialiased;
-  background: var(--bg-deep);
-}
-
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
 body {
-  font-family: var(--font-body);
-  background: var(--bg-deep);
-  color: var(--text);
-  line-height: 1.7;
-  overflow-x: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--t-primary);
+  line-height: 1.6;
 }
-
-::selection {
-  background: var(--cyan-glow);
-  color: var(--cyan);
-}
-
 a { color:inherit; text-decoration:none; }
 
-/* ═══════════════ CONTAINER ═══════════════ */
 .container {
   max-width: var(--max-w);
   margin: 0 auto;
@@ -98,573 +70,340 @@ a { color:inherit; text-decoration:none; }
 
 /* ═══════════════ NAV ═══════════════ */
 .nav {
-  position:fixed; top:0; left:0; right:0; z-index:1000;
+  position:fixed; top:0; left:0; right:0; z-index:100;
   padding: 0 clamp(20px, 4vw, 48px);
-  transition: all 0.4s var(--ease-out);
+  transition: background 0.3s, border-color 0.3s;
 }
 .nav.scrolled {
-  background: rgba(6, 8, 12, 0.92);
-  backdrop-filter: blur(24px) saturate(1.6);
+  background: rgba(10,10,11,0.88);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
 .nav-inner {
   max-width: var(--max-w); margin:0 auto;
   display:flex; align-items:center; justify-content:space-between;
-  height:72px;
+  height:68px;
 }
-.nav-logo-group {
-  display:flex; align-items:center; gap:10px;
+.nav-logo {
+  display:flex; align-items:center; gap:8px;
 }
-.nav-logo-icon {
-  width:32px; height:32px;
-  background: linear-gradient(135deg, var(--cyan), var(--mint));
-  border-radius: 8px;
-  display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-mono); font-weight:700; font-size:1rem;
-  color:#000;
-}
-.nav-logo-text {
-  font-family:var(--font-heading); font-weight:700; font-size:1.15rem;
-  letter-spacing:-0.02em;
-}
-.nav-logo-text span { color: var(--cyan); }
-
+.nav-logo img { height:28px; width:auto; }
 .nav-links {
-  display:flex; align-items:center; gap:36px; list-style:none;
+  display:flex; align-items:center; gap:32px; list-style:none;
 }
 .nav-links a {
-  font-size:0.85rem; font-weight:400; color:var(--text-dim);
-  transition: color 0.25s;
+  font-size:0.875rem; color:var(--t-secondary);
+  transition: color 0.2s;
 }
-.nav-links a:hover { color:var(--text); }
-
+.nav-links a:hover { color:var(--t-primary); }
 .nav-cta {
-  padding:8px 20px; border-radius:100px;
-  background: var(--cyan); color:#000 !important;
-  font-weight:600 !important; font-size:0.82rem !important;
-  transition: all 0.25s !important;
+  padding:7px 18px; border-radius:8px;
+  background: var(--t-primary);
+  color: var(--bg) !important;
+  font-weight:500 !important; font-size:0.85rem !important;
 }
-.nav-cta:hover {
-  background: #33EAFF !important;
-  color:#000 !important;
-  box-shadow: 0 4px 20px var(--cyan-glow);
-}
+.nav-cta:hover { background: #E4E4E7 !important; color:var(--bg) !important; }
 
 .nav-mobile-btn {
-  display:none; flex-direction:column; gap:5px;
-  background:none; border:none; cursor:pointer; padding:4px; z-index:2000;
+  display:none; flex-direction:column; gap:4px;
+  background:none; border:none; cursor:pointer; padding:4px;
 }
 .nav-mobile-btn span {
-  display:block; width:22px; height:2px;
-  background:var(--text); border-radius:2px; transition:all 0.3s;
+  display:block; width:20px; height:2px;
+  background:var(--t-primary); border-radius:2px;
 }
 
 /* ═══════════════ HERO ═══════════════ */
 .hero {
   min-height:100vh; display:flex; flex-direction:column;
-  justify-content:center; align-items:center;
-  text-align:center; padding:120px 24px 80px;
-  position:relative; overflow:hidden;
+  justify-content:center; padding:120px 24px 80px;
+  text-align:center;
 }
-
-/* Animated grid background */
-.hero-canvas {
-  position:absolute; inset:0; z-index:0;
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(0,229,255,0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 30%, rgba(0,245,160,0.03) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(255,216,102,0.03) 0%, transparent 50%);
-}
-.hero-dots {
-  position:absolute; inset:0; z-index:0;
-  background-image:
-    radial-gradient(rgba(0,229,255,0.08) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 35%, transparent 70%);
-}
-.hero-glow {
-  position:absolute; width:600px; height:600px;
-  top:50%; left:50%; transform:translate(-50%, -50%);
-  background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 60%);
-  pointer-events:none; z-index:0;
-  animation: glowPulse 6s ease-in-out infinite;
-}
-@keyframes glowPulse {
-  0%, 100% { opacity:0.6; transform:translate(-50%, -50%) scale(1); }
-  50% { opacity:1; transform:translate(-50%, -50%) scale(1.15); }
-}
-
-.hero-content { position:relative; z-index:1; max-width:840px; }
+.hero-content { max-width:760px; margin:0 auto; }
 
 .hero-badge {
   display:inline-flex; align-items:center; gap:8px;
-  padding:6px 18px; border-radius:100px;
-  background: var(--cyan-glow);
-  border:1px solid var(--cyan-border);
-  font-family:var(--font-mono); font-size:0.68rem;
-  color:var(--cyan-text); font-weight:500;
-  margin-bottom: 36px;
-  animation: fadeIn 0.8s ease-out;
+  padding:4px 14px; border-radius:20px;
+  background: var(--green-bg); border:1px solid var(--green-line);
+  font-family:var(--mono); font-size:0.68rem;
+  font-weight:500; color:var(--green);
+  margin-bottom:40px;
 }
 .hero-badge-dot {
-  width:7px; height:7px; border-radius:50%;
-  background:var(--mint);
-  box-shadow: 0 0 10px var(--mint);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity:1; }
-  50% { opacity:0.35; }
+  width:6px; height:6px; border-radius:50%;
+  background:var(--green);
 }
 
-.hero-title {
-  font-family:var(--font-heading);
-  font-size: clamp(2.6rem, 6vw, 4.8rem);
-  font-weight:700; line-height:1.06; letter-spacing:-0.03em;
-  color: var(--text);
-  margin-bottom: 8px;
-  animation: fadeIn 0.8s ease-out 0.1s both;
+.hero h1 {
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+  font-weight:700; line-height:1.08; letter-spacing:-0.03em;
+  margin-bottom:22px;
 }
-.hero-title-accent {
-  display:inline-block;
-  background: linear-gradient(135deg, var(--cyan), var(--mint));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+.hero-title-dim { color: var(--t-secondary); font-weight:400; }
+.hero-title-accent { color: var(--accent); }
 .hero-title-ext {
-  font-family:var(--font-mono);
-  font-size:0.42em;
-  color:var(--cyan);
-  vertical-align: super;
+  font-family:var(--mono); font-size:0.38em;
+  color:var(--accent); vertical-align:super; font-weight:500;
 }
 
 .hero-hash {
-  font-family:var(--font-mono); font-size:0.62rem;
-  color:var(--text-muted); margin-bottom:28px;
-  word-break:break-all;
-  animation: fadeIn 0.8s ease-out 0.15s both;
+  font-family:var(--mono); font-size:0.62rem;
+  color:var(--t-tertiary); margin-bottom:28px;
 }
-
 .hero-desc {
-  font-size:1.08rem; color:var(--text-soft);
-  line-height:1.72; max-width:640px;
-  margin:0 auto 40px; font-weight:300;
-  animation: fadeIn 0.8s ease-out 0.2s both;
+  font-size:1.08rem; color:var(--t-secondary);
+  line-height:1.7; max-width:600px; margin:0 auto 42px;
 }
-.hero-desc strong { font-weight:600; color:var(--text); }
+.hero-desc strong { color:var(--t-primary); font-weight:600; }
 
 .hero-actions {
-  display:flex; gap:14px; justify-content:center;
-  flex-wrap:wrap;
-  animation: fadeIn 0.8s ease-out 0.25s both;
-}
-
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(18px); }
-  to { opacity:1; transform:translateY(0); }
+  display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
 }
 
 /* ═══════════════ BUTTONS ═══════════════ */
 .btn {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:13px 28px; border-radius:100px;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:11px 24px; border-radius:8px;
   font-size:0.9rem; font-weight:500; cursor:pointer;
-  transition: all 0.3s var(--ease-out);
-  border:none; font-family:var(--font-body);
+  transition:all 0.2s; border:none; font-family:var(--font);
 }
 .btn-primary {
-  background: linear-gradient(135deg, var(--cyan), #00C8E0);
-  color:#000 !important;
-  font-weight:600;
+  background: var(--t-primary); color:var(--bg);
 }
-.btn-primary:hover {
-  transform:translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,229,255,0.25);
-}
+.btn-primary:hover { background: #E4E4E7; }
 .btn-secondary {
-  background:transparent; color:var(--text);
-  border:1px solid var(--border-light);
+  background: transparent; color: var(--t-secondary);
+  border:1px solid var(--border);
 }
 .btn-secondary:hover {
-  border-color:var(--cyan);
-  background:var(--cyan-glow);
+  border-color: var(--t-tertiary);
+  color: var(--t-primary);
 }
-.btn-ghost {
-  background:transparent; color:var(--text-dim);
-  border:1px solid var(--border);
-  font-family:var(--font-mono); font-size:0.76rem;
+.btn-outline {
+  background:transparent; color:var(--t-tertiary);
+  border:1px solid var(--border-subtle);
+  font-family:var(--mono); font-size:0.78rem;
 }
-.btn-ghost:hover {
-  border-color:var(--text-dim);
-  color:var(--text);
-}
-.btn-arrow { transition:transform 0.25s; }
-.btn:hover .btn-arrow { transform:translateX(3px); }
+.btn-outline:hover { border-color:var(--border); color:var(--t-secondary); }
+.btn-arrow { transition:transform 0.2s; }
+.btn:hover .btn-arrow { transform:translateX(2px); }
 
-/* ═══════════════ TERMINAL BLOCK ═══════════════ */
 .terminal-block {
-  margin-top:48px;
-  background: var(--bg-code);
-  border:1px solid var(--border);
-  border-radius: var(--radius-xl);
-  overflow:hidden;
-  max-width:600px; width:100%;
-  text-align:left;
-  animation: fadeIn 0.8s ease-out 0.3s both;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  margin-top:48px; max-width:580px; width:100%;
+  background: var(--bg-code); border:1px solid var(--border);
+  border-radius: var(--radius); overflow:hidden; text-align:left;
 }
 .terminal-bar {
   display:flex; align-items:center; gap:8px;
-  padding:10px 18px;
-  background: rgba(255,255,255,0.015);
+  padding:10px 16px; background:rgba(255,255,255,0.015);
   border-bottom:1px solid var(--border);
 }
-.terminal-bar-dot { width:10px; height:10px; border-radius:50%; }
-.terminal-bar-dot.red    { background:#FF5F57; }
-.terminal-bar-dot.yellow { background:#FFBD2E; }
-.terminal-bar-dot.green  { background:#28C840; }
-.terminal-bar-title {
-  margin-left:12px; font-family:var(--font-mono);
-  font-size:0.68rem; color:var(--text-muted);
+.terminal-bar span {
+  margin-left:8px; font-family:var(--mono);
+  font-size:0.66rem; color:var(--t-tertiary);
 }
+.t-dot { width:9px; height:9px; border-radius:50%; }
+.t-dot.r { background:#F04438; }
+.t-dot.y { background:#D4A72C; }
+.t-dot.g { background:#17B26A; }
+
 .terminal-body {
-  padding:22px 24px;
-  font-family:var(--font-mono);
-  font-size:0.78rem;
-  line-height:2.1;
+  padding:20px 22px;
+  font-family:var(--mono); font-size:0.76rem; line-height:2;
 }
-.terminal-body .t-dim  { color:var(--text-dim); }
-.terminal-body .t-cyan { color:var(--cyan); }
-.terminal-body .t-mint { color:var(--mint); }
-.terminal-body .t-gold { color:var(--gold-text); }
+.t-dim  { color:var(--t-tertiary); }
+.t-cyan { color:var(--accent); }
+.t-green{ color:var(--green); }
+.t-gold { color:var(--gold); }
 
 /* ═══════════════ SECTIONS ═══════════════ */
-section { padding: var(--section-gap) 0; position:relative; }
+section { padding: var(--gap) 0; }
+.section-alt { background: var(--bg-alt); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 
 .section-label {
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--font-mono); font-size:0.68rem;
-  text-transform:uppercase; letter-spacing:0.14em;
-  color:var(--cyan-text); margin-bottom:14px;
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--mono); font-size:0.66rem;
+  text-transform:uppercase; letter-spacing:0.12em;
+  color:var(--t-tertiary); margin-bottom:12px;
 }
-.section-label::before { content:'//'; }
+.section-label::before { content:'//'; color:var(--accent); }
 
 .section-title {
-  font-family:var(--font-heading);
-  font-size: clamp(1.8rem, 3.8vw, 2.9rem);
-  font-weight:700; line-height:1.12;
-  letter-spacing:-0.02em; margin-bottom:14px;
-  color: var(--text);
+  font-size:clamp(1.6rem, 3vw, 2.4rem);
+  font-weight:700; line-height:1.14; letter-spacing:-0.02em;
+  margin-bottom:12px;
 }
-
-.section-desc {
-  font-size:1.05rem; color:var(--text-soft);
-  max-width:560px; line-height:1.7; font-weight:300;
-}
-
-/* ═══════════════ SECTION VARIANTS ═══════════════ */
-.section-alt {
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-/* ═══════════════ THESIS ═══════════════ */
-.thesis-inner {
-  text-align:center; max-width:760px; margin:0 auto;
-}
-.thesis-quote {
-  font-family:var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight:600; line-height:1.38; letter-spacing:-0.02em;
-  color:var(--text);
-}
-.thesis-quote em {
-  font-style:normal;
-  background: linear-gradient(135deg, var(--cyan), var(--mint));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.thesis-attr {
-  font-family:var(--font-mono); font-size:0.7rem;
-  color:var(--text-muted); margin-top:18px;
-  text-transform:uppercase; letter-spacing:0.12em;
+.section-sub {
+  font-size:1rem; color:var(--t-secondary);
+  max-width:540px; line-height:1.7;
 }
 
 /* ═══════════════ THREE PILLARS ═══════════════ */
-.pillars-grid {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:16px; margin-top:64px;
+.pillars {
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  gap:16px; margin-top:60px;
 }
 .pillar {
-  background: var(--bg-card);
-  border:1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 36px 28px 28px;
-  transition: all 0.4s var(--ease-out);
-  position:relative; overflow:hidden;
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:32px 26px;
+  transition: border-color 0.3s;
 }
-.pillar::before {
-  content:'';
-  position:absolute; top:0; left:0; right:0;
-  height:3px;
-  background: linear-gradient(90deg, var(--cyan), var(--mint));
-  opacity:0; transition:opacity 0.3s;
-}
-.pillar:hover::before { opacity:1; }
-.pillar:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-}
+.pillar:hover { border-color: var(--accent-dim); }
 .pillar-icon {
-  font-family:var(--font-mono);
-  font-size:2rem; margin-bottom:14px;
+  font-family:var(--mono); font-size:1.8rem; margin-bottom:14px;
 }
-.pillar-icon.c { color:var(--cyan); }
-.pillar-icon.g { color:var(--mint); }
-.pillar-icon.go { color:var(--gold-text); }
-.pillar h3 {
-  font-family:var(--font-heading);
-  font-size:1.1rem; font-weight:600;
-  margin-bottom:8px;
-}
-.pillar p {
-  font-size:0.88rem; color:var(--text-dim);
-  line-height:1.6;
-}
-.pillar-file {
-  margin-top:24px; padding-top:18px;
-  border-top:1px solid var(--border);
-  font-family:var(--font-mono); font-size:0.62rem;
-  color:var(--text-muted);
+.pillar h3 { font-size:1rem; font-weight:600; margin-bottom:6px; }
+.pillar p { font-size:0.88rem; color:var(--t-secondary); line-height:1.6; }
+.pillar-meta {
+  margin-top:22px; padding-top:16px; border-top:1px solid var(--border);
+  font-family:var(--mono); font-size:0.62rem; color:var(--t-tertiary);
 }
 
-/* ═══════════════ VERIFICATION GRID ═══════════════ */
+/* ═══════════════ VERIFICATION ═══════════════ */
 .verify-grid {
-  display:grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap:12px; margin-top:64px;
-  counter-reset: vs;
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:12px; margin-top:56px; counter-reset:vs;
 }
-.verify-card {
-  background: var(--bg-card);
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  padding:24px 18px; text-align:center;
-  transition: all 0.3s var(--ease-out);
-  position:relative;
+.v-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:22px 16px;
+  text-align:center; transition:border-color 0.2s;
 }
-.verify-card::before {
-  counter-increment:vs;
-  content: "0" counter(vs);
-  display:block;
-  font-family:var(--font-mono);
-  font-size:0.7rem; font-weight:700;
-  color:var(--cyan);
-  margin-bottom:10px;
+.v-card::before {
+  counter-increment:vs; content:"0" counter(vs);
+  display:block; font-family:var(--mono); font-size:0.68rem;
+  font-weight:600; color:var(--accent); margin-bottom:8px;
 }
-.verify-card:hover {
-  border-color:var(--mint-border);
-}
-.verify-card:hover::before { color:var(--mint); }
-.verify-card h4 {
-  font-size:0.82rem; font-weight:600;
-  margin-bottom:6px;
-}
-.verify-card p {
-  font-size:0.76rem; color:var(--text-dim);
-  line-height:1.5;
-}
+.v-card:hover { border-color: var(--accent-dim); }
+.v-card h4 { font-size:0.85rem; font-weight:600; margin-bottom:4px; }
+.v-card p { font-size:0.78rem; color:var(--t-secondary); line-height:1.5; }
 
 /* ═══════════════ TRUST TABLE ═══════════════ */
-.trust-table {
-  width:100%; border-collapse: separate; border-spacing:0;
-  margin-top:56px; border-radius:var(--radius-xl);
-  overflow:hidden;
-  border:1px solid var(--border);
+.trust-wrap {
+  margin-top:56px; border-radius:var(--radius);
+  border:1px solid var(--border); overflow:hidden;
 }
+.trust-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
 .trust-table th {
-  font-family:var(--font-mono); font-size:0.66rem;
-  text-transform:uppercase; letter-spacing:0.1em;
-  color:var(--text-muted); background:var(--bg-card);
-  text-align:left; padding:14px 18px;
-  border-bottom:1px solid var(--border);
+  font-family:var(--mono); font-size:0.64rem; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--t-tertiary);
+  background:var(--bg-card); text-align:left;
+  padding:12px 16px; border-bottom:1px solid var(--border);
 }
 .trust-table td {
-  padding:15px 18px; border-bottom:1px solid var(--border);
-  color:var(--text-soft); font-size:0.88rem;
-  background:var(--bg-surface);
+  padding:13px 16px; border-bottom:1px solid var(--border);
+  color:var(--t-secondary); background:var(--bg);
 }
 .trust-table tr:last-child td { border-bottom:none; }
 .trust-table tr:hover td { background:var(--bg-card); }
 
-.trust-badge {
-  display:inline-flex; align-items:center; gap:6px;
-  font-family:var(--font-mono); font-size:0.7rem;
-  font-weight:600; padding:4px 12px;
-  border-radius:100px;
+.tag {
+  display:inline-flex; font-family:var(--mono); font-size:0.68rem;
+  font-weight:600; padding:3px 10px; border-radius:20px;
 }
-.trust-badge.high {
-  background: var(--mint-glow); color: var(--mint-text);
-  border:1px solid var(--mint-border);
-}
-.trust-badge.med {
-  background: var(--gold-glow); color: var(--gold-text);
-  border:1px solid var(--gold-border);
-}
-.trust-badge.low {
-  background: rgba(255,255,255,0.04); color: var(--text-dim);
-  border:1px solid var(--border-light);
-}
-.trust-badge.tampered {
-  background: var(--red-glow); color: var(--red);
-  border:1px solid rgba(255,77,106,0.25);
-}
+.tag-high { background:var(--green-bg); color:var(--green); border:1px solid var(--green-line); }
+.tag-med  { background:var(--gold-bg); color:var(--gold); }
+.tag-low  { background:transparent; color:var(--t-secondary); border:1px solid var(--border); }
+.tag-tampered { background:var(--red-bg); color:var(--red); }
 
-/* ═══════════════ CODE DEMO ═══════════════ */
-.code-demo {
-  background: var(--bg-code);
-  border:1px solid var(--border); border-radius:var(--radius-xl);
-  overflow:hidden; margin-top:56px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+/* ═══════════════ CODE ═══════════════ */
+.code-block {
+  margin-top:56px; background:var(--bg-code);
+  border:1px solid var(--border); border-radius:var(--radius);
+  overflow:hidden;
 }
 .code-bar {
   display:flex; align-items:center; gap:8px;
-  padding:10px 18px; background:rgba(255,255,255,0.015);
+  padding:10px 16px; background:rgba(255,255,255,0.015);
   border-bottom:1px solid var(--border);
 }
 .code-body {
-  padding:32px;
-  font-family:var(--font-mono);
-  font-size:0.82rem; line-height:2.1;
-  color: var(--text);
+  padding:28px 28px;
+  font-family:var(--mono); font-size:0.8rem; line-height:2;
+  color:var(--t-primary);
 }
 .c-kw { color:#FF7B72; }
 .c-fn { color:#D2A8FF; }
 .c-s  { color:#A5D6FF; }
-.c-c  { color:var(--text-muted); }
-.c-g  { color:var(--mint); }
-.c-cy { color:var(--cyan); }
+.c-c  { color:var(--t-tertiary); }
+.c-g  { color:var(--green); }
 
-/* ═══════════════ COMPLIANCE GRID ═══════════════ */
+/* ═══════════════ COMPLIANCE ═══════════════ */
 .comp-grid {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  display:grid; grid-template-columns:repeat(3,1fr);
   gap:14px; margin-top:56px;
 }
 .comp-card {
-  background: var(--bg-card);
-  border:1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding:32px 26px;
-  transition: all 0.3s var(--ease-out);
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:28px 24px;
+  transition:border-color 0.2s;
 }
-.comp-card:hover {
-  border-color: var(--border-hover);
+.comp-card:hover { border-color:var(--accent-dim); }
+.comp-card-label {
+  font-family:var(--mono); font-size:0.68rem;
+  color:var(--accent); text-transform:uppercase;
+  letter-spacing:0.08em; margin-bottom:10px;
 }
-.comp-card h4 {
-  font-family:var(--font-mono);
-  font-size:0.72rem; color:var(--cyan-text);
-  text-transform:uppercase; letter-spacing:0.1em;
-  margin-bottom:12px;
-}
-.comp-card h5 {
-  font-family:var(--font-heading);
-  font-size:1.05rem; font-weight:600;
-  margin-bottom:8px;
-}
-.comp-card p {
-  font-size:0.88rem; color:var(--text-dim);
-  line-height:1.6;
-}
+.comp-card h4 { font-size:1rem; font-weight:600; margin-bottom:6px; }
+.comp-card p { font-size:0.88rem; color:var(--t-secondary); line-height:1.6; }
 
 /* ═══════════════ SPEC BANNER ═══════════════ */
 .spec-banner {
-  background: var(--bg-card);
-  border:1px solid var(--cyan-border);
-  border-radius: var(--radius-xl);
-  padding:28px 32px; margin-top:56px;
-  display:flex; align-items:center; gap:24px;
+  margin-top:48px; background:var(--bg-card);
+  border:1px solid var(--border); border-radius:var(--radius);
+  padding:24px 28px; display:flex; align-items:center; gap:20px;
 }
-.spec-banner-icon {
-  font-family:var(--font-mono); font-size:2.4rem;
-  flex-shrink:0;
-}
-.spec-banner-text h4 {
-  font-family:var(--font-heading); font-size:1rem;
-  font-weight:600; margin-bottom:4px;
-}
-.spec-banner-text p {
-  font-size:0.85rem; color:var(--text-dim);
-}
+.spec-icon { font-family:var(--mono); font-size:2rem; flex-shrink:0; }
+.spec-text h4 { font-size:0.95rem; font-weight:600; margin-bottom:2px; }
+.spec-text p { font-size:0.82rem; color:var(--t-secondary); }
 
 /* ═══════════════ CTA ═══════════════ */
-.cta-section { text-align:center; }
-.cta-section .section-desc { margin:0 auto 40px; }
-.cta-actions {
-  display:flex; gap:14px; justify-content:center;
-  flex-wrap:wrap; margin-top:8px;
-}
+.cta { text-align:center; }
+.cta .section-sub { margin:0 auto 36px; }
+.cta-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
 /* ═══════════════ FOOTER ═══════════════ */
 .footer {
-  border-top:1px solid var(--border);
-  padding:48px 0;
+  border-top:1px solid var(--border); padding:44px 0;
 }
 .footer-inner {
   display:flex; justify-content:space-between;
   align-items:flex-start; gap:32px;
 }
-.footer-brand {
-  display:flex; flex-direction:column; gap:6px;
-}
-.footer-logo {
-  font-family:var(--font-heading); font-size:1.15rem;
-  font-weight:700; letter-spacing:-0.02em;
-}
-.footer-logo span { color:var(--cyan); }
+.footer-brand { display:flex; flex-direction:column; gap:6px; }
+.footer-brand img { height:24px; width:auto; margin-bottom:4px; }
 .footer-hash {
-  font-family:var(--font-mono); font-size:0.58rem;
-  color:var(--text-muted);
+  font-family:var(--mono); font-size:0.56rem; color:var(--t-tertiary);
 }
 .footer-copy {
-  font-size:0.8rem; color:var(--text-dim);
-  margin-top:8px;
+  font-size:0.82rem; color:var(--t-secondary);
+  margin-top:6px;
 }
-.footer-links {
-  display:flex; gap:36px; list-style:none;
-}
-.footer-col h4 {
-  font-family:var(--font-mono); font-size:0.66rem;
-  text-transform:uppercase; letter-spacing:0.1em;
-  color:var(--text-muted); margin-bottom:12px;
+.footer-links { display:flex; gap:48px; }
+.footer-col h5 {
+  font-family:var(--mono); font-size:0.64rem;
+  text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--t-tertiary); margin-bottom:10px;
 }
 .footer-col a {
-  display:block; font-size:0.85rem; color:var(--text-soft);
-  margin-bottom:8px; transition:color 0.2s;
+  display:block; font-size:0.85rem; color:var(--t-secondary);
+  margin-bottom:6px; transition:color 0.2s;
 }
-.footer-col a:hover { color:var(--text); }
+.footer-col a:hover { color:var(--t-primary); }
 
-/* ═══════════════ REVEAL ANIMATIONS ═══════════════ */
+/* ═══════════════ SCROLL REVEAL ═══════════════ */
 .reveal {
-  opacity:0; transform:translateY(30px);
-  transition: all 0.7s var(--ease-out);
+  opacity:0; transform:translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
-.reveal.visible {
-  opacity:1; transform:translateY(0);
-}
-.reveal-d1 { transition-delay:0.1s; }
-.reveal-d2 { transition-delay:0.2s; }
-.reveal-d3 { transition-delay:0.3s; }
-.reveal-d4 { transition-delay:0.35s; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.r1 { transition-delay:0.1s; }
+.r2 { transition-delay:0.2s; }
+.r3 { transition-delay:0.3s; }
 
 /* ═══════════════ RESPONSIVE ═══════════════ */
 @media (max-width:1024px) {
-  .verify-grid { grid-template-columns:repeat(3, 1fr); }
+  .verify-grid { grid-template-columns:repeat(3,1fr); }
 }
 
 @media (max-width:768px) {
@@ -672,43 +411,30 @@ section { padding: var(--section-gap) 0; position:relative; }
   .nav-mobile-btn { display:flex; }
   .nav-links.open {
     display:flex; flex-direction:column;
-    position:absolute; top:72px; left:0; right:0;
-    background:rgba(6,8,12,0.98); backdrop-filter:blur(20px);
-    padding:24px; gap:20px;
-    border-bottom:1px solid var(--border);
+    position:absolute; top:68px; left:0; right:0;
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:20px; gap:16px;
   }
-  .nav-links.open a { color:var(--text); font-size:1rem; }
-
-  .pillars-grid, .comp-grid { grid-template-columns:1fr; }
-  .verify-grid { grid-template-columns:repeat(2, 1fr); }
-
-  .hero-title { font-size:1.9rem; }
+  .nav-links.open a { color:var(--t-primary); font-size:0.95rem; }
+  .pillars,.comp-grid { grid-template-columns:1fr; }
+  .verify-grid { grid-template-columns:repeat(2,1fr); }
+  .hero h1 { font-size:1.8rem; }
   .hero-desc { font-size:0.92rem; }
   .terminal-block { max-width:100%; }
-  .terminal-body { font-size:0.68rem; padding:16px; }
-  .code-body { font-size:0.68rem; padding:20px; line-height:1.8; }
-
-  .spec-banner { flex-direction:column; text-align:center; }
-
+  .terminal-body { font-size:0.68rem; padding:14px; }
+  .code-body { font-size:0.68rem; padding:18px; line-height:1.8; }
+  .section-title { font-size:1.5rem; }
   .footer-inner { flex-direction:column; align-items:center; text-align:center; }
   .footer-links { gap:24px; }
-  .section-title { font-size:1.6rem; }
-  .section-desc { font-size:0.95rem; }
-
-  .trust-table { font-size:0.75rem; }
-  .trust-table th, .trust-table td { padding:10px 12px; }
+  .spec-banner { flex-direction:column; text-align:center; }
 }
 
 @media (max-width:480px) {
   .hero { padding:100px 16px 50px; }
-  .hero-title { font-size:1.5rem; }
+  .hero h1 { font-size:1.4rem; }
   .hero-actions { flex-direction:column; align-items:center; }
   .hero-actions .btn { width:100%; justify-content:center; }
-
   .verify-grid { grid-template-columns:1fr; }
-  .pillar { padding:24px 20px; }
-  .code-body { font-size:0.62rem; padding:14px; }
-  .comp-card { padding:24px 20px; }
 }
 </style>
 </head>
@@ -717,9 +443,8 @@ section { padding: var(--section-gap) 0; position:relative; }
 <!-- ═══════════════ NAV ═══════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo-group">
-      <div class="nav-logo-icon">.e</div>
-      <div class="nav-logo-text">EPI <span>LABS</span></div>
+    <a href="#" class="nav-logo">
+      <img src="assets/logo.png" alt="EPI LABS">
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#evidence">Evidence</a></li>
@@ -737,20 +462,19 @@ section { padding: var(--section-gap) 0; position:relative; }
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero" id="home">
-  <div class="hero-canvas"></div>
-  <div class="hero-dots"></div>
-  <div class="hero-glow"></div>
   <div class="hero-content">
     <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      SYSTEM STATUS: OPERATIONAL &middot; v4.2.0 &middot; MIT LICENSE
+      <span class="hero-badge-dot"></span>v4.2.0 &middot; OPERATIONAL &middot; MIT LICENSE
     </div>
-    <h1 class="hero-title">
-      EVIDENCE PACKAGED<br><span class="hero-title-accent">INFRASTRUCTURE</span><span class="hero-title-ext">(.epi)</span>
+    <h1>
+      <span class="hero-title-dim">EVIDENCE</span><br>
+      <span class="hero-title-dim">PACKAGED</span><br>
+      <span class="hero-title-accent">INFRASTRUCTURE</span>
+      <span class="hero-title-ext">(.epi)</span>
     </h1>
     <div class="hero-hash">SHA256: a3f7b2c9d1e8f4a6b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8</div>
     <p class="hero-desc">
-      EPI captures AI agent executions into a single, cryptographically signed, tamper-evident <strong>.epi</strong> file — like a PDF for evidence. <strong>Three lines of Python.</strong> Regulators verify in any browser, offline, without trusting the producer.
+      <strong>EPI</strong> captures AI agent executions into a cryptographically signed, tamper-evident <strong>.epi</strong> file — like a PDF for evidence. Three lines of Python. Regulators verify in any browser, offline, without trusting the producer.
     </p>
     <div class="hero-actions">
       <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">
@@ -759,24 +483,22 @@ section { padding: var(--section-gap) 0; position:relative; }
       <a href="viewer/" class="btn btn-secondary">
         Open Decision Ops <span class="btn-arrow">&rarr;</span>
       </a>
-      <a href="how-it-works.html" class="btn btn-ghost">
+      <a href="how-it-works.html" class="btn btn-outline">
         See the Evidence Package
       </a>
     </div>
     <div class="terminal-block">
       <div class="terminal-bar">
-        <div class="terminal-bar-dot red"></div>
-        <div class="terminal-bar-dot yellow"></div>
-        <div class="terminal-bar-dot green"></div>
-        <span class="terminal-bar-title">epi-recorder v4.2.0 — bash — 80x24</span>
+        <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+        <span>epi-recorder v4.2.0</span>
       </div>
       <div class="terminal-body">
         <span class="t-dim">$</span> <span class="t-cyan">pip install epi-recorder</span><br>
         <span class="t-dim">$</span> <span class="t-cyan">epi run agent.py</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-mint">Recording 42 steps...</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-mint">Sealed agent.epi &check; Ed25519 signed</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-green">Recording 42 steps...</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-green">Sealed agent.epi &#x2713; Ed25519 signed</span><br>
         <span class="t-dim">$</span> <span class="t-cyan">epi verify agent.epi</span><br>
-        <span class="t-dim">&rarr;</span> <span class="t-mint">VERIFIED &check; Trust Level: HIGH</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-green">VERIFIED &#x2713; Trust Level: HIGH</span><br>
         <span class="t-dim">&rarr;</span> <span class="t-gold">Ed25519 &middot; 42 steps &middot; SHA-256 &middot; SCITT anchored</span>
       </div>
     </div>
@@ -785,13 +507,12 @@ section { padding: var(--section-gap) 0; position:relative; }
 
 <!-- ═══════════════ THESIS ═══════════════ -->
 <section class="section-alt">
-  <div class="container">
-    <div class="thesis-inner reveal">
-      <p class="thesis-quote">
-        "AI evidence shouldn't live in someone else's dashboard.<br>
-        It should be a <em>file</em> you can open."
+  <div class="container" style="text-align:center; max-width:700px;">
+    <div class="reveal">
+      <p style="font-size:clamp(1.2rem,2.5vw,1.8rem); font-weight:600; line-height:1.5; letter-spacing:-0.02em;">
+        "AI evidence shouldn't live in<br>someone else's dashboard.<br>It should be a <span style="color:var(--accent)">file</span> you can open."
       </p>
-      <p class="thesis-attr">The EPI Thesis</p>
+      <p style="font-family:var(--mono); font-size:0.7rem; color:var(--t-tertiary); margin-top:16px; text-transform:uppercase; letter-spacing:0.1em;">The EPI Thesis</p>
     </div>
   </div>
 </section>
@@ -800,32 +521,28 @@ section { padding: var(--section-gap) 0; position:relative; }
 <section id="evidence">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">
-        <span style="margin-left:4px">The Evidence Container</span>
-      </div>
-      <h2 class="section-title reveal reveal-d1">One file. Complete proof.</h2>
-      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
-        Every consequential AI decision sealed into a single, portable, cryptographically signed artifact.
-      </p>
+      <div class="section-label reveal">Container</div>
+      <h2 class="section-title reveal r1">One file. Complete proof.</h2>
+      <p class="section-sub reveal r2" style="margin:0 auto">Every consequential AI decision sealed into a portable, cryptographically signed artifact.</p>
     </div>
-    <div class="pillars-grid reveal reveal-d3">
+    <div class="pillars reveal r3">
       <div class="pillar">
-        <div class="pillar-icon c">&#x1F512;</div>
+        <div class="pillar-icon">&#x1F512;</div>
         <h3>Cryptographic Signing</h3>
-        <p>Ed25519 signed manifest. SHA-256 file integrity. Every byte change invalidates the signature. Tamper-evident by construction.</p>
-        <div class="pillar-file">manifest.json &larr; Ed25519 signature</div>
+        <p>Ed25519 signed manifest. SHA-256 file integrity. Any byte change invalidates the signature.</p>
+        <div class="pillar-meta">manifest.json &larr; Ed25519 signature</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon g">&#x1F517;</div>
+        <div class="pillar-icon">&#x1F517;</div>
         <h3>Hash-Chained Timeline</h3>
-        <p>Every step in steps.jsonl is linked to its predecessor via prev_hash. Insert, delete, or reorder — the chain breaks. Immutable by design.</p>
-        <div class="pillar-file">steps.jsonl &larr; prev_hash chain</div>
+        <p>Every step linked to its predecessor via prev_hash. Insert, delete, or reorder — the chain breaks.</p>
+        <div class="pillar-meta">steps.jsonl &larr; prev_hash chain</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon go">&#x1F4E6;</div>
+        <div class="pillar-icon">&#x1F4E6;</div>
         <h3>Polyglot Container</h3>
-        <p>A .epi file is valid HTML AND a binary evidence archive. Double-click opens in any browser. Zero install. Zero upload. Fully offline.</p>
-        <div class="pillar-file">.epi &larr; HTML + ZIP + signature</div>
+        <p>Valid HTML AND binary archive. Double-click opens in any browser. Zero install. Fully offline.</p>
+        <div class="pillar-meta">.epi &larr; HTML + ZIP + signature</div>
       </div>
     </div>
   </div>
@@ -835,20 +552,16 @@ section { padding: var(--section-gap) 0; position:relative; }
 <section class="section-alt" id="verify">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">
-        <span style="margin-left:4px">Verification</span>
-      </div>
-      <h2 class="section-title reveal reveal-d1">Five independent checks</h2>
-      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
-        No server. No trust. No installation. Just a browser and a .epi file.
-      </p>
+      <div class="section-label reveal">Verification</div>
+      <h2 class="section-title reveal r1">Five independent checks</h2>
+      <p class="section-sub reveal r2" style="margin:0 auto">No server. No trust. No installation. Just a browser and a .epi file.</p>
     </div>
-    <div class="verify-grid reveal reveal-d3">
-      <div class="verify-card"><h4>Structure</h4><p>Valid envelope, extractable ZIP, required files present.</p></div>
-      <div class="verify-card"><h4>Integrity</h4><p>Every file hash in file_manifest matches computed SHA-256.</p></div>
-      <div class="verify-card"><h4>Signature</h4><p>Ed25519 signature valid against canonical manifest hash.</p></div>
-      <div class="verify-card"><h4>Chain</h4><p>prev_hash links intact. Monotonic indices and timestamps.</p></div>
-      <div class="verify-card"><h4>SCITT</h4><p>COSE_Sign1 statement + receipt verified against ledger.</p></div>
+    <div class="verify-grid reveal r3">
+      <div class="v-card"><h4>Structure</h4><p>Valid envelope, extractable ZIP, required files present.</p></div>
+      <div class="v-card"><h4>Integrity</h4><p>Every file hash matches computed SHA-256.</p></div>
+      <div class="v-card"><h4>Signature</h4><p>Ed25519 valid against canonical manifest hash.</p></div>
+      <div class="v-card"><h4>Chain</h4><p>prev_hash links intact. Monotonic indices.</p></div>
+      <div class="v-card"><h4>SCITT</h4><p>COSE_Sign1 statement + receipt verified.</p></div>
     </div>
   </div>
 </section>
@@ -857,42 +570,38 @@ section { padding: var(--section-gap) 0; position:relative; }
 <section>
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">
-        <span style="margin-left:4px">Trust Model</span>
-      </div>
-      <h2 class="section-title reveal reveal-d1">Who signed it. What it proves.</h2>
-      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
-        Every .epi artifact carries a trust level. Is the data intact? Do you trust the signer? The model answers both.
-      </p>
+      <div class="section-label reveal">Trust Model</div>
+      <h2 class="section-title reveal r1">Who signed it. What it proves.</h2>
+      <p class="section-sub reveal r2" style="margin:0 auto">Every .epi artifact carries a trust level — computed from integrity, signature, identity, and transparency.</p>
     </div>
-    <div class="reveal reveal-d3" style="overflow-x:auto">
+    <div class="trust-wrap reveal r3">
       <table class="trust-table">
         <thead>
           <tr><th>Level</th><th>Integrity</th><th>Signature</th><th>Identity</th><th>SCITT</th><th>Meaning</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="trust-badge high">HIGH</span></td>
+            <td><span class="tag tag-high">HIGH</span></td>
             <td>PASS</td><td>VALID</td><td>KNOWN</td><td>—</td>
             <td>Trust registry verified signer identity</td>
           </tr>
           <tr>
-            <td><span class="trust-badge med">MEDIUM</span></td>
-            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&check;</td>
-            <td>Valid signature, ledger-anchored</td>
+            <td><span class="tag tag-med">MEDIUM</span></td>
+            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&#x2713;</td>
+            <td>Valid signature, SCITT ledger-anchored</td>
           </tr>
           <tr>
-            <td><span class="trust-badge low">LOW</span></td>
+            <td><span class="tag tag-low">LOW</span></td>
             <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>—</td>
             <td>Valid but unverified identity</td>
           </tr>
           <tr>
-            <td style="color:var(--text-muted)">NONE</td>
+            <td style="color:var(--t-tertiary)">NONE</td>
             <td>—</td><td>—</td><td>—</td><td>—</td>
             <td>No signature present</td>
           </tr>
           <tr>
-            <td><span class="trust-badge tampered">TAMPERED</span></td>
+            <td><span class="tag tag-tampered">TAMPERED</span></td>
             <td>FAIL</td><td>INVALID</td><td>—</td><td>—</td>
             <td>Integrity failure or signature mismatch</td>
           </tr>
@@ -906,20 +615,14 @@ section { padding: var(--section-gap) 0; position:relative; }
 <section class="section-alt" id="integrate">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">
-        <span style="margin-left:4px">Integration</span>
-      </div>
-      <h2 class="section-title reveal reveal-d1">Three lines of Python</h2>
-      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
-        No monkey patching. Streaming and non-streaming both supported. Works with any LLM SDK.
-      </p>
+      <div class="section-label reveal">Integration</div>
+      <h2 class="section-title reveal r1">Three lines of Python</h2>
+      <p class="section-sub reveal r2" style="margin:0 auto">No monkey patching. Streaming and non-streaming. Works with any LLM SDK.</p>
     </div>
-    <div class="code-demo reveal reveal-d3">
+    <div class="code-block reveal r3">
       <div class="code-bar">
-        <div class="terminal-bar-dot red"></div>
-        <div class="terminal-bar-dot yellow"></div>
-        <div class="terminal-bar-dot green"></div>
-        <span class="terminal-bar-title">agent.py</span>
+        <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+        <span>agent.py</span>
       </div>
       <div class="code-body">
         <span class="c-kw">from</span> openai <span class="c-kw">import</span> OpenAI<br>
@@ -928,7 +631,7 @@ section { padding: var(--section-gap) 0; position:relative; }
         <span class="c-kw">with</span> <span class="c-fn">record</span>(<span class="c-s">"agent.epi"</span>, goal=<span class="c-s">"Assess loan application"</span>):<br>
         &nbsp;&nbsp;&nbsp;&nbsp;response = client.chat.completions.<span class="c-fn">create</span>(<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=<span class="c-s">"gpt-4"</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this application"</span>}]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this"</span>}]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;)<br><br>
         <span class="c-c"># Every call &rarr; signed .epi evidence</span><br>
         <span class="c-c"># epi verify agent.epi &rarr;</span> <span class="c-g">VERIFIED &#x2713;</span>
@@ -941,65 +644,48 @@ section { padding: var(--section-gap) 0; position:relative; }
 <section id="compliance">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">
-        <span style="margin-left:4px">Compliance</span>
-      </div>
-      <h2 class="section-title reveal reveal-d1">Built for the EU AI Act</h2>
-      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
-        Article 12 record-keeping. Article 14 human oversight. Article 19 transparency. All addressable from a single .epi artifact.
-      </p>
+      <div class="section-label reveal">Compliance</div>
+      <h2 class="section-title reveal r1">Built for the EU AI Act</h2>
+      <p class="section-sub reveal r2" style="margin:0 auto">Articles 12, 14, and 19 — all addressable from a single .epi artifact.</p>
     </div>
-    <div class="comp-grid reveal reveal-d3">
+    <div class="comp-grid reveal r3">
       <div class="comp-card">
-        <h4>Article 12</h4>
-        <h5>Record-Keeping</h5>
-        <p>Seals the complete execution trail — every LLM call, tool invocation, decision, and environment snapshot — into one signed artifact. Auditors open it in a browser.</p>
+        <div class="comp-card-label">Article 12</div>
+        <h4>Record-Keeping</h4>
+        <p>Seals the complete execution trail — every LLM call, tool invocation, decision, and environment snapshot — into one signed artifact.</p>
       </div>
       <div class="comp-card">
-        <h4>Article 14</h4>
-        <h5>Human Oversight</h5>
-        <p>review.json is appended post-sealing without breaking the cryptographic signature. Who reviewed, when, what they decided — in the same signed file.</p>
+        <div class="comp-card-label">Article 14</div>
+        <h4>Human Oversight</h4>
+        <p>review.json appended post-sealing without breaking the signature. Who reviewed, when, what they decided — same file.</p>
       </div>
       <div class="comp-card">
-        <h4>Article 19</h4>
-        <h5>Transparency</h5>
-        <p>policy.json and policy_evaluation.json travel with the container. Every rule applied, every threshold checked, every outcome logged — inspectable and auditable.</p>
+        <div class="comp-card-label">Article 19</div>
+        <h4>Transparency</h4>
+        <p>policy.json and policy_evaluation.json travel with the container. Every rule, every threshold, every outcome logged.</p>
       </div>
     </div>
-
-    <div class="spec-banner reveal reveal-d4">
-      <div class="spec-banner-icon">&#x1F4DC;</div>
-      <div>
-        <h4>Formal Specification Available</h4>
-        <p>The EPI File Format Specification v4.2.0 defines every byte of the .epi container — envelope structure, manifest schema, cryptographic protocol, and verification procedure. Open standard. MIT licensed.</p>
+    <div class="spec-banner reveal r3">
+      <div class="spec-icon">&#x1F4DC;</div>
+      <div class="spec-text">
+        <h4>EPI File Format Specification v4.2.0</h4>
+        <p>Every byte defined. Envelope structure, manifest schema, cryptographic protocol, verification procedure. Open standard.</p>
       </div>
-      <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank" class="btn btn-secondary" style="flex-shrink:0;white-space:nowrap">
-        Read the Spec
-      </a>
+      <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank" class="btn btn-secondary" style="flex-shrink:0">Read the Spec</a>
     </div>
   </div>
 </section>
 
 <!-- ═══════════════ CTA ═══════════════ -->
-<section class="cta-section" id="contact">
+<section class="cta" id="contact">
   <div class="container">
-    <div class="section-label reveal" style="justify-content:center">
-      <span style="margin-left:4px">Get Started</span>
-    </div>
-    <h2 class="section-title reveal reveal-d1">Evidence starts with one command</h2>
-    <p class="section-desc reveal reveal-d2">
-      Install. Wrap your client. Record. Verify. An auditor-proof evidence trail in under a minute.
-    </p>
-    <div class="cta-actions reveal reveal-d3">
-      <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">
-        pip install epi-recorder <span class="btn-arrow">&rarr;</span>
-      </a>
-      <a href="viewer/" class="btn btn-secondary">
-        Decision Ops <span class="btn-arrow">&rarr;</span>
-      </a>
-      <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn btn-ghost" target="_blank">
-        GitHub
-      </a>
+    <div class="section-label reveal" style="justify-content:center">Get Started</div>
+    <h2 class="section-title reveal r1">Evidence starts with one command</h2>
+    <p class="section-sub reveal r2">Install. Wrap your client. Record. Verify. An auditor-proof trail in under a minute.</p>
+    <div class="cta-btns reveal r3">
+      <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">pip install epi-recorder &rarr;</a>
+      <a href="viewer/" class="btn btn-secondary">Decision Ops &rarr;</a>
+      <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn btn-outline" target="_blank">GitHub</a>
     </div>
   </div>
 </section>
@@ -1009,26 +695,26 @@ section { padding: var(--section-gap) 0; position:relative; }
   <div class="container">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="footer-logo">EPI <span>LABS</span></div>
+        <img src="assets/logo.png" alt="EPI LABS">
         <div class="footer-hash">abdcd1e51e02a00139d8a4093bc502ce06af95966be1ac7d</div>
         <div class="footer-copy">Building the trust layer for the AI economy.<br>&copy; 2026 EPI LABS. MIT License.</div>
       </div>
       <div class="footer-links">
         <div class="footer-col">
-          <h4>Product</h4>
+          <h5>Product</h5>
           <a href="how-it-works.html">How It Works</a>
           <a href="technology.html">Technology</a>
           <a href="pricing.html">Pricing</a>
           <a href="verify.html">Verify</a>
         </div>
         <div class="footer-col">
-          <h4>Developers</h4>
+          <h5>Developers</h5>
           <a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank">GitHub</a>
           <a href="https://pypi.org/project/epi-recorder/" target="_blank">PyPI</a>
           <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank">Spec</a>
         </div>
         <div class="footer-col">
-          <h4>Company</h4>
+          <h5>Company</h5>
           <a href="vision.html">Vision</a>
           <a href="contact.html">Contact</a>
           <a href="mailto:mohdibrahim@epilabs.org">Email</a>
@@ -1039,13 +725,9 @@ section { padding: var(--section-gap) 0; position:relative; }
 </footer>
 
 <script>
-// ── Nav scroll ──
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
-// ── Mobile menu ──
 const btn = document.getElementById('mobileBtn');
 const links = document.getElementById('navLinks');
 btn.addEventListener('click', () => links.classList.toggle('open'));
@@ -1054,16 +736,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', () => {
     links.classList.remove('open');
     const el = document.querySelector(a.getAttribute('href'));
-    if (el) { el.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
   });
 });
 
-// ── Scroll reveals ──
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-  });
-}, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold:0.08, rootMargin:'0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
 </body>
