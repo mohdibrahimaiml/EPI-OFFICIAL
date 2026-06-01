@@ -4,478 +4,787 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EPI LABS — Evidence Packaged Infrastructure (.epi)</title>
-<meta name="description" content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible.">
+<meta name="description" content="Self-contained evidence packages that make AI reproducible, verifiable, and legally defensible. Three lines of Python. Signed. Sealed. Shipped.">
 <meta property="og:title" content="EPI LABS — Evidence Packaged Infrastructure (.epi)">
-<meta property="og:description" content="Portable, cryptographically signed, tamper-evident evidence packages for AI.">
+<meta property="og:description" content="Portable, cryptographically signed, tamper-evident evidence packages for AI. Verify in any browser, offline, no trust required.">
 <meta property="og:image" content="https://epilabs.org/assets/logo.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════════════════════════════ */
-/* DESIGN SYSTEM                                                   */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════ */
+/* EPI LABS — FORENSIC EVIDENCE DESIGN SYSTEM v3.0            */
+/* ═══════════════════════════════════════════════════════════ */
+
 :root {
-  --bg: #08090C;
-  --bg-elevated: #0E1117;
-  --bg-card: #11151D;
-  --surface: #141A24;
-  --text: #E6EDF3;
-  --text-dim: #8B949E;
-  --text-muted: #484F58;
-  --accent: #58A6FF;
-  --accent-glow: rgba(88, 166, 255, 0.15);
-  --green: #3FB950;
-  --green-glow: rgba(63, 185, 80, 0.12);
-  --amber: #D29922;
-  --red: #F85149;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(88, 166, 255, 0.25);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --max-width: 1100px;
-  --section-pad: clamp(100px, 14vw, 180px);
+  --bg-deep:     #06080C;
+  --bg-surface:  #0D1117;
+  --bg-card:     #111820;
+  --bg-elevated: #161D28;
+  --bg-code:     #0B1018;
+
+  --text:        #E6EDF3;
+  --text-soft:   #B0B8C4;
+  --text-dim:    #6B7280;
+  --text-muted:  #3D4450;
+
+  --cyan:         #00E5FF;
+  --cyan-glow:    rgba(0, 229, 255, 0.10);
+  --cyan-border:  rgba(0, 229, 255, 0.20);
+  --cyan-text:    #00C8E0;
+
+  --gold:         #FFD866;
+  --gold-glow:    rgba(255, 216, 102, 0.10);
+  --gold-border:  rgba(255, 216, 102, 0.20);
+  --gold-text:    #E8C040;
+
+  --mint:         #00F5A0;
+  --mint-glow:    rgba(0, 245, 160, 0.10);
+  --mint-border:  rgba(0, 245, 160, 0.20);
+  --mint-text:    #00D488;
+
+  --red:          #FF4D6A;
+  --red-glow:     rgba(255, 77, 106, 0.10);
+
+  --border:       rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.10);
+  --border-hover: rgba(0, 229, 255, 0.25);
+
+  --radius:       14px;
+  --radius-sm:    8px;
+  --radius-xl:    20px;
+
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Cascadia Code', monospace;
+
+  --max-w:        1100px;
+  --section-gap:  clamp(100px, 14vw, 180px);
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+html {
+  scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+  background: var(--bg-deep);
+}
+
 body {
-  font-family: var(--font-sans);
-  background: var(--bg);
+  font-family: var(--font-body);
+  background: var(--bg-deep);
   color: var(--text);
   line-height: 1.7;
   overflow-x: hidden;
 }
-::selection { background:rgba(88,166,255,0.25); color:var(--text); }
+
+::selection {
+  background: var(--cyan-glow);
+  color: var(--cyan);
+}
+
 a { color:inherit; text-decoration:none; }
 
+/* ═══════════════ CONTAINER ═══════════════ */
 .container {
-  max-width: var(--max-width);
+  max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 clamp(20px, 4vw, 48px);
 }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* NAV                                                              */
-/* ══════════════════════════════════════════════════════════════════ */
-nav {
-  position: fixed; top:0; left:0; right:0; z-index:1000;
+/* ═══════════════ NAV ═══════════════ */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
   padding: 0 clamp(20px, 4vw, 48px);
-  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition: all 0.4s var(--ease-out);
 }
-nav.scrolled {
-  background: rgba(8,9,12,0.92);
-  backdrop-filter: blur(20px) saturate(1.4);
+.nav.scrolled {
+  background: rgba(6, 8, 12, 0.92);
+  backdrop-filter: blur(24px) saturate(1.6);
   border-bottom: 1px solid var(--border);
 }
 .nav-inner {
-  max-width: var(--max-width); margin:0 auto;
-  display:flex; align-items:center; justify-content:space-between; height:72px;
+  max-width: var(--max-w); margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  height:72px;
 }
-.nav-logo { display:flex; align-items:center; font-family:var(--font-mono); font-weight:700; font-size:1.1rem; color:var(--text); }
-.nav-logo span { color:var(--accent); margin-left:4px; }
-.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
-.nav-links a { font-size:0.88rem; font-weight:400; color:var(--text-dim); transition:color 0.25s; }
+.nav-logo-group {
+  display:flex; align-items:center; gap:10px;
+}
+.nav-logo-icon {
+  width:32px; height:32px;
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+  border-radius: 8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:700; font-size:1rem;
+  color:#000;
+}
+.nav-logo-text {
+  font-family:var(--font-heading); font-weight:700; font-size:1.15rem;
+  letter-spacing:-0.02em;
+}
+.nav-logo-text span { color: var(--cyan); }
+
+.nav-links {
+  display:flex; align-items:center; gap:36px; list-style:none;
+}
+.nav-links a {
+  font-size:0.85rem; font-weight:400; color:var(--text-dim);
+  transition: color 0.25s;
+}
 .nav-links a:hover { color:var(--text); }
+
 .nav-cta {
   padding:8px 20px; border-radius:100px;
-  background: var(--accent); color:#000 !important; font-weight:600 !important;
-  transition: all 0.25s !important; font-size:0.85rem !important;
+  background: var(--cyan); color:#000 !important;
+  font-weight:600 !important; font-size:0.82rem !important;
+  transition: all 0.25s !important;
 }
-.nav-cta:hover { background:#79B8FF !important; }
-.mobile-toggle {
+.nav-cta:hover {
+  background: #33EAFF !important;
+  color:#000 !important;
+  box-shadow: 0 4px 20px var(--cyan-glow);
+}
+
+.nav-mobile-btn {
   display:none; flex-direction:column; gap:5px;
   background:none; border:none; cursor:pointer; padding:4px; z-index:2000;
 }
-.mobile-toggle span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:all 0.3s; }
+.nav-mobile-btn span {
+  display:block; width:22px; height:2px;
+  background:var(--text); border-radius:2px; transition:all 0.3s;
+}
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* HERO                                                             */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════ HERO ═══════════════ */
 .hero {
-  min-height:100vh; display:flex; flex-direction:column; justify-content:center;
-  align-items:center; text-align:center; padding:120px 24px 80px;
+  min-height:100vh; display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center; padding:120px 24px 80px;
   position:relative; overflow:hidden;
 }
-.hero-grid {
+
+/* Animated grid background */
+.hero-canvas {
   position:absolute; inset:0; z-index:0;
   background-image:
-    linear-gradient(rgba(88,166,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(88,166,255,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+    radial-gradient(circle at 20% 50%, rgba(0,229,255,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(0,245,160,0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(255,216,102,0.03) 0%, transparent 50%);
 }
-.hero-content { position:relative; z-index:1; max-width:820px; }
+.hero-dots {
+  position:absolute; inset:0; z-index:0;
+  background-image:
+    radial-gradient(rgba(0,229,255,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 35%, transparent 70%);
+}
+.hero-glow {
+  position:absolute; width:600px; height:600px;
+  top:50%; left:50%; transform:translate(-50%, -50%);
+  background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+  animation: glowPulse 6s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity:0.6; transform:translate(-50%, -50%) scale(1); }
+  50% { opacity:1; transform:translate(-50%, -50%) scale(1.15); }
+}
+
+.hero-content { position:relative; z-index:1; max-width:840px; }
+
 .hero-badge {
   display:inline-flex; align-items:center; gap:8px;
   padding:6px 18px; border-radius:100px;
-  background: var(--accent-glow); border:1px solid rgba(88,166,255,0.3);
-  font-family: var(--font-mono); font-size:0.72rem; color:var(--accent);
-  margin-bottom:36px; animation:fadeUp 0.8s ease-out;
+  background: var(--cyan-glow);
+  border:1px solid var(--cyan-border);
+  font-family:var(--font-mono); font-size:0.68rem;
+  color:var(--cyan-text); font-weight:500;
+  margin-bottom: 36px;
+  animation: fadeIn 0.8s ease-out;
 }
-.hero-badge .dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.hero-badge-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity:1; }
+  50% { opacity:0.35; }
+}
 
-.hero h1 {
-  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-  font-weight:800; line-height:1.08; letter-spacing:-0.03em;
-  margin-bottom:16px; animation:fadeUp 0.8s ease-out 0.1s both;
+.hero-title {
+  font-family:var(--font-heading);
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  font-weight:700; line-height:1.06; letter-spacing:-0.03em;
   color: var(--text);
+  margin-bottom: 8px;
+  animation: fadeIn 0.8s ease-out 0.1s both;
 }
-.hero h1 em {
-  font-style:normal; color:var(--accent);
-  font-family:var(--font-mono); font-size:0.55em;
+.hero-title-accent {
+  display:inline-block;
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.hero-hash {
-  font-family: var(--font-mono); font-size:0.65rem; color:var(--text-muted);
-  margin-bottom:24px; word-break:break-all;
-  animation:fadeUp 0.8s ease-out 0.15s both;
+.hero-title-ext {
+  font-family:var(--font-mono);
+  font-size:0.42em;
+  color:var(--cyan);
+  vertical-align: super;
 }
-.hero-desc {
-  font-size:1.05rem; color:var(--text-dim); line-height:1.7;
-  max-width:620px; margin:0 auto 40px; font-weight:300;
-  animation:fadeUp 0.8s ease-out 0.2s both;
-}
-.hero-desc code {
-  font-family:var(--font-mono); background:rgba(88,166,255,0.1);
-  padding:1px 6px; border-radius:4px; font-size:0.9em; color:var(--accent);
-}
-.hero-actions {
-  display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
-  animation:fadeUp 0.8s ease-out 0.3s both;
-}
-@keyframes fadeUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
 
+.hero-hash {
+  font-family:var(--font-mono); font-size:0.62rem;
+  color:var(--text-muted); margin-bottom:28px;
+  word-break:break-all;
+  animation: fadeIn 0.8s ease-out 0.15s both;
+}
+
+.hero-desc {
+  font-size:1.08rem; color:var(--text-soft);
+  line-height:1.72; max-width:640px;
+  margin:0 auto 40px; font-weight:300;
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+.hero-desc strong { font-weight:600; color:var(--text); }
+
+.hero-actions {
+  display:flex; gap:14px; justify-content:center;
+  flex-wrap:wrap;
+  animation: fadeIn 0.8s ease-out 0.25s both;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(18px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* ═══════════════ BUTTONS ═══════════════ */
 .btn {
   display:inline-flex; align-items:center; gap:8px;
-  padding:12px 28px; border-radius:100px; font-size:0.9rem;
-  font-weight:500; cursor:pointer;
-  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
-  border:none; font-family:var(--font-sans);
+  padding:13px 28px; border-radius:100px;
+  font-size:0.9rem; font-weight:500; cursor:pointer;
+  transition: all 0.3s var(--ease-out);
+  border:none; font-family:var(--font-body);
 }
-.btn-primary { background:var(--accent); color:#000; }
-.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px var(--accent-glow); }
-.btn-secondary { background:transparent; color:var(--text); border:1px solid var(--border); }
-.btn-secondary:hover { border-color:var(--accent); background:var(--accent-glow); }
-.btn-outline {
-  background:transparent; color:var(--text-dim); border:1px solid var(--border);
-  font-family:var(--font-mono); font-size:0.78rem;
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), #00C8E0);
+  color:#000 !important;
+  font-weight:600;
 }
-.btn-outline:hover { border-color:var(--text-dim); color:var(--text); }
-
-.hero-terminal {
-  margin-top:48px; animation:fadeUp 0.8s ease-out 0.4s both;
-  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-  overflow:hidden; max-width:600px; width:100%; text-align:left;
+.btn-primary:hover {
+  transform:translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,229,255,0.25);
 }
-.hero-terminal .term-bar {
-  display:flex; align-items:center; gap:8px;
-  padding:10px 16px; background:rgba(255,255,255,0.02);
-  border-bottom:1px solid var(--border);
+.btn-secondary {
+  background:transparent; color:var(--text);
+  border:1px solid var(--border-light);
 }
-.hero-terminal .term-bar .d { width:10px; height:10px; border-radius:50%; }
-.hero-terminal .term-bar .d:nth-child(1) { background:#F85149; }
-.hero-terminal .term-bar .d:nth-child(2) { background:#D29922; }
-.hero-terminal .term-bar .d:nth-child(3) { background:#3FB950; }
-.hero-terminal .term-bar span { margin-left:12px; font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono); }
-.hero-terminal .term-body { padding:20px 20px; font-family:var(--font-mono); font-size:0.75rem; line-height:2; }
-.term-accent { color:var(--accent); }
-.term-green { color:var(--green); }
-.term-dim { color:var(--text-muted); }
-
-/* ══════════════════════════════════════════════════════════════════ */
-/* SECTION COMMON                                                   */
-/* ══════════════════════════════════════════════════════════════════ */
-section { padding: var(--section-pad) 0; position:relative; }
-.section-label {
-  display:inline-flex; align-items:center; gap:10px;
-  font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase;
-  letter-spacing:0.12em; color:var(--accent); margin-bottom:16px;
+.btn-secondary:hover {
+  border-color:var(--cyan);
+  background:var(--cyan-glow);
 }
-.section-label::before { content:'//'; }
-.section-title {
-  font-size:clamp(1.8rem, 3.5vw, 2.8rem);
-  font-weight:700; line-height:1.15; letter-spacing:-0.02em; margin-bottom:16px;
+.btn-ghost {
+  background:transparent; color:var(--text-dim);
+  border:1px solid var(--border);
+  font-family:var(--font-mono); font-size:0.76rem;
 }
-.section-desc {
-  font-size:1.05rem; color:var(--text-dim); max-width:560px; line-height:1.7; font-weight:300;
-}
-
-/* ══════════════════════════════════════════════════════════════════ */
-/* THESIS                                                           */
-/* ══════════════════════════════════════════════════════════════════ */
-.thesis {
-  background:var(--bg-elevated);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:clamp(60px,10vw,120px) 0;
-}
-.thesis-inner { text-align:center; max-width:760px; margin:0 auto; }
-.thesis-quote {
-  font-size:clamp(1.4rem, 3vw, 2.2rem);
-  font-weight:700; line-height:1.4; letter-spacing:-0.02em;
+.btn-ghost:hover {
+  border-color:var(--text-dim);
   color:var(--text);
 }
-.thesis-quote em { font-style:normal; color:var(--accent); }
-.thesis-attr {
-  font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted);
-  margin-top:20px; text-transform:uppercase; letter-spacing:0.1em;
+.btn-arrow { transition:transform 0.25s; }
+.btn:hover .btn-arrow { transform:translateX(3px); }
+
+/* ═══════════════ TERMINAL BLOCK ═══════════════ */
+.terminal-block {
+  margin-top:48px;
+  background: var(--bg-code);
+  border:1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow:hidden;
+  max-width:600px; width:100%;
+  text-align:left;
+  animation: fadeIn 0.8s ease-out 0.3s both;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+.terminal-bar {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 18px;
+  background: rgba(255,255,255,0.015);
+  border-bottom:1px solid var(--border);
+}
+.terminal-bar-dot { width:10px; height:10px; border-radius:50%; }
+.terminal-bar-dot.red    { background:#FF5F57; }
+.terminal-bar-dot.yellow { background:#FFBD2E; }
+.terminal-bar-dot.green  { background:#28C840; }
+.terminal-bar-title {
+  margin-left:12px; font-family:var(--font-mono);
+  font-size:0.68rem; color:var(--text-muted);
+}
+.terminal-body {
+  padding:22px 24px;
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  line-height:2.1;
+}
+.terminal-body .t-dim  { color:var(--text-dim); }
+.terminal-body .t-cyan { color:var(--cyan); }
+.terminal-body .t-mint { color:var(--mint); }
+.terminal-body .t-gold { color:var(--gold-text); }
+
+/* ═══════════════ SECTIONS ═══════════════ */
+section { padding: var(--section-gap) 0; position:relative; }
+
+.section-label {
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-mono); font-size:0.68rem;
+  text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--cyan-text); margin-bottom:14px;
+}
+.section-label::before { content:'//'; }
+
+.section-title {
+  font-family:var(--font-heading);
+  font-size: clamp(1.8rem, 3.8vw, 2.9rem);
+  font-weight:700; line-height:1.12;
+  letter-spacing:-0.02em; margin-bottom:14px;
+  color: var(--text);
 }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* PILLARS                                                          */
-/* ══════════════════════════════════════════════════════════════════ */
+.section-desc {
+  font-size:1.05rem; color:var(--text-soft);
+  max-width:560px; line-height:1.7; font-weight:300;
+}
+
+/* ═══════════════ SECTION VARIANTS ═══════════════ */
+.section-alt {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ═══════════════ THESIS ═══════════════ */
+.thesis-inner {
+  text-align:center; max-width:760px; margin:0 auto;
+}
+.thesis-quote {
+  font-family:var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight:600; line-height:1.38; letter-spacing:-0.02em;
+  color:var(--text);
+}
+.thesis-quote em {
+  font-style:normal;
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.thesis-attr {
+  font-family:var(--font-mono); font-size:0.7rem;
+  color:var(--text-muted); margin-top:18px;
+  text-transform:uppercase; letter-spacing:0.12em;
+}
+
+/* ═══════════════ THREE PILLARS ═══════════════ */
 .pillars-grid {
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:64px;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:16px; margin-top:64px;
 }
 .pillar {
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:36px 28px;
-  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
-  display:flex; flex-direction:column;
+  background: var(--bg-card);
+  border:1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 36px 28px 28px;
+  transition: all 0.4s var(--ease-out);
+  position:relative; overflow:hidden;
 }
-.pillar:hover { border-color:var(--accent); transform:translateY(-4px); }
+.pillar::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:3px;
+  background: linear-gradient(90deg, var(--cyan), var(--mint));
+  opacity:0; transition:opacity 0.3s;
+}
+.pillar:hover::before { opacity:1; }
+.pillar:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
 .pillar-icon {
-  font-family:var(--font-mono); font-size:2.2rem; margin-bottom:16px; color:var(--accent);
+  font-family:var(--font-mono);
+  font-size:2rem; margin-bottom:14px;
 }
-.pillar h3 { font-size:1.1rem; font-weight:600; margin-bottom:10px; }
-.pillar p { font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
+.pillar-icon.c { color:var(--cyan); }
+.pillar-icon.g { color:var(--mint); }
+.pillar-icon.go { color:var(--gold-text); }
+.pillar h3 {
+  font-family:var(--font-heading);
+  font-size:1.1rem; font-weight:600;
+  margin-bottom:8px;
+}
+.pillar p {
+  font-size:0.88rem; color:var(--text-dim);
+  line-height:1.6;
+}
 .pillar-file {
-  margin-top:auto; padding-top:20px; font-family:var(--font-mono);
-  font-size:0.65rem; color:var(--text-muted);
+  margin-top:24px; padding-top:18px;
   border-top:1px solid var(--border);
+  font-family:var(--font-mono); font-size:0.62rem;
+  color:var(--text-muted);
 }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* VERIFICATION CARDS                                               */
-/* ══════════════════════════════════════════════════════════════════ */
-.verify-section { background:var(--bg-elevated); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+/* ═══════════════ VERIFICATION GRID ═══════════════ */
 .verify-grid {
-  display:grid; grid-template-columns: repeat(5, 1fr); gap:14px; margin-top:64px;
-  counter-reset: verify-step;
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:12px; margin-top:64px;
+  counter-reset: vs;
 }
 .verify-card {
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:24px 20px; text-align:center;
-  transition:all 0.3s;
+  background: var(--bg-card);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:24px 18px; text-align:center;
+  transition: all 0.3s var(--ease-out);
   position:relative;
 }
 .verify-card::before {
-  counter-increment:verify-step; content:"0" counter(verify-step);
-  display:block; font-family:var(--font-mono); font-size:0.75rem;
-  font-weight:700; color:var(--accent); margin-bottom:10px;
+  counter-increment:vs;
+  content: "0" counter(vs);
+  display:block;
+  font-family:var(--font-mono);
+  font-size:0.7rem; font-weight:700;
+  color:var(--cyan);
+  margin-bottom:10px;
 }
-.verify-card:hover { border-color:var(--green); }
-.verify-card h4 { font-size:0.85rem; font-weight:600; margin-bottom:8px; }
-.verify-card p { font-size:0.78rem; color:var(--text-dim); line-height:1.5; }
+.verify-card:hover {
+  border-color:var(--mint-border);
+}
+.verify-card:hover::before { color:var(--mint); }
+.verify-card h4 {
+  font-size:0.82rem; font-weight:600;
+  margin-bottom:6px;
+}
+.verify-card p {
+  font-size:0.76rem; color:var(--text-dim);
+  line-height:1.5;
+}
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* INTEGRATION CODE                                                 */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════ TRUST TABLE ═══════════════ */
+.trust-table {
+  width:100%; border-collapse: separate; border-spacing:0;
+  margin-top:56px; border-radius:var(--radius-xl);
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.trust-table th {
+  font-family:var(--font-mono); font-size:0.66rem;
+  text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--text-muted); background:var(--bg-card);
+  text-align:left; padding:14px 18px;
+  border-bottom:1px solid var(--border);
+}
+.trust-table td {
+  padding:15px 18px; border-bottom:1px solid var(--border);
+  color:var(--text-soft); font-size:0.88rem;
+  background:var(--bg-surface);
+}
+.trust-table tr:last-child td { border-bottom:none; }
+.trust-table tr:hover td { background:var(--bg-card); }
+
+.trust-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--font-mono); font-size:0.7rem;
+  font-weight:600; padding:4px 12px;
+  border-radius:100px;
+}
+.trust-badge.high {
+  background: var(--mint-glow); color: var(--mint-text);
+  border:1px solid var(--mint-border);
+}
+.trust-badge.med {
+  background: var(--gold-glow); color: var(--gold-text);
+  border:1px solid var(--gold-border);
+}
+.trust-badge.low {
+  background: rgba(255,255,255,0.04); color: var(--text-dim);
+  border:1px solid var(--border-light);
+}
+.trust-badge.tampered {
+  background: var(--red-glow); color: var(--red);
+  border:1px solid rgba(255,77,106,0.25);
+}
+
+/* ═══════════════ CODE DEMO ═══════════════ */
 .code-demo {
-  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  background: var(--bg-code);
+  border:1px solid var(--border); border-radius:var(--radius-xl);
   overflow:hidden; margin-top:56px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
 .code-bar {
   display:flex; align-items:center; gap:8px;
-  padding:12px 18px; background:rgba(255,255,255,0.02);
+  padding:10px 18px; background:rgba(255,255,255,0.015);
   border-bottom:1px solid var(--border);
 }
-.code-bar .d { width:10px; height:10px; border-radius:50%; }
-.code-bar .d:nth-child(1) { background:#F85149; }
-.code-bar .d:nth-child(2) { background:#D29922; }
-.code-bar .d:nth-child(3) { background:#3FB950; }
-.code-bar span { margin-left:12px; font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); }
 .code-body {
-  padding:32px; font-family:var(--font-mono); font-size:0.8rem; line-height:2; color:var(--text);
+  padding:32px;
+  font-family:var(--font-mono);
+  font-size:0.82rem; line-height:2.1;
+  color: var(--text);
 }
-.code-body .kw { color:#FF7B72; }
-.code-body .fn { color:#D2A8FF; }
-.code-body .s { color:#A5D6FF; }
-.code-body .c { color:var(--text-muted); }
-.code-body .g { color:var(--green); }
+.c-kw { color:#FF7B72; }
+.c-fn { color:#D2A8FF; }
+.c-s  { color:#A5D6FF; }
+.c-c  { color:var(--text-muted); }
+.c-g  { color:var(--mint); }
+.c-cy { color:var(--cyan); }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* COMPLIANCE GRID                                                  */
-/* ══════════════════════════════════════════════════════════════════ */
-.compliance-grid {
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:56px;
+/* ═══════════════ COMPLIANCE GRID ═══════════════ */
+.comp-grid {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:14px; margin-top:56px;
 }
-.compliance-card {
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:28px 24px;
-  transition:all 0.3s;
+.comp-card {
+  background: var(--bg-card);
+  border:1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding:32px 26px;
+  transition: all 0.3s var(--ease-out);
 }
-.compliance-card:hover { border-color:var(--accent); }
-.compliance-card h4 {
-  font-family:var(--font-mono); font-size:0.75rem; color:var(--accent);
-  margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em;
+.comp-card:hover {
+  border-color: var(--border-hover);
 }
-.compliance-card p { font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
+.comp-card h4 {
+  font-family:var(--font-mono);
+  font-size:0.72rem; color:var(--cyan-text);
+  text-transform:uppercase; letter-spacing:0.1em;
+  margin-bottom:12px;
+}
+.comp-card h5 {
+  font-family:var(--font-heading);
+  font-size:1.05rem; font-weight:600;
+  margin-bottom:8px;
+}
+.comp-card p {
+  font-size:0.88rem; color:var(--text-dim);
+  line-height:1.6;
+}
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* CTA                                                              */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════ SPEC BANNER ═══════════════ */
+.spec-banner {
+  background: var(--bg-card);
+  border:1px solid var(--cyan-border);
+  border-radius: var(--radius-xl);
+  padding:28px 32px; margin-top:56px;
+  display:flex; align-items:center; gap:24px;
+}
+.spec-banner-icon {
+  font-family:var(--font-mono); font-size:2.4rem;
+  flex-shrink:0;
+}
+.spec-banner-text h4 {
+  font-family:var(--font-heading); font-size:1rem;
+  font-weight:600; margin-bottom:4px;
+}
+.spec-banner-text p {
+  font-size:0.85rem; color:var(--text-dim);
+}
+
+/* ═══════════════ CTA ═══════════════ */
 .cta-section { text-align:center; }
 .cta-section .section-desc { margin:0 auto 40px; }
-.cta-actions { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.cta-actions {
+  display:flex; gap:14px; justify-content:center;
+  flex-wrap:wrap; margin-top:8px;
+}
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* TRUST TABLE                                                      */
-/* ══════════════════════════════════════════════════════════════════ */
-.trust-table {
-  width:100%; border-collapse:collapse; margin-top:48px;
-  font-size:0.88rem;
+/* ═══════════════ FOOTER ═══════════════ */
+.footer {
+  border-top:1px solid var(--border);
+  padding:48px 0;
 }
-.trust-table th {
-  font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase;
-  letter-spacing:0.08em; color:var(--text-muted);
-  text-align:left; padding:12px 16px; border-bottom:1px solid var(--border);
+.footer-inner {
+  display:flex; justify-content:space-between;
+  align-items:flex-start; gap:32px;
 }
-.trust-table td {
-  padding:14px 16px; border-bottom:1px solid var(--border); color:var(--text-dim);
+.footer-brand {
+  display:flex; flex-direction:column; gap:6px;
 }
-.trust-table tr:hover td { background:rgba(88,166,255,0.03); }
-.trust-level {
-  font-family:var(--font-mono); font-size:0.75rem; font-weight:600; padding:3px 10px; border-radius:100px;
+.footer-logo {
+  font-family:var(--font-heading); font-size:1.15rem;
+  font-weight:700; letter-spacing:-0.02em;
 }
-.tl-high { background:var(--green-glow); color:var(--green); }
-.tl-med { background:rgba(210,153,34,0.1); color:var(--amber); }
-.tl-low { background:rgba(255,255,255,0.04); color:var(--text-dim); }
+.footer-logo span { color:var(--cyan); }
+.footer-hash {
+  font-family:var(--font-mono); font-size:0.58rem;
+  color:var(--text-muted);
+}
+.footer-copy {
+  font-size:0.8rem; color:var(--text-dim);
+  margin-top:8px;
+}
+.footer-links {
+  display:flex; gap:36px; list-style:none;
+}
+.footer-col h4 {
+  font-family:var(--font-mono); font-size:0.66rem;
+  text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--text-muted); margin-bottom:12px;
+}
+.footer-col a {
+  display:block; font-size:0.85rem; color:var(--text-soft);
+  margin-bottom:8px; transition:color 0.2s;
+}
+.footer-col a:hover { color:var(--text); }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* FOOTER                                                           */
-/* ══════════════════════════════════════════════════════════════════ */
-footer {
-  border-top:1px solid var(--border); padding:48px 0;
-}
-.footer-inner { display:flex; justify-content:space-between; align-items:center; }
-.footer-logo { font-family:var(--font-mono); font-weight:700; font-size:1.1rem; }
-.footer-logo span { color:var(--accent); }
-.footer-copy { font-size:0.82rem; color:var(--text-muted); }
-.footer-links { display:flex; gap:28px; list-style:none; }
-.footer-links a { font-size:0.85rem; color:var(--text-dim); transition:color 0.25s; }
-.footer-links a:hover { color:var(--text); }
-.footer-hash { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-muted); margin-top:8px; }
-
-/* ══════════════════════════════════════════════════════════════════ */
-/* REVEAL ANIMATIONS                                                */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════ REVEAL ANIMATIONS ═══════════════ */
 .reveal {
   opacity:0; transform:translateY(30px);
-  transition:all 0.7s cubic-bezier(0.16,1,0.3,1);
+  transition: all 0.7s var(--ease-out);
 }
-.reveal.visible { opacity:1; transform:translateY(0); }
-.r1 { transition-delay:0.1s; }
-.r2 { transition-delay:0.2s; }
-.r3 { transition-delay:0.3s; }
+.reveal.visible {
+  opacity:1; transform:translateY(0);
+}
+.reveal-d1 { transition-delay:0.1s; }
+.reveal-d2 { transition-delay:0.2s; }
+.reveal-d3 { transition-delay:0.3s; }
+.reveal-d4 { transition-delay:0.35s; }
 
-/* ══════════════════════════════════════════════════════════════════ */
-/* RESPONSIVE                                                       */
-/* ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════ RESPONSIVE ═══════════════ */
 @media (max-width:1024px) {
   .verify-grid { grid-template-columns:repeat(3, 1fr); }
 }
+
 @media (max-width:768px) {
   .nav-links { display:none; }
-  .mobile-toggle { display:flex; }
+  .nav-mobile-btn { display:flex; }
   .nav-links.open {
     display:flex; flex-direction:column;
     position:absolute; top:72px; left:0; right:0;
-    background:rgba(8,9,12,0.98); backdrop-filter:blur(20px);
-    padding:24px; gap:20px; border-bottom:1px solid var(--border);
+    background:rgba(6,8,12,0.98); backdrop-filter:blur(20px);
+    padding:24px; gap:20px;
+    border-bottom:1px solid var(--border);
   }
   .nav-links.open a { color:var(--text); font-size:1rem; }
-  .pillars-grid, .verify-grid { grid-template-columns:1fr; }
-  .compliance-grid { grid-template-columns:1fr; }
-  .hero h1 { font-size:1.8rem; }
-  .hero-desc { font-size:0.9rem; }
-  .hero-terminal { max-width:100%; }
-  .hero-terminal .term-body { font-size:0.65rem; }
-  .code-body { font-size:0.65rem; padding:20px; }
+
+  .pillars-grid, .comp-grid { grid-template-columns:1fr; }
+  .verify-grid { grid-template-columns:repeat(2, 1fr); }
+
+  .hero-title { font-size:1.9rem; }
+  .hero-desc { font-size:0.92rem; }
+  .terminal-block { max-width:100%; }
+  .terminal-body { font-size:0.68rem; padding:16px; }
+  .code-body { font-size:0.68rem; padding:20px; line-height:1.8; }
+
+  .spec-banner { flex-direction:column; text-align:center; }
+
+  .footer-inner { flex-direction:column; align-items:center; text-align:center; }
+  .footer-links { gap:24px; }
+  .section-title { font-size:1.6rem; }
+  .section-desc { font-size:0.95rem; }
+
   .trust-table { font-size:0.75rem; }
-  .section-title { font-size:1.5rem; }
-  .footer-inner { flex-direction:column; gap:20px; text-align:center; }
-  .footer-links { gap:20px; }
+  .trust-table th, .trust-table td { padding:10px 12px; }
 }
+
 @media (max-width:480px) {
   .hero { padding:100px 16px 50px; }
-  .hero h1 { font-size:1.5rem; }
+  .hero-title { font-size:1.5rem; }
   .hero-actions { flex-direction:column; align-items:center; }
   .hero-actions .btn { width:100%; justify-content:center; }
+
   .verify-grid { grid-template-columns:1fr; }
   .pillar { padding:24px 20px; }
-  .code-body { font-size:0.6rem; padding:16px; line-height:1.8; }
+  .code-body { font-size:0.62rem; padding:14px; }
+  .comp-card { padding:24px 20px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════ NAV ══════════════════════════════════════ -->
-<nav id="navbar">
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">EPI <span>LABS</span></a>
+    <a href="#" class="nav-logo-group">
+      <div class="nav-logo-icon">.e</div>
+      <div class="nav-logo-text">EPI <span>LABS</span></div>
+    </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#evidence">Evidence</a></li>
-      <li><a href="#verify">Verification</a></li>
+      <li><a href="#verify">Verify</a></li>
       <li><a href="#integrate">Integrate</a></li>
       <li><a href="#compliance">Compliance</a></li>
       <li><a href="pricing.html">Pricing</a></li>
       <li><a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank" class="nav-cta">GitHub</a></li>
     </ul>
-    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <button class="nav-mobile-btn" id="mobileBtn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════ HERO ══════════════════════════════════════ -->
+<!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero" id="home">
-  <div class="hero-grid"></div>
+  <div class="hero-canvas"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="dot"></span>SYSTEM STATUS: OPERATIONAL · v4.2.0 · MIT LICENSE</div>
-    <h1>EVIDENCE PACKAGED INFRASTRUCTURE <em>(.epi)</em></h1>
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      SYSTEM STATUS: OPERATIONAL &middot; v4.2.0 &middot; MIT LICENSE
+    </div>
+    <h1 class="hero-title">
+      EVIDENCE PACKAGED<br><span class="hero-title-accent">INFRASTRUCTURE</span><span class="hero-title-ext">(.epi)</span>
+    </h1>
     <div class="hero-hash">SHA256: a3f7b2c9d1e8f4a6b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8</div>
     <p class="hero-desc">
-      EPI captures AI agent executions into a single, cryptographically signed, tamper-evident <code>.epi</code> file — like a PDF for evidence. Engineers integrate in three lines of Python. Regulators verify in any browser, offline, without trusting the producer.
+      EPI captures AI agent executions into a single, cryptographically signed, tamper-evident <strong>.epi</strong> file — like a PDF for evidence. <strong>Three lines of Python.</strong> Regulators verify in any browser, offline, without trusting the producer.
     </p>
     <div class="hero-actions">
       <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">
-        pip install epi-recorder
+        pip install epi-recorder <span class="btn-arrow">&rarr;</span>
       </a>
-      <a href="viewer/" class="btn btn-outline">
-        Open Decision Ops →
+      <a href="viewer/" class="btn btn-secondary">
+        Open Decision Ops <span class="btn-arrow">&rarr;</span>
       </a>
-      <a href="how-it-works.html" class="btn btn-secondary">
-        See the Evidence Package →
+      <a href="how-it-works.html" class="btn btn-ghost">
+        See the Evidence Package
       </a>
     </div>
-    <div class="hero-terminal">
-      <div class="term-bar">
-        <div class="d"></div><div class="d"></div><div class="d"></div>
-        <span>epi-recorder v4.2.0</span>
+    <div class="terminal-block">
+      <div class="terminal-bar">
+        <div class="terminal-bar-dot red"></div>
+        <div class="terminal-bar-dot yellow"></div>
+        <div class="terminal-bar-dot green"></div>
+        <span class="terminal-bar-title">epi-recorder v4.2.0 — bash — 80x24</span>
       </div>
-      <div class="term-body">
-        <span class="term-dim">$</span> <span class="term-accent">pip install epi-recorder</span><br>
-        <span class="term-dim">$</span> <span class="term-accent">epi run agent.py</span><br>
-        <span class="term-dim">→</span> <span class="term-green">Recording 42 steps...</span><br>
-        <span class="term-dim">→</span> <span class="term-green">Sealed agent.epi ✓ Ed25519 signed</span><br>
-        <span class="term-dim">$</span> <span class="term-accent">epi verify agent.epi</span><br>
-        <span class="term-dim">→</span> <span class="term-green">VERIFIED ✓ Trust Level: HIGH</span><br>
-        <span class="term-dim">→</span> <span class="term-green">Ed25519 · 42 steps · SHA-256 · SCITT anchored</span>
+      <div class="terminal-body">
+        <span class="t-dim">$</span> <span class="t-cyan">pip install epi-recorder</span><br>
+        <span class="t-dim">$</span> <span class="t-cyan">epi run agent.py</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-mint">Recording 42 steps...</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-mint">Sealed agent.epi &check; Ed25519 signed</span><br>
+        <span class="t-dim">$</span> <span class="t-cyan">epi verify agent.epi</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-mint">VERIFIED &check; Trust Level: HIGH</span><br>
+        <span class="t-dim">&rarr;</span> <span class="t-gold">Ed25519 &middot; 42 steps &middot; SHA-256 &middot; SCITT anchored</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ THESIS ══════════════════════════════════════ -->
-<section class="thesis">
+<!-- ═══════════════ THESIS ═══════════════ -->
+<section class="section-alt">
   <div class="container">
     <div class="thesis-inner reveal">
       <p class="thesis-quote">
@@ -487,108 +796,103 @@ footer {
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ EVIDENCE ═══════════════════════════════════ -->
+<!-- ═══════════════ EVIDENCE ═══════════════ -->
 <section id="evidence">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">The Container</div>
-      <h2 class="section-title reveal r1">One file. Complete proof.</h2>
-      <p class="section-desc reveal r2" style="margin:0 auto">Every consequential AI decision sealed into a single, portable, cryptographically signed artifact.</p>
+      <div class="section-label reveal" style="justify-content:center">
+        <span style="margin-left:4px">The Evidence Container</span>
+      </div>
+      <h2 class="section-title reveal reveal-d1">One file. Complete proof.</h2>
+      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
+        Every consequential AI decision sealed into a single, portable, cryptographically signed artifact.
+      </p>
     </div>
-    <div class="pillars-grid reveal r3">
+    <div class="pillars-grid reveal reveal-d3">
       <div class="pillar">
-        <div class="pillar-icon">&#x1F512;</div>
+        <div class="pillar-icon c">&#x1F512;</div>
         <h3>Cryptographic Signing</h3>
         <p>Ed25519 signed manifest. SHA-256 file integrity. Every byte change invalidates the signature. Tamper-evident by construction.</p>
-        <div class="pillar-file">manifest.json ← Ed25519 signature</div>
+        <div class="pillar-file">manifest.json &larr; Ed25519 signature</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">&#x1F517;</div>
+        <div class="pillar-icon g">&#x1F517;</div>
         <h3>Hash-Chained Timeline</h3>
         <p>Every step in steps.jsonl is linked to its predecessor via prev_hash. Insert, delete, or reorder — the chain breaks. Immutable by design.</p>
-        <div class="pillar-file">steps.jsonl ← prev_hash chain</div>
+        <div class="pillar-file">steps.jsonl &larr; prev_hash chain</div>
       </div>
       <div class="pillar">
-        <div class="pillar-icon">&#x1F4E6;</div>
+        <div class="pillar-icon go">&#x1F4E6;</div>
         <h3>Polyglot Container</h3>
         <p>A .epi file is valid HTML AND a binary evidence archive. Double-click opens in any browser. Zero install. Zero upload. Fully offline.</p>
-        <div class="pillar-file">.epi ← HTML + ZIP + signature</div>
+        <div class="pillar-file">.epi &larr; HTML + ZIP + signature</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ VERIFICATION ═══════════════════════════════ -->
-<section class="verify-section" id="verify">
+<!-- ═══════════════ VERIFICATION ═══════════════ -->
+<section class="section-alt" id="verify">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">Verification</div>
-      <h2 class="section-title reveal r1">Five independent checks</h2>
-      <p class="section-desc reveal r2" style="margin:0 auto">No server. No trust. No installation. Just a browser and a .epi file.</p>
+      <div class="section-label reveal" style="justify-content:center">
+        <span style="margin-left:4px">Verification</span>
+      </div>
+      <h2 class="section-title reveal reveal-d1">Five independent checks</h2>
+      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
+        No server. No trust. No installation. Just a browser and a .epi file.
+      </p>
     </div>
-    <div class="verify-grid reveal r3">
-      <div class="verify-card">
-        <h4>Structure</h4>
-        <p>Valid envelope, extractable ZIP, required files present.</p>
-      </div>
-      <div class="verify-card">
-        <h4>Integrity</h4>
-        <p>Every file hash in file_manifest matches computed SHA-256.</p>
-      </div>
-      <div class="verify-card">
-        <h4>Signature</h4>
-        <p>Ed25519 signature valid against canonical manifest hash.</p>
-      </div>
-      <div class="verify-card">
-        <h4>Chain</h4>
-        <p>prev_hash links intact. Monotonic indices. Monotonic timestamps.</p>
-      </div>
-      <div class="verify-card">
-        <h4>SCITT</h4>
-        <p>COSE_Sign1 statement + receipt verified against transparency ledger.</p>
-      </div>
+    <div class="verify-grid reveal reveal-d3">
+      <div class="verify-card"><h4>Structure</h4><p>Valid envelope, extractable ZIP, required files present.</p></div>
+      <div class="verify-card"><h4>Integrity</h4><p>Every file hash in file_manifest matches computed SHA-256.</p></div>
+      <div class="verify-card"><h4>Signature</h4><p>Ed25519 signature valid against canonical manifest hash.</p></div>
+      <div class="verify-card"><h4>Chain</h4><p>prev_hash links intact. Monotonic indices and timestamps.</p></div>
+      <div class="verify-card"><h4>SCITT</h4><p>COSE_Sign1 statement + receipt verified against ledger.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ TRUST MODEL ═══════════════════════════════ -->
+<!-- ═══════════════ TRUST MODEL ═══════════════ -->
 <section>
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">Trust</div>
-      <h2 class="section-title reveal r1">Who signed it. What it proves.</h2>
-      <p class="section-desc reveal r2" style="margin:0 auto">
-        EPI's trust model answers the two questions every auditor asks:
-        is the data intact, and can I trust the signer?
+      <div class="section-label reveal" style="justify-content:center">
+        <span style="margin-left:4px">Trust Model</span>
+      </div>
+      <h2 class="section-title reveal reveal-d1">Who signed it. What it proves.</h2>
+      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
+        Every .epi artifact carries a trust level. Is the data intact? Do you trust the signer? The model answers both.
       </p>
     </div>
-    <div class="reveal r3" style="overflow-x:auto">
+    <div class="reveal reveal-d3" style="overflow-x:auto">
       <table class="trust-table">
         <thead>
-          <tr><th>Level</th><th>Integrity</th><th>Signature</th><th>Identity</th><th>SCITT</th><th></th></tr>
+          <tr><th>Level</th><th>Integrity</th><th>Signature</th><th>Identity</th><th>SCITT</th><th>Meaning</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="trust-level tl-high">HIGH</span></td>
+            <td><span class="trust-badge high">HIGH</span></td>
             <td>PASS</td><td>VALID</td><td>KNOWN</td><td>—</td>
-            <td>Trust registry verified identity</td>
+            <td>Trust registry verified signer identity</td>
           </tr>
           <tr>
-            <td><span class="trust-level tl-med">MEDIUM</span></td>
-            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>✓</td>
-            <td>Valid signature + ledger-anchored</td>
+            <td><span class="trust-badge med">MEDIUM</span></td>
+            <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>&check;</td>
+            <td>Valid signature, ledger-anchored</td>
           </tr>
           <tr>
-            <td><span class="trust-level tl-low">LOW</span></td>
+            <td><span class="trust-badge low">LOW</span></td>
             <td>PASS</td><td>VALID</td><td>UNKNOWN</td><td>—</td>
             <td>Valid but unverified identity</td>
           </tr>
           <tr>
-            <td>NONE</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            <td style="color:var(--text-muted)">NONE</td>
+            <td>—</td><td>—</td><td>—</td><td>—</td>
             <td>No signature present</td>
           </tr>
           <tr>
-            <td><span style="color:var(--red); font-family:var(--font-mono);font-size:0.75rem;font-weight:600">TAMPERED</span></td>
+            <td><span class="trust-badge tampered">TAMPERED</span></td>
             <td>FAIL</td><td>INVALID</td><td>—</td><td>—</td>
             <td>Integrity failure or signature mismatch</td>
           </tr>
@@ -598,126 +902,168 @@ footer {
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ INTEGRATE ═══════════════════════════════════ -->
-<section class="verify-section" id="integrate">
+<!-- ═══════════════ INTEGRATION ═══════════════ -->
+<section class="section-alt" id="integrate">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">Integration</div>
-      <h2 class="section-title reveal r1">Three lines of Python</h2>
-      <p class="section-desc reveal r2" style="margin:0 auto">No monkey patching. Streaming and non-streaming. Works with any LLM SDK.</p>
+      <div class="section-label reveal" style="justify-content:center">
+        <span style="margin-left:4px">Integration</span>
+      </div>
+      <h2 class="section-title reveal reveal-d1">Three lines of Python</h2>
+      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
+        No monkey patching. Streaming and non-streaming both supported. Works with any LLM SDK.
+      </p>
     </div>
-    <div class="code-demo reveal r3">
+    <div class="code-demo reveal reveal-d3">
       <div class="code-bar">
-        <div class="d"></div><div class="d"></div><div class="d"></div>
-        <span>agent.py</span>
+        <div class="terminal-bar-dot red"></div>
+        <div class="terminal-bar-dot yellow"></div>
+        <div class="terminal-bar-dot green"></div>
+        <span class="terminal-bar-title">agent.py</span>
       </div>
       <div class="code-body">
-        <span class="kw">from</span> openai <span class="kw">import</span> OpenAI<br>
-        <span class="kw">from</span> epi_recorder <span class="kw">import</span> record, wrap_openai<br><br>
-        client = <span class="fn">wrap_openai</span>(<span class="fn">OpenAI</span>())<br><br>
-        <span class="kw">with</span> <span class="fn">record</span>(<span class="s">"agent.epi"</span>, goal=<span class="s">"Assess loan application"</span>):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;response = client.chat.completions.<span class="fn">create</span>(<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=<span class="s">"gpt-4"</span>,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="s">"role"</span>:<span class="s">"user"</span>, <span class="s">"content"</span>:<span class="s">"Assess this application"</span>}]<br>
+        <span class="c-kw">from</span> openai <span class="c-kw">import</span> OpenAI<br>
+        <span class="c-kw">from</span> epi_recorder <span class="c-kw">import</span> record, wrap_openai<br><br>
+        client = <span class="c-fn">wrap_openai</span>(<span class="c-fn">OpenAI</span>())<br><br>
+        <span class="c-kw">with</span> <span class="c-fn">record</span>(<span class="c-s">"agent.epi"</span>, goal=<span class="c-s">"Assess loan application"</span>):<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;response = client.chat.completions.<span class="c-fn">create</span>(<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=<span class="c-s">"gpt-4"</span>,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span class="c-s">"role"</span>:<span class="c-s">"user"</span>, <span class="c-s">"content"</span>:<span class="c-s">"Assess this application"</span>}]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;)<br><br>
-        <span class="c"># Every call → signed .epi evidence</span><br>
-        <span class="c"># epi verify agent.epi → VERIFIED ✓</span>
+        <span class="c-c"># Every call &rarr; signed .epi evidence</span><br>
+        <span class="c-c"># epi verify agent.epi &rarr;</span> <span class="c-g">VERIFIED &#x2713;</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ COMPLIANCE ═══════════════════════════════════ -->
+<!-- ═══════════════ COMPLIANCE ═══════════════ -->
 <section id="compliance">
   <div class="container">
     <div style="text-align:center">
-      <div class="section-label reveal" style="justify-content:center">Compliance</div>
-      <h2 class="section-title reveal r1">Built for the EU AI Act</h2>
-      <p class="section-desc reveal r2" style="margin:0 auto">Article 12 record-keeping. Article 14 human oversight. Article 19 transparency. All addressable from a single .epi artifact.</p>
+      <div class="section-label reveal" style="justify-content:center">
+        <span style="margin-left:4px">Compliance</span>
+      </div>
+      <h2 class="section-title reveal reveal-d1">Built for the EU AI Act</h2>
+      <p class="section-desc reveal reveal-d2" style="margin:0 auto">
+        Article 12 record-keeping. Article 14 human oversight. Article 19 transparency. All addressable from a single .epi artifact.
+      </p>
     </div>
-    <div class="compliance-grid reveal r3">
-      <div class="compliance-card">
+    <div class="comp-grid reveal reveal-d3">
+      <div class="comp-card">
         <h4>Article 12</h4>
-        <p>Record-keeping: EPI seals the complete execution trail — every LLM call, tool invocation, decision, and environment snapshot — into one signed artifact. Auditors open it in a browser.</p>
+        <h5>Record-Keeping</h5>
+        <p>Seals the complete execution trail — every LLM call, tool invocation, decision, and environment snapshot — into one signed artifact. Auditors open it in a browser.</p>
       </div>
-      <div class="compliance-card">
+      <div class="comp-card">
         <h4>Article 14</h4>
-        <p>Human oversight: review.json is appended post-sealing without breaking the cryptographic signature. Who reviewed, when, what they decided — embedded in the same signed artifact.</p>
+        <h5>Human Oversight</h5>
+        <p>review.json is appended post-sealing without breaking the cryptographic signature. Who reviewed, when, what they decided — in the same signed file.</p>
       </div>
-      <div class="compliance-card">
+      <div class="comp-card">
         <h4>Article 19</h4>
-        <p>Transparency: policy.json and policy_evaluation.json travel with the container. Every rule applied, every threshold checked, every outcome logged. The policy that governed the run is inspectable.</p>
+        <h5>Transparency</h5>
+        <p>policy.json and policy_evaluation.json travel with the container. Every rule applied, every threshold checked, every outcome logged — inspectable and auditable.</p>
       </div>
+    </div>
+
+    <div class="spec-banner reveal reveal-d4">
+      <div class="spec-banner-icon">&#x1F4DC;</div>
+      <div>
+        <h4>Formal Specification Available</h4>
+        <p>The EPI File Format Specification v4.2.0 defines every byte of the .epi container — envelope structure, manifest schema, cryptographic protocol, and verification procedure. Open standard. MIT licensed.</p>
+      </div>
+      <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank" class="btn btn-secondary" style="flex-shrink:0;white-space:nowrap">
+        Read the Spec
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ CTA ═══════════════════════════════════════ -->
+<!-- ═══════════════ CTA ═══════════════ -->
 <section class="cta-section" id="contact">
   <div class="container">
-    <div class="section-label reveal" style="justify-content:center">Get Started</div>
-    <h2 class="section-title reveal r1">Evidence starts with a single command</h2>
-    <p class="section-desc reveal r2">
-      pip install epi-recorder. Wrap your client. Record. Verify. That's it.
+    <div class="section-label reveal" style="justify-content:center">
+      <span style="margin-left:4px">Get Started</span>
+    </div>
+    <h2 class="section-title reveal reveal-d1">Evidence starts with one command</h2>
+    <p class="section-desc reveal reveal-d2">
+      Install. Wrap your client. Record. Verify. An auditor-proof evidence trail in under a minute.
     </p>
-    <div class="cta-actions reveal r3">
+    <div class="cta-actions reveal reveal-d3">
       <a href="https://pypi.org/project/epi-recorder/" class="btn btn-primary" target="_blank">
-        pip install epi-recorder
+        pip install epi-recorder <span class="btn-arrow">&rarr;</span>
       </a>
       <a href="viewer/" class="btn btn-secondary">
-        Open Decision Ops
+        Decision Ops <span class="btn-arrow">&rarr;</span>
       </a>
-      <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn btn-secondary" target="_blank">
-        View on GitHub
+      <a href="https://github.com/mohdibrahimaiml/epi-recorder" class="btn btn-ghost" target="_blank">
+        GitHub
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
-<footer>
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
   <div class="container">
     <div class="footer-inner">
-      <div>
+      <div class="footer-brand">
         <div class="footer-logo">EPI <span>LABS</span></div>
         <div class="footer-hash">abdcd1e51e02a00139d8a4093bc502ce06af95966be1ac7d</div>
-        <div class="footer-copy">Building the trust layer for the AI economy. MIT License.</div>
+        <div class="footer-copy">Building the trust layer for the AI economy.<br>&copy; 2026 EPI LABS. MIT License.</div>
       </div>
-      <ul class="footer-links">
-        <li><a href="how-it-works.html">How It Works</a></li>
-        <li><a href="technology.html">Technology</a></li>
-        <li><a href="pricing.html">Pricing</a></li>
-        <li><a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank">GitHub</a></li>
-        <li><a href="https://pypi.org/project/epi-recorder/" target="_blank">PyPI</a></li>
-        <li><a href="mailto:mohdibrahim@epilabs.org">Contact</a></li>
-      </ul>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="how-it-works.html">How It Works</a>
+          <a href="technology.html">Technology</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="verify.html">Verify</a>
+        </div>
+        <div class="footer-col">
+          <h4>Developers</h4>
+          <a href="https://github.com/mohdibrahimaiml/epi-recorder" target="_blank">GitHub</a>
+          <a href="https://pypi.org/project/epi-recorder/" target="_blank">PyPI</a>
+          <a href="https://github.com/mohdibrahimaiml/epi-recorder/blob/main/docs/EPI-SPEC.md" target="_blank">Spec</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="vision.html">Vision</a>
+          <a href="contact.html">Contact</a>
+          <a href="mailto:mohdibrahim@epilabs.org">Email</a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <script>
-// Nav scroll effect
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+// ── Nav scroll ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
 
-// Mobile menu
-const toggle = document.getElementById('mobileToggle');
+// ── Mobile menu ──
+const btn = document.getElementById('mobileBtn');
 const links = document.getElementById('navLinks');
-toggle.addEventListener('click', () => links.classList.toggle('open'));
+btn.addEventListener('click', () => links.classList.toggle('open'));
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', () => {
     links.classList.remove('open');
-    const t = document.querySelector(a.getAttribute('href'));
-    if (t) { t.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    const el = document.querySelector(a.getAttribute('href'));
+    if (el) { el.scrollIntoView({ behavior:'smooth', block:'start' }); }
   });
 });
 
-// Scroll reveals
+// ── Scroll reveals ──
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
 </body>
