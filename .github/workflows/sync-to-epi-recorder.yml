@@ -1,0 +1,88 @@
+name: Sync Website to epi-recorder
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout EPI-OFFICIAL
+        uses: actions/checkout@v4
+        with:
+          path: epi-official
+
+      - name: Checkout epi-recorder
+        uses: actions/checkout@v4
+        with:
+          repository: mohdibrahimaiml/epi-recorder
+          token: ${{ secrets.SYNC_TOKEN }}
+          path: epi-recorder
+
+      - name: Sync website files
+        run: |
+          set -e
+          SRC="epi-official"
+          DST="epi-recorder/verify_portal/static"
+
+          # Files/dirs to exclude from sync (repo-specific, not website)
+          EXCLUDES=(
+            ".git" ".github" ".gitignore" ".nojekyll"
+            "CNAME" "LICENSE"
+            "EPI_Accel_Atoms_Demo.ipynb"
+            "outreach.md"
+            "index-v4.1-backup.html"
+          )
+
+          # epi-recorder-specific files to preserve
+          PRESERVE=(
+            ".well-known"
+            "portal.html"
+            "verify"
+          )
+
+          # Build rsync exclude args
+          EXCLUDE_ARGS=()
+          for item in "${EXCLUDES[@]}"; do
+            EXCLUDE_ARGS+=(--exclude="$item")
+          done
+
+          # Temporarily back up preserved files
+          TMPDIR=$(mktemp -d)
+          for item in "${PRESERVE[@]}"; do
+            if [ -e "$DST/$item" ]; then
+              mkdir -p "$(dirname "$TMPDIR/$item")"
+              cp -a "$DST/$item" "$TMPDIR/$item"
+            fi
+          done
+
+          # Sync with delete (removes files deleted from EPI-OFFICIAL)
+          rsync -av --delete \
+            "${EXCLUDE_ARGS[@]}" \
+            "$SRC/" "$DST/"
+
+          # Restore preserved files
+          for item in "${PRESERVE[@]}"; do
+            if [ -e "$TMPDIR/$item" ]; then
+              mkdir -p "$(dirname "$DST/$item")"
+              cp -a "$TMPDIR/$item" "$DST/$item"
+            fi
+          done
+
+          rm -rf "$TMPDIR"
+          echo "Sync complete"
+
+      - name: Commit and push
+        run: |
+          cd epi-recorder
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add verify_portal/static/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: sync website from EPI-OFFICIAL@${{ github.sha }}"
+          git push origin main
