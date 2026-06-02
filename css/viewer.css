@@ -1,4 +1,4 @@
-﻿/**
+/**
  * EPI Viewer Styles - Web Integration
  * 
  * Design Philosophy: Unified with main website (Dark, Premium, Trustworthy)
@@ -11,8 +11,8 @@
     --bg-secondary: #0A0D15;
     --bg-card: #141B2D;
 
-    --color-primary: #d4a847;
-    --color-primary-light: #e8c36a;
+    --color-primary: #0A84FF;
+    --color-primary-light: #409CFF;
 
     --color-success: #30D158;
     --color-error: #FF453A;
@@ -117,12 +117,12 @@ body {
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 14px rgba(212,168,71,0.2);
+    box-shadow: 0 4px 14px rgba(10, 132, 255, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212,168,71,0.3);
+    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.6);
 }
 
 /* Drop Zone */
@@ -142,7 +142,7 @@ body {
 .drop-zone:hover,
 .drop-zone.drag-active {
     border-color: var(--color-primary);
-    background: rgba(212,168,71,0.05);
+    background: rgba(10, 132, 255, 0.05);
     transform: scale(1.01);
 }
 
@@ -217,7 +217,7 @@ body {
 
 .step.loading {
     border-color: var(--color-primary);
-    box-shadow: 0 0 15px rgba(212,168,71,0.1);
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.1);
 }
 
 .step-icon {
@@ -415,7 +415,7 @@ body {
 .tab-btn.active {
     color: var(--color-primary-light);
     border-bottom-color: var(--color-primary);
-    background: rgba(212,168,71,0.05);
+    background: rgba(10, 132, 255, 0.05);
 }
 
 /* Layer Content */
