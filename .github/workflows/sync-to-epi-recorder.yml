@@ -9,6 +9,15 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Check SYNC_TOKEN secret
+        run: |
+          if [ -z "${{ secrets.SYNC_TOKEN }}" ]; then
+            echo "::error::SYNC_TOKEN secret is not set."
+            echo "::error::Please create a Personal Access Token with 'repo' scope"
+            echo "::error::and add it as a repository secret named SYNC_TOKEN in EPI-OFFICIAL."
+            exit 1
+          fi
+
       - name: Checkout EPI-OFFICIAL
         uses: actions/checkout@v4
         with:
