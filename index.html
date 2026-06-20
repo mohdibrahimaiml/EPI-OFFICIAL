@@ -482,14 +482,22 @@ function updateChecks(report){
 async function sha256(buf){var h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,'0')}).join('')}
 function buf2hex(buf){return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('')}
 
+async function deriveKeyName(pubKeyHex){
+  var hash=await sha256(new TextEncoder().encode(pubKeyHex));
+  return hash.substring(0,16);
+}
+
 async function verifyEd25519(sigStr,pubKeyHex,hashHex){
   try{
     var parts=sigStr.split(':');
-    if(parts.length!==3||parts[0]!=='ed25519')return{valid:null,msg:'Unsupported signature: '+sigStr.substring(0,20)+'...'};
+    if(parts.length!==3||parts[0]!=='ed25519')return{valid:false,msg:'Unsupported signature: '+sigStr.substring(0,20)+'...'};
     var rawSigHex=parts[2];
     var sigBytes=new Uint8Array(rawSigHex.match(/.{1,2}/g).map(function(b){return parseInt(b,16)}));
     var pubBytes=new Uint8Array(pubKeyHex.match(/.{1,2}/g).map(function(b){return parseInt(b,16)}));
-    if(pubBytes.length!==32)return{valid:null,msg:'Invalid public key length: '+pubBytes.length};
+    if(pubBytes.length!==32)return{valid:false,msg:'Invalid public key length: '+pubBytes.length};
+    // Cryptographically bind the key name to the public key (matches Python)
+    var expectedKeyName=await deriveKeyName(pubKeyHex);
+    if(parts[1]!==expectedKeyName)return{valid:false,msg:'Key name does not match public key'};
     var hashBytes=new Uint8Array(hashHex.match(/.{1,2}/g).map(function(b){return parseInt(b,16)}));
     var key=await crypto.subtle.importKey('raw',pubBytes,{name:'Ed25519'},false,['verify']);
     var ok=await crypto.subtle.verify({name:'Ed25519'},key,sigBytes,hashBytes);
@@ -499,7 +507,8 @@ async function verifyEd25519(sigStr,pubKeyHex,hashHex){
 
 function detectContainer(buffer){
   var prefix=new TextDecoder().decode(buffer.slice(0,4));
-  if(prefix==='EPI1')return'envelope-v2';
+  // Envelope-v2 files are polyglot HTML: they start with the comment magic "<!--"
+  if(prefix==='<!--')return'envelope-v2';
   var sig=new Uint8Array(buffer.slice(0,4));
   if(sig[0]===0x50&&sig[1]===0x4B&&sig[2]===0x03&&sig[3]===0x04)return'legacy-zip';
   return null;
@@ -516,39 +525,235 @@ function extractZIPPayload(buffer,fmt){
 }
 
 /*
-  Matches Python get_canonical_hash → _get_json_canonical_hash:
-    json.dumps(data, sort_keys=True, separators=(',',':'), ensure_ascii=False)
-  Critical: datetime strings MUST be normalized (microseconds stripped → 'Z' suffix)
-  before hashing. Ed25519 signed the normalized version. */
-function normalizeCanonical(obj){
-  if(obj===null||obj===undefined)return obj;
-  if(typeof obj==='string'){
-    var m=/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.exec(obj);
-    if(m)return m[1]+'Z';   // strip microseconds, force UTC Z
-    return obj
+  Canonical JSON encoder that matches Python json.dumps(sort_keys=True,
+  separators=(',',':'), ensure_ascii=False).
+
+  We also preserve the original text for every JSON number token.  Python keeps
+  the trailing ".0" for floats (e.g. 900.0) while JavaScript's JSON.stringify
+  drops it (900).  Without preservation, manifests/steps that contain float
+  metrics would hash differently in the browser and signature verification would
+  fail even for valid artifacts.
+*/
+function tokenizeJSON(str){
+  var tokens=[],i=0;
+  while(i<str.length){
+    var c=str[i];
+    if(c===' '||c==='\t'||c==='\n'||c==='\r'){i++;continue;}
+    if(c==='"'){
+      i++;var s='';
+      while(i<str.length){
+        var ch=str[i];
+        if(ch==='\\'){i++;s+=str[i];i++;}
+        else if(ch==='"'){i++;break;}
+        else{s+=ch;i++;}
+      }
+      tokens.push({type:'string',value:s});
+      continue;
+    }
+    if(c==='{'||c==='}'||c==='['||c===']'||c===':'||c===','){tokens.push({type:c});i++;continue;}
+    if(str.substring(i,i+4)==='true'){tokens.push({type:'true',value:true});i+=4;continue;}
+    if(str.substring(i,i+5)==='false'){tokens.push({type:'false',value:false});i+=5;continue;}
+    if(str.substring(i,i+4)==='null'){tokens.push({type:'null',value:null});i+=4;continue;}
+    if(c==='-'||(c>='0'&&c<='9')){
+      var start=i;
+      if(str[i]==='-')i++;
+      while(i<str.length&&str[i]>='0'&&str[i]<='9')i++;
+      if(str[i]==='.'){i++;while(i<str.length&&str[i]>='0'&&str[i]<='9')i++;}
+      if(str[i]==='e'||str[i]==='E'){i++;if(str[i]==='+'||str[i]==='-')i++;while(i<str.length&&str[i]>='0'&&str[i]<='9')i++;}
+      tokens.push({type:'number',raw:str.substring(start,i)});
+      continue;
+    }
+    throw new Error('Unexpected character '+c+' at '+i);
   }
-  if(Array.isArray(obj))return obj.map(normalizeCanonical);
-  if(typeof obj==='object'){
-    var out={};
-    Object.keys(obj).sort().forEach(function(k){if(obj[k]!==undefined)out[k]=normalizeCanonical(obj[k])});
-    return out
+  return tokens;
+}
+function parseJSONPreserveNumbers(text){
+  var tokens=tokenizeJSON(text),pos=0;
+  function parseValue(){
+    var tok=tokens[pos];
+    if(tok.type==='number'){pos++;return{__num:tok.raw};}
+    if(tok.type==='string'){pos++;return tok.value;}
+    if(tok.type==='true'||tok.type==='false'||tok.type==='null'){pos++;return tok.value;}
+    if(tok.type==='[')return parseArray();
+    if(tok.type==='{')return parseObject();
+    throw new Error('Unexpected token '+tok.type);
   }
-  return obj
+  function parseArray(){
+    pos++;
+    var arr=[];
+    if(tokens[pos]&&tokens[pos].type===']'){pos++;return arr;}
+    while(true){
+      arr.push(parseValue());
+      var tok=tokens[pos++];
+      if(tok.type===',')continue;
+      if(tok.type===']')return arr;
+      throw new Error('Expected , or ] got '+tok.type);
+    }
+  }
+  function parseObject(){
+    pos++;
+    var obj={};
+    if(tokens[pos]&&tokens[pos].type==='}'){pos++;return obj;}
+    while(true){
+      var keyTok=tokens[pos++];
+      if(keyTok.type!=='string')throw new Error('Expected string key');
+      var key=keyTok.value;
+      if(tokens[pos++].type!==':')throw new Error('Expected :');
+      obj[key]=parseValue();
+      var tok=tokens[pos++];
+      if(tok.type===',')continue;
+      if(tok.type==='}')return obj;
+      throw new Error('Expected , or } got '+tok.type);
+    }
+  }
+  var val=parseValue();
+  if(pos!==tokens.length)throw new Error('Unexpected trailing tokens');
+  return val;
 }
 function sortedJSON(obj){
+  if(obj && typeof obj==='object' && obj.__num!==undefined)return obj.__num;
   if(obj===null)return'null';
   if(typeof obj==='string')return JSON.stringify(obj);
   if(typeof obj==='number')return String(Number.isFinite(obj)?obj:'null');
   if(typeof obj==='boolean')return String(obj);
   if(Array.isArray(obj))return'['+obj.map(sortedJSON).join(',')+']';
   var keys=Object.keys(obj).sort(),p=[];
-  for(var i=0;i<keys.length;i++){var k=keys[i];if(obj[k]!==undefined)p.push(JSON.stringify(k)+':'+sortedJSON(obj[k]))}
-  return'{'+p.join(',')+'}'
+  for(var i=0;i<keys.length;i++){var k=keys[i];if(obj[k]!==undefined)p.push(JSON.stringify(k)+':'+sortedJSON(obj[k]));}
+  return'{'+p.join(',')+'}';
 }
-function computeManifestHash(manifest){
-  var m=normalizeCanonical(JSON.parse(JSON.stringify(manifest)));
-  delete m.signature;
-  return sha256(new TextEncoder().encode(sortedJSON(m)));
+function normalizeCreatedAt(manifest){
+  if(manifest && typeof manifest==='object' && typeof manifest.created_at==='string'){
+    var m=/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.exec(manifest.created_at);
+    if(m)manifest.created_at=m[1]+'Z';
+  }
+  return manifest;
+}
+function computeManifestHash(rawManifestText){
+  var manifest=parseJSONPreserveNumbers(rawManifestText);
+  normalizeCreatedAt(manifest);
+  delete manifest.signature;
+  return sha256(new TextEncoder().encode(sortedJSON(manifest)));
+}
+
+async function canonicalStepHash(step){
+  // Matches epi_core.serialize.get_canonical_hash(StepModel, format='json'):
+  // sort keys, no whitespace, exclude source_type, and normalize only the
+  // top-level datetime field (timestamp) the way Pydantic model_dump does.
+  var fields=['index','timestamp','kind','content','trace_id','span_id','parent_span_id','prev_hash','governance'];
+  var canonical={};
+  for(var i=0;i<fields.length;i++){
+    var k=fields[i];
+    var v=step[k]!==undefined?step[k]:null;
+    if(k==='timestamp'&&typeof v==='string'){
+      var m=/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.exec(v);
+      if(m)v=m[1]+'Z';
+    }
+    canonical[k]=v;
+  }
+  return sha256(new TextEncoder().encode(sortedJSON(canonical)));
+}
+
+function unwrapNum(v){
+  return (v && typeof v==='object' && v.__num!==undefined)?Number(v.__num):v;
+}
+function auditStepSequence(steps){
+  if(!steps||steps.length===0)return true;
+  var indices=steps.map(function(s){var n=unwrapNum(s.index);return n!==undefined?n:0});
+  for(var i=1;i<indices.length;i++){
+    if(indices[i]!==indices[i-1]+1)return false;
+  }
+  var times=steps.map(function(s){
+    var t_ns=unwrapNum((s.content||{}).timestamp_ns);
+    return t_ns!==undefined?t_ns:(s.timestamp||'');
+  });
+  for(var i=1;i<times.length;i++){
+    if(times[i]<times[i-1])return false;
+  }
+  return true;
+}
+
+function auditStepCompleteness(steps){
+  var pendingToolCalls=[];
+  var pendingLlmRequests=[];
+  var pendingApprovals=[];
+  for(var i=0;i<steps.length;i++){
+    var s=steps[i];
+    var kind=s.kind||'';
+    var content=s.content||{};
+    var idx=s.index!==undefined?s.index:0;
+    var span_id=s.span_id;
+    if(kind==='tool.call'){
+      pendingToolCalls.push({idx:idx,call_id:content.call_id});
+    }else if(kind==='tool.response'){
+      var call_id=content.call_id;
+      var matched=false;
+      if(call_id!==undefined&&call_id!==null){
+        for(var ti=pendingToolCalls.length-1;ti>=0;ti--){
+          if(pendingToolCalls[ti].call_id===call_id){
+            pendingToolCalls.splice(ti,1);
+            matched=true;
+            break;
+          }
+        }
+      }
+      if(!matched&&pendingToolCalls.length>0)pendingToolCalls.shift();
+    }else if(kind==='llm.request'){
+      pendingLlmRequests.push({idx:idx,span_id:span_id});
+    }else if(kind==='llm.response'||kind==='llm.error'){
+      var matched=false;
+      if(span_id!==undefined&&span_id!==null){
+        for(var li=pendingLlmRequests.length-1;li>=0;li--){
+          if(pendingLlmRequests[li].span_id===span_id){
+            pendingLlmRequests.splice(li,1);
+            matched=true;
+            break;
+          }
+        }
+      }
+      if(!matched&&pendingLlmRequests.length>0)pendingLlmRequests.shift();
+    }else if(kind==='agent.approval.request'){
+      pendingApprovals.push({idx:idx,action:content.action});
+    }else if(kind==='agent.approval.response'){
+      var action=content.action;
+      var matched=false;
+      if(action!==undefined&&action!==null){
+        for(var ai=pendingApprovals.length-1;ai>=0;ai--){
+          if(pendingApprovals[ai].action===action){
+            pendingApprovals.splice(ai,1);
+            matched=true;
+            break;
+          }
+        }
+      }
+      if(!matched&&pendingApprovals.length>0)pendingApprovals.shift();
+    }
+  }
+  return pendingToolCalls.length===0&&pendingLlmRequests.length===0&&pendingApprovals.length===0;
+}
+
+async function auditStepChain(steps){
+  if(!steps||steps.length<2)return true;
+  for(var i=1;i<steps.length;i++){
+    var claimed=steps[i].prev_hash;
+    if(claimed===null||claimed===undefined||claimed==='CHAIN_START')continue;
+    var expected=await canonicalStepHash(steps[i-1]);
+    if(claimed!==expected)return false;
+  }
+  return true;
+}
+
+function auditStepCount(steps,manifest){
+  var total=unwrapNum(manifest.total_steps);
+  if(total===undefined||total===null)return true;
+  return steps.length===total;
+}
+
+async function auditSteps(steps,manifest){
+  var seq=auditStepSequence(steps);
+  var comp=auditStepCompleteness(steps);
+  var chain=await auditStepChain(steps);
+  var count=auditStepCount(steps,manifest);
+  return{sequence_ok:seq,completeness_ok:comp,chain_ok:chain,step_count_ok:count};
 }
 
 async function processFile(f){
@@ -576,16 +781,26 @@ async function processFile(f){
     // Check 2: manifest.json
     var mf=zip.file('manifest.json');
     if(!mf){showResult('fail','<strong>No manifest.json found</strong>');return}
+    var rawManifest;
+    try{rawManifest=await mf.async('string')}catch(e){showResult('fail','<strong>Could not read manifest.json</strong><br>'+e.message);return}
     var manifest;
-    try{manifest=JSON.parse(await mf.async('string'))}catch(e){showResult('fail','<strong>manifest.json parse error</strong><br>'+e.message);return}
+    try{manifest=parseJSONPreserveNumbers(rawManifest)}catch(e){showResult('fail','<strong>manifest.json parse error</strong><br>'+e.message);return}
     report.metadata.spec_version=manifest.spec_version||'?';
     report.metadata.workflow_id=manifest.workflow_id||'?';
     report.metadata.created_at=manifest.created_at||'?';
 
-    // Check 3: steps.jsonl — count steps
-    var stepsFile=zip.file('steps.jsonl'),stepCount=0;
-    if(stepsFile){var st=await stepsFile.async('string');stepCount=st.trim().split('\n').filter(function(l){return l.trim().length>0}).length}
-    report.metadata.steps_count=stepCount;
+    // Check 3: steps.jsonl — parse and count steps
+    var steps=[],stepsFile=zip.file('steps.jsonl');
+    if(stepsFile){
+      var st=await stepsFile.async('string');
+      var lines=st.split('\n');
+      for(var si=0;si<lines.length;si++){
+        var line=lines[si].trim();
+        if(!line)continue;
+        try{steps.push(parseJSONPreserveNumbers(line))}catch(e){}
+      }
+    }
+    report.metadata.steps_count=steps.length;
 
     // Check 4: file_manifest integrity
     var fileManifest=manifest.file_manifest||{},mismatches={},checked=0;
@@ -606,32 +821,52 @@ async function processFile(f){
     });
     report.metadata.files_checked=checked;
     report.facts.mismatches=mismatches;
-    report.facts.integrity_ok=Object.keys(mismatches).length===0;
 
-    // Check 5: Signature
+    // Check 5: forensic audits on the step timeline
+    var forensic=await auditSteps(steps,manifest);
+    report.facts.sequence_ok=forensic.sequence_ok;
+    report.facts.completeness_ok=forensic.completeness_ok;
+    report.facts.chain_ok=forensic.chain_ok;
+    report.facts.step_count_ok=forensic.step_count_ok;
+    report.facts.integrity_ok=Object.keys(mismatches).length===0&&forensic.sequence_ok&&forensic.completeness_ok&&forensic.chain_ok&&forensic.step_count_ok;
+
+    // Check 6: Signature + key-name binding + trust registry
+    var registry=null;
+    try{registry=await (await fetch('/.well-known/epi-trust-registry.json')).json();}catch(e){}
     report.facts.has_signature=!!manifest.signature;
     if(manifest.signature&&manifest.public_key){
       try{
         // Compute canonical hash matching Python's get_canonical_hash
-        var manifestHash=await computeManifestHash(manifest);
+        var manifestHash=await computeManifestHash(rawManifest);
         var sigResult=await verifyEd25519(manifest.signature,manifest.public_key,manifestHash);
         report.facts.signature_valid=sigResult.valid;
-        if(sigResult.valid===true)report.identity.status='KNOWN';
-        else if(sigResult.valid===false){report.identity.status='TAMPERED';report.trust_level='NONE'}
-        report.identity.detail=sigResult.msg;
         report.identity.public_key_id=manifest.public_key.substring(0,16);
         var nameParts=manifest.signature.split(':',2);
         if(nameParts.length>=2)report.identity.name=nameParts[1];
+        if(sigResult.valid===true){
+          if(registry&&registry.trusted_keys&&registry.trusted_keys[manifest.public_key]){
+            report.identity.status='KNOWN';
+            report.identity.name=registry.trusted_keys[manifest.public_key];
+            report.identity.detail='Verified via remote anchor: '+(registry.name||'EPI Labs Trust Registry');
+            report.identity.registry_verified=true;
+          }else{
+            report.identity.status='UNKNOWN';
+            report.identity.detail='Valid signature from unverified identity — verify signer independently';
+          }
+        }else{
+          report.identity.status='UNKNOWN';
+          report.identity.detail=sigResult.msg||'Signature could not be verified';
+        }
       }catch(e){report.facts.signature_valid=null;report.identity.detail='WebCrypto not available: '+e.message}
     }else if(!manifest.signature){report.facts.signature_valid=null;report.identity.detail='Artifact is unsigned'}
 
-    // Determine trust level (matching Python)
+    // Determine trust level (matching Python epi_core/trust.py)
     if(report.facts.integrity_ok&&report.facts.signature_valid===true&&report.identity.status==='KNOWN'){report.trust_level='HIGH';report.trust_message='Cryptographically verified — signer identity confirmed'}
     else if(report.facts.integrity_ok&&report.facts.signature_valid===true&&report.identity.status!=='KNOWN'){report.trust_level='LOW';report.trust_message='Valid signature from unverified identity — verify signer independently'}
-    else if(report.facts.integrity_ok&&report.facts.signature_valid===null&&report.facts.has_signature){report.trust_level='MEDIUM';report.trust_message='Unsigned — integrity intact, signer not verified'}
     else if(report.facts.integrity_ok&&!report.facts.has_signature){report.trust_level='MEDIUM';report.trust_message='Unsigned — integrity intact, no signer identity'}
     else if(!report.facts.integrity_ok){report.trust_level='NONE';report.trust_message='Integrity compromised — do not trust'}
     else if(report.facts.signature_valid===false){report.trust_level='NONE';report.trust_message='Signature invalid — artifact may be tampered'}
+    else{report.trust_level='NONE';report.trust_message='Verification inconclusive — do not trust'}
 
     showReport(report,'');
   }catch(e){showResult('fail','<strong>Verification error</strong><br>'+e.message)}
