@@ -48,6 +48,7 @@ jobs:
           # epi-recorder-specific files to preserve
           PRESERVE=(
             ".well-known"
+            "admin"
             "portal.html"
             "verify"
           )
@@ -72,9 +73,10 @@ jobs:
             "${EXCLUDE_ARGS[@]}" \
             "$SRC/" "$DST/"
 
-          # Restore preserved files
+          # Restore preserved files (remove destination first to avoid nested copies)
           for item in "${PRESERVE[@]}"; do
             if [ -e "$TMPDIR/$item" ]; then
+              rm -rf "$DST/$item"
               mkdir -p "$(dirname "$DST/$item")"
               cp -a "$TMPDIR/$item" "$DST/$item"
             fi
